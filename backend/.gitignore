@@ -1,0 +1,12 @@
+.author
+django_project/db.sqlite3
+django_project/service_account.json
+django_project/logs.log
+django_project/staticfiles/
+django_project/mediafiles/
+.env
+venv/
+.idea
+**/__pycache__/
+
+аукцион сервак.txt

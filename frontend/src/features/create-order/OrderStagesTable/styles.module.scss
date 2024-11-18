@@ -1,0 +1,26 @@
+@import "~/app/styles/colors.scss";
+$font-color: map-get($colors, "default-font-color");
+
+.table-wrapper {
+  overflow-x: auto;
+  border-left: 1px solid rgba($font-color, 0.2);
+  border-right: 1px solid rgba($font-color, 0.2);
+}
+
+.table {
+  width: 100%;
+  th,
+  td {
+    text-align: center;
+    padding: 0.5rem 1rem;
+    font-weight: 400;
+    font-size: 1.4rem;
+    line-height: 1.7rem;
+    border: 1px solid rgba($font-color, 0.2);
+    border-left: none;
+  }
+  tr:first-child th:last-child,
+  tr:nth-child(odd) td:last-child {
+    border-right: none;
+  }
+}

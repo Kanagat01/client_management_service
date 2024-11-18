@@ -1,0 +1,10 @@
+.tooltip {
+  --bs-tooltip-border-radius: 5px;
+  --bs-tooltip-bg: #fff;
+  --bs-tooltip-color: #000;
+  --bs-tooltip-font-size: max(0.9rem, 9px);
+}
+
+.tooltip-arrow {
+  display: none !important;
+}

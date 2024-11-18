@@ -1,0 +1,22 @@
+name: Deploy to server
+run-name: ${{ github.actor }} is deploying react app to server
+on: [push]
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+      - name: Update server code
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          password: ${{ secrets.PASSWORD }}
+          port: ${{ secrets.PORT }}
+          script: |
+            cd auction_frontend;
+            git pull;
+            cd ../auction_backend;
+            docker-compose up -d --build react_app;
+      - run: echo "💡 The server code has been updated"

@@ -1,0 +1,458 @@
+{
+    "common": {
+        "save": "Save",
+        "delete": "Delete",
+        "cancel": "Cancel",
+        "accept": "Accept",
+        "reject": "Refuse",
+        "confirm": "Confirm",
+        "add": "Add",
+        "copied": "Copied",
+        "data": "Data",
+        "credentials": "2024 Cargonika LLC. All rights reserved",
+        "errorMessage": "An error occurred: {{err}}",
+        "serverError": "Server error. Code {{code}}",
+        "unknownError": "Unknown error: {{error}}",
+        "noData": "There is no data to display",
+        "priceRub": "Price [rub]",
+        "customer": "Customer",
+        "transporter": "Transporter",
+        "manager": "Manager",
+        "selection": "Selection",
+        "bid": "Bid",
+        "fillOutRequired": "Fill in the required fields: {{fields}}",
+        "requiredField": "Required field",
+        "notValidEmail": "Incorrect email format",
+        "wrongEmail": "Wrong email",
+        "youDidNotChangeAnyField": "You haven't changed any fields",
+        "pageForbidden": "You don't have permission to view this page",
+        "actionForbidden": "You don't have enough rights to perform this action",
+        "id": "ID",
+        "actions": "Actions",
+        "table": "Table"
+    },
+    "validatePassword": {
+        "passwordLengthError": "The password must be at least 8 characters long",
+        "letterTestError": "The password must consist of uppercase and lowercase letters",
+        "numberTestError": "The password must contain at least one digit and a special character"
+    },
+    "mapSection": {
+        "map": "Map",
+        "cargoLocation": "Cargo location"
+    },
+    "settings": {
+        "myCompany": "My company",
+        "securitySectionTitle": "Entry and security",
+        "passwords": "Passwords",
+        "yourManagers": "Your managers",
+        "addManager": "Add manager",
+        "language": "Language",
+        "changePassword": "Change password"
+    },
+    "subscriptions": {
+        "singular": "Subscription",
+        "plural": "Subscriptions",
+        "chooseSubscription": "Select a subscription",
+        "price": "Price",
+        "selected": "Selected"
+    },
+    "documents": {
+        "document": "Document",
+        "noData": "No data available",
+        "myDocuments": "My documents",
+        "documentName": "Document name",
+        "user": "User",
+        "mb": "MB"
+    },
+    "addDocument": {
+        "loading": "Adding a document...",
+        "success": "Document {{name}} has been added successfully",
+        "error": {
+            "general": "An error occurred while adding a document: {{err}}",
+            "orderDoesNotBelong": "You can't add a document to this order"
+        },
+        "loadDocument": "Upload document",
+        "filesNotSelected": "No files selected"
+    },
+    "deleteDocument": {
+        "loading": "Deleting the document...",
+        "success": "Document #{{docId}} {{docName}} deleted",
+        "error": "An error occurred while deleting the document: {{err}}",
+        "title": "Delete document",
+        "selectDocument": "Select the document to delete",
+        "noDocs": "There are no documents to delete"
+    },
+    "notifications": {
+        "info": "Information",
+        "empty": "There are no notifications",
+        "understood": "Understood",
+        "remove": "Remove",
+        "chooseSubscription": {
+            "title": "Choose a subscription",
+            "description": "In order to access all the functionality of the site, choose a subscription and pay a subscription fee. To do this, you need to go to \n\"Settings > Subscriptions\""
+        },
+        "topUpBalance": {
+            "title": "Top up your balance",
+            "description": "Your balance is zero or negative. The functionality will be limited to viewing information and navigating through sections. Please top up your balance."
+        },
+        "addManager": {
+            "title": "Add a manager",
+            "description": "You need to add a manager to work with orders. To do this, you need to go to \n\"Settings > Add Manager\""
+        }
+    },
+    "offers": {
+        "singular": "Offer",
+        "plural": "Offers",
+        "empty": "There are no offers for this order yet",
+        "selectOffer": "Select an offer",
+        "priceMoreThan0Error": "The price must be greater than 0"
+    },
+    "createOffer": {
+        "title": "Place a Bid",
+        "loading": "Placing a Bid...",
+        "success": "The bid has been successfully placed",
+        "priceError": "The price must be greater than zero",
+        "priceChangedError": "The current price has changed. Please try again"
+    },
+    "acceptOffer": {
+        "loading_bestOffer": "Accepting the best offer...",
+        "loading": "Accepting the offer #{{id}}...",
+        "success": "Offer #{{offerId}} accepted \nOrder No.{{transportationNumber}} is being executed",
+        "areYouSure": "Are you sure you want to accept the offer",
+        "areYouSure_bestOffer": "Are you sure you want to accept the best offer for",
+        "from": "from",
+        "forOrder": "for order"
+    },
+    "rejectOffer": {
+        "loading": "Rejecting the offer...",
+        "success": "Offer #{{id}} rejected"
+    },
+    "acceptOfferTransporter": {
+        "loading": "Accepting the order...",
+        "success": "Order No. {{transportationNumber}} accepted",
+        "areYouSure": "Are you sure you want to accept the order",
+        "forPrice": "for the amount of"
+    },
+    "rejectOfferTransporter": {
+        "loading": "Rejecting the order...",
+        "success": "Order No.{{transportationNumber}} rejected",
+        "areYouSure": "Are you sure you want to cancel the order",
+        "forPrice": "for the amount of"
+    },
+    "applicationType": {
+        "auction": "Auction",
+        "bidding": "Bidding",
+        "direct": "Direct order"
+    },
+    "findCargo": {
+        "documentTitle": "Service \"Cargo Receiver\"",
+        "mainTitle": "Search for transportation by tracking number and driver's vehicle number",
+        "fillOutBoth": "Fill in both fields",
+        "orderNotFound": "No transportation found with this tracking number",
+        "driverNotFound": "No driver found with this vehicle number",
+        "notAvailableWithCurrentSubscription": "The \"Cargo Receiver\" service is not available for this order",
+        "transportationNumberPlaceholder": "Sender's tracking number",
+        "machineNumberPlaceholder": "Driver's vehicle number",
+        "instruction": "To view information about the current transportation, click the search icon"
+    },
+    "orders": {
+        "plural": "Orders",
+        "selectOrder": "Select order",
+        "orderStatusIs": "Order Status \"{{status}}\"",
+        "transportationNumberMustBeUnique": "Transport number must be unique",
+        "addAtLeastOneStage": "Add at least 1 delivery",
+        "orderStageNumber_MustBeUnique": "Delivery No. must be unique: {{stage Num}}",
+        "canEditOnlyUnpublished": "You can edit only unpublished orders",
+        "pages": {
+            "beingExecuted": "Transportation log",
+            "cancelled": "Cancelled",
+            "inAuction": "Auctions",
+            "inBidding": "Bidding",
+            "inDirect": "Direct orders",
+            "unpublished": "Orders",
+            "cargoPlan": "Loading plan",
+            "inputPlaceholders": {
+                "cityFrom": "Moscow",
+                "cityTo": "Balashikha"
+            }
+        },
+        "additional": "Additional",
+        "transport": "Transport"
+    },
+    "orderPage": {
+        "orderNotFound": "No order found with this transportation number",
+        "noAccess": "You do not have access to this page. Please pay your subscription fee to gain access."
+    },
+    "orderTranslations": {
+        "id": "id",
+        "transportation_number": "Transportation Number",
+        "customer_manager": "Customer Manager",
+        "transporter_manager": "Transporter Manager",
+        "driver": "Driver",
+        "status": "Order Status",
+        "start_price": "Starting Price",
+        "current_price": "Current Price",
+        "price_step": "Price Step",
+        "comments_for_transporter": "Comments for Transporter",
+        "additional_requirements": "Additional Requirements",
+        "additional_requirements_short": "Additional Req.",
+        "created_at": "Created At",
+        "updated_at": "Updated At",
+        "transport_body_type": "Body Type",
+        "transport_load_type": "Loading",
+        "transport_unload_type": "Unloading",
+        "transport_volume": "Vehicle, m3",
+        "temp_mode": "Temperature Mode",
+        "adr": "ADR",
+        "transport_body_width": "Body Width",
+        "transport_body_length": "Body Length",
+        "transport_body_height": "Body Height",
+        "documents": "Documents",
+        "offers": "Offers",
+        "tracking": "Tracking",
+        "stages": "Deliveries",
+        "price_data": "Price Data",
+        "stages_cnt": "Deliveries, Count",
+        "loading_time": "Loading Time",
+        "loading_date": "Loading Date",
+        "unloading_date": "Unloading Date",
+        "city_from": "Starting City",
+        "city_to": "Destination City",
+        "postal_code": "Postal Code",
+        "cargo_parameters": "Cargo Parameters",
+        "volume": "Volume",
+        "weight": "Weight",
+        "offer_price": "Bid",
+        "final_price": "Cost of Transportation",
+        "application_type": "Application type",
+        "best_offer_price": "Best offer",
+        "best_offer_company": "Company with best offer",
+        "transporter": "Transporter"
+    },
+    "orderModel": {
+        "driverDataAdded": "Driver data added for order №{{transportationNumber}}",
+        "orderCompletedError": "Cannot cancel, the order is already completed",
+        "orderCompletedOrUnpublished": "Order is already completed or unpublished",
+        "orderAlreadyCompleted": "Order is already completed"
+    },
+    "orderStatus": {
+        "unpublished": "Unpublished",
+        "cancelled": "Cancelled",
+        "in_auction": "In Auction",
+        "in_bidding": "In Bidding",
+        "in_direct": "Assigned",
+        "being_executed": "Being Executed",
+        "completed": "Completed"
+    },
+    "createOrder": {
+        "loading": "Creating order...",
+        "success": "Order created successfully"
+    },
+    "editOrder": {
+        "loading": "Updating order #{{transportationNumber}}...",
+        "success": "Order #{{transportationNumber}} updated successfully"
+    },
+    "cancelOrder": {
+        "loading": "Cancelling order...",
+        "success": "Order status changed to \"Cancelled\"",
+        "buttonText": "Cancel",
+        "areYouSure": "Are you sure you want to cancel the order"
+    },
+    "publishOrder": {
+        "loading": "Publishing order...",
+        "success": "Order status changed to \"{{status}}\"",
+        "transporterHasNoManager": "The transport company has no manager to assign",
+        "inAuction": "to auction",
+        "inBidding": "to bidding",
+        "areYouSure": "Are you sure you want to publish the order",
+        "selectTransporter": "Select a transport company",
+        "priceMustBeGreaterThan0": "Price must be greater than zero",
+        "assign": "Assign",
+        "offeringPrice_rub": "Offered price [rub]"
+    },
+    "unpublishOrder": {
+        "loading": "Returning to orders...",
+        "success": "Order status changed to \"Unpublished\"",
+        "buttonText": "Return to orders",
+        "orderCompletedError": "You cannot \"Return to orders\" a completed order",
+        "areYouSure": "Are you sure you want to \"Return to orders\" the order"
+    },
+    "completeOrder": {
+        "loading": "Completing order...",
+        "success": "Order status changed to \"Completed\"",
+        "buttonText": "Complete",
+        "areYouSure": "Are you sure you want to",
+        "areYouSure_status": "complete the order"
+    },
+    "cancelOrderCompletion": {
+        "loading": "Cancelling order completion...",
+        "success": "Order status changed to \"Being Executed\"",
+        "areYouSure_status": "cancel completion of the order"
+    },
+    "addDriverData": {
+        "title": "Submit data",
+        "loading": "Submitting driver data...",
+        "success": "Data submitted",
+        "wrongPhoneNumber": "Incorrect phone number",
+        "shouldBeBeingExecuted": "To add driver data, the order status must be \"Being Executed\"",
+        "maxLengthIs": "Maximum length is {{maxLength}} characters",
+        "canNotAddData": "Cannot submit data, order status is \"{{status}}\"",
+        "inputPlaceholders": {
+            "fullName": "Full Name",
+            "machineData": "Vehicle Data",
+            "phoneNumber": "+7 (777) 777 7777"
+        },
+        "mustBeUnique": "Must be unique to the driver"
+    },
+    "orderStage": {
+        "singular": "Delivery",
+        "loadingStage": "Loading",
+        "unloadingStage": "Unloading",
+        "stageNotFound": "Delivery not found",
+        "enterOrderStageNumber": "Enter delivery number",
+        "orderStageWithThisNumberAlreadyExists": "A delivery with this number already exists",
+        "next": "Next",
+        "back": "Back",
+        "stageNumber": "Delivery No.",
+        "stage": "Stage",
+        "stageType": "Stage Type",
+        "datetime": "Date Time",
+        "deliveryStatus": "Delivery Status",
+        "delivered": "Cargo Delivered",
+        "notDelivered": "Awaiting Delivery"
+    },
+    "orderStageTranslations": {
+        "date": "Date",
+        "company": "Company",
+        "postal_code": "Postal Code",
+        "city": "City",
+        "address": "Address",
+        "contact_person": "Contact Person",
+        "cargo": "Cargo",
+        "weight": "Weight",
+        "volume": "Volume",
+        "comments": "Delivery Comments",
+        "time_start": "From",
+        "time_end": "To"
+    },
+    "removeStage": {
+        "areYouSure": "Are you sure you want to delete the delivery"
+    },
+    "editDetails": {
+        "loading": "Saving details...",
+        "success": "Details updated",
+        "details": "Details",
+        "yourDetails": "Your company details"
+    },
+    "changeSubscription": {
+        "loading": "Updating subscription...",
+        "success": "Subscription updated",
+        "subscriptionNotExists": "Subscription with this id does not exist",
+        "onlyCompanyCanChange": "Only company accounts can change subscriptions",
+        "insufficient_funds": "Insufficient funds. Top up your balance with another {{ summa }} ₽"
+    },
+    "editManager": {
+        "title": "Edit Manager",
+        "loading": "Updating manager data...",
+        "success": "Manager data updated",
+        "selectManager": "Choose a manager",
+        "managerNotFound": "Manager not found",
+        "notExistOrNotBelongError": "Manager with this id does not exist or does not belong to you"
+    },
+    "addTransportToAllowed": {
+        "loading": "Adding to your transporters...",
+        "success": "Transporter #{{id}} added successfully"
+    },
+    "editUser": {
+        "profileInfo": "Profile Information",
+        "loading": "Updating data...",
+        "success": "Data updated",
+        "email": "Email",
+        "fullName": "Full Name",
+        "companyName": "Company Name"
+    },
+    "driverProfileTranslations": {
+        "full_name": "Driver's Full Name",
+        "passport_number": "Passport Number",
+        "phone_number": "Phone Number",
+        "machine_data": "Vehicle",
+        "machine_number": "Vehicle Number"
+    },
+    "companiesList": {
+        "title": "Your Transporters",
+        "alreadyExists": "This company is already added to your transporters",
+        "notFound": "Transporter company with this id does not exist",
+        "addCompany": "Add Transporter",
+        "transporterCompanyId": "Transporter Company ID"
+    },
+    "registration": {
+        "userAlreadyExists": "A user with this email already exists",
+        "loadingCompany": "Registering account...",
+        "successCompany": "You have been registered successfully",
+        "loadingManager": "Registering manager...",
+        "successManager": "Manager registered successfully",
+        "inputPlaceholders": {
+            "fullName": "Full Name",
+            "companyName": "Company Name",
+            "email": "Email",
+            "password": "Password"
+        },
+        "buttonText": "Register",
+        "managerFullName": "Manager Full Name",
+        "managerEmail": "Manager Email"
+    },
+    "login": {
+        "loading": "Logging in...",
+        "success": "You have been logged in successfully",
+        "401": "Invalid credentials",
+        "403": "Access denied",
+        "404": "User not found",
+        "invalidCredentials": "Invalid login or password",
+        "buttonText": "Log In",
+        "inputPlaceholders": {
+            "email": "Login or Email",
+            "password": "Password"
+        },
+        "forgotPassword": "Forgot Password?",
+        "alreadyHaveAnAccount": "Already have an account?"
+    },
+    "logout": {
+        "buttonText": "Log Out",
+        "areYouSure": "Are you sure you want to log out of your account?"
+    },
+    "changePassword": {
+        "loading": "Updating password...",
+        "success": "Password updated successfully",
+        "passwordsDoNotMatch": "Passwords do not match",
+        "wrongPassword": "Incorrect current password",
+        "currentPassword": "Current Password",
+        "updatePassword": "Update Password"
+    },
+    "forgotPassword": {
+        "loading": "Sending request...",
+        "success": "Password reset email sent",
+        "userNotFound": "User with this email not found",
+        "enterCorrectEmail": "Please enter a valid email address",
+        "loginSubtitleSuccess": "A message with a password reset link has been sent to the email you provided. If you don't receive the email, check your \"Spam\" folder.",
+        "loginSubtitle": "To recover your password, please enter \nyour email address",
+        "changeEmail": "Change Email",
+        "recover": "Recover"
+    },
+    "resetPassword": {
+        "loading": "Resetting password...",
+        "success": "Your password has been updated",
+        "invalidToken": "Address does not exist",
+        "tokenExpired": "The link has expired",
+        "loginSubtitle": "To reset your password, please enter \nyour new password and confirm it",
+        "loginSubtitleInvalidToken": "Invalid address. The password reset link may have expired.",
+        "inputPlaceholders": {
+            "newPassword": "New Password",
+            "confirmPassword": "Confirm Password"
+        },
+        "buttonText": "Reset"
+    },
+    "scheduleCard": {
+        "free": "Available",
+        "reserved": "Occupied"
+    }
+}

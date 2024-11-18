@@ -1,0 +1,25 @@
+.menu-profile-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.profile-main {
+  display: flex;
+  flex-direction: column;
+}
+
+.full-name,
+.org-name {
+  display: inline-block;
+}
+
+.full-name {
+  font-size: 1.6rem;
+  font-weight: 600;
+}
+
+.org-name {
+  font-size: 1.4rem;
+  font-weight: 400;
+  opacity: 0.5;
+}

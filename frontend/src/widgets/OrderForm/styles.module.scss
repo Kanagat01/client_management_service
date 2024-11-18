@@ -1,0 +1,46 @@
+.input,
+.textarea,
+.select {
+  border-radius: 10px !important;
+  width: 100% !important;
+}
+
+.input {
+  height: 3rem;
+  margin-bottom: 2rem;
+}
+
+.select {
+  font-size: 1.2rem;
+  font-weight: 400;
+  line-height: 1.4rem;
+  height: 12rem;
+  text-align: left;
+
+  option {
+    margin-bottom: 5px;
+  }
+}
+
+.title {
+  text-align: center;
+  font-size: 1.4rem;
+  font-weight: 500;
+  line-height: 1.7rem;
+  margin-bottom: 1rem;
+}
+
+.secondCol {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  height: 29rem;
+
+  div,
+  textarea {
+    height: -webkit-fill-available;
+  }
+  label {
+    color: var(--default-font-color);
+  }
+}

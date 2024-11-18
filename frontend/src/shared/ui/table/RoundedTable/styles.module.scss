@@ -1,0 +1,54 @@
+@import "~/app/styles/colors.scss";
+$default-font-color: map-get($colors, "default-font-color");
+
+.tableResponsive {
+  background: #fff;
+  border-radius: 5px;
+  border: 1px solid rgba($default-font-color, 0.5);
+
+  &.lightBorder {
+    border: 1px solid #f6f6f6;
+  }
+}
+
+.table {
+  border: none;
+  width: 100%;
+  height: 100%;
+  font-size: 1.2rem;
+  th,
+  td {
+    font-weight: 400;
+    padding: 0.5rem 1rem;
+    border: 1px solid rgba($default-font-color, 0.5);
+    border-radius: 5px;
+    word-wrap: break-word;
+  }
+  tr {
+    td:first-child,
+    th:first-child {
+      border-left: none;
+    }
+    td:last-child,
+    th:last-child {
+      border-right: none;
+    }
+    &:first-child {
+      th,
+      td {
+        border-top: none;
+      }
+    }
+    &:last-child {
+      td {
+        border-bottom: none;
+      }
+    }
+  }
+  &.lightBorder {
+    th,
+    td {
+      border: 1px solid #f6f6f6;
+    }
+  }
+}
