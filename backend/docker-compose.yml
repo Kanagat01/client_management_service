@@ -52,12 +52,6 @@ services:
     depends_on:
       - db
 
-  smtp:
-    build: ./smtp_server
-    network_mode: host
-    env_file:
-      - .env
-
   nginx:
     build: ./nginx
     networks:

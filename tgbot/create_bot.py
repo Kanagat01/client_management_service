@@ -1,6 +1,6 @@
 import os.path
-import logging
 import redis
+import logging
 import betterlogging as bl
 from pytz import timezone
 
@@ -13,8 +13,8 @@ from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 
-from tgbot.config import load_config
-from tgbot.middlewares.config import ConfigMiddleware
+from config import load_config
+from middlewares.config import ConfigMiddleware
 
 
 config = load_config(".env")
@@ -24,7 +24,6 @@ storage = RedisStorage(redis=r) if config.tg_bot.use_redis else MemoryStorage()
 bot = Bot(token=config.tg_bot.token, parse_mode='HTML')
 dp = Dispatcher()
 
-calendar_id = config.tg_bot.calendar_id
 local_tz = 'Europe/Moscow'
 local_tz_obj = timezone(local_tz)
 scheduler = AsyncIOScheduler(timezone=local_tz_obj)
@@ -35,30 +34,27 @@ logger = logging.getLogger(__name__)
 log_level = logging.INFO
 bl.basic_colorized_config(level=log_level)
 
-SCOPES = ["https://www.googleapis.com/auth/calendar.events"]
-token_path = "tgbot/calendar_api/token.json"
-creds_path = "tgbot/calendar_api/credentials.json"
-# token_path = "tgbot/calendar_api/oxana_token.json"
-# creds_path = "tgbot/calendar_api/oxana_creds.json"
+# calendar_id = config.tg_bot.calendar_id
+# token_path = "tgbot/calendar_api/token.json"
+# creds_path = "tgbot/calendar_api/credentials.json"
+# SCOPES = ["https://www.googleapis.com/auth/calendar.events"]
 
-creds = None
-if os.path.exists(token_path):
-    creds = Credentials.from_authorized_user_file(token_path, SCOPES)
-if not creds or not creds.valid:
-    if creds and creds.expired and creds.refresh_token:
-        creds.refresh(Request())
-    else:
-        flow = InstalledAppFlow.from_client_secrets_file(
-            creds_path, SCOPES
-        )
-        creds = flow.run_local_server(port=0)
+# creds = None
+# if os.path.exists(token_path):
+#     creds = Credentials.from_authorized_user_file(token_path, SCOPES)
+# if not creds or not creds.valid:
+#     if creds and creds.expired and creds.refresh_token:
+#         creds.refresh(Request())
+#     else:
+#         flow = InstalledAppFlow.from_client_secrets_file(
+#             creds_path, SCOPES
+#         )
+#         creds = flow.run_local_server(port=0)
 
-    with open(token_path, "w") as token:
-        token.write(creds.to_json())
+#     with open(token_path, "w") as token:
+#         token.write(creds.to_json())
 
-calendar_service = build("calendar", "v3", credentials=creds)
-
-DATABASE_URL = f'postgresql+asyncpg://{config.db.user}:{config.db.password}@{config.db.host}:5432/{config.db.database}'
+# calendar_service = build("calendar", "v3", credentials=creds)
 
 
 def register_global_middlewares(dp: Dispatcher, config):

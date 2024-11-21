@@ -1,1 +1,29 @@
+# ------------------------------
+# Common
 venv/
+
+# ------------------------------
+# Telegram bot
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# PEP 582; used by e.g. github.com/David-OConnor/pyflow
+__pypackages__/
+
+# Environments
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Pyre type checker
+.pyre/
+.idea/*
+.env
+
+token.json
+credentials.json
