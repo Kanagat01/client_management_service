@@ -29,23 +29,6 @@ def send_sms(phone: int, message: str) -> dict:
     return api.send_sms(phone, message)
 
 
-def all_read_only_serializer(cls):
-    """
-    make all fields of a serializer read only
-    :param cls:
-    :return:
-    """
-
-    def get_fields(self):
-        fields = super(cls, self).get_fields()
-        for field in fields.values():
-            field.read_only = True
-        return fields
-
-    cls.get_fields = get_fields
-    return cls
-
-
 def custom_exception_handler(exc, context):
     response = exception_handler(exc, context)
 

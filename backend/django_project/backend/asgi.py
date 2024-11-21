@@ -20,13 +20,13 @@ class QueryAuthMiddleware:
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'backend.settings')
 django_asgi_app = get_asgi_application()
 
-from .routing import websocket_urlpatterns
+# from .routing import websocket_urlpatterns
 
 application = ProtocolTypeRouter({
     "http": django_asgi_app,
-    "websocket": QueryAuthMiddleware(
-            URLRouter(websocket_urlpatterns)
-        ),
+    # "websocket": QueryAuthMiddleware(
+    #         URLRouter(websocket_urlpatterns)
+    #     ),
 })
 
 

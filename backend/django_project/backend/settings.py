@@ -14,7 +14,7 @@ SECRET_KEY = os.environ.get(
 DEBUG = bool(os.environ.get("DEBUG", default=1))
 
 ALLOWED_HOSTS = os.environ.get(
-    "DJANGO_ALLOWED_HOSTS", "localhost 127.0.0.1 10.0.2.2").split(" ")
+    "DJANGO_ALLOWED_HOSTS", "localhost 127.0.0.1").split(" ")
 CSRF_TRUSTED_ORIGINS = os.environ.get(
     "DJANGO_CSRF_TRUSTED_ORIGINS", "http://localhost http://127.0.0.1").split(" ")
 
@@ -28,16 +28,13 @@ SMS_LOGIN = os.environ.get(
 SMS_PASSWORD = os.environ.get(
     "SMS_PASSWORD", "")
 
-
-if "cargonika.ru" not in ALLOWED_HOSTS:
-    EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
-    EMAIL_HOST_USER = "example@gmail.com"
-else:
-    EMAIL_HOST = os.environ.get("EMAIL_HOST")
-    EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")
-    EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
-    EMAIL_PORT = int(os.environ.get("EMAIL_PORT"))
-    EMAIL_USE_SSL = bool(os.environ.get("EMAIL_USE_SSL"))
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+EMAIL_HOST_USER = "example@gmail.com"
+# EMAIL_HOST = os.environ.get("EMAIL_HOST")
+# EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")
+# EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
+# EMAIL_PORT = int(os.environ.get("EMAIL_PORT"))
+# EMAIL_USE_SSL = bool(os.environ.get("EMAIL_USE_SSL"))
 
 
 INSTALLED_APPS = [
@@ -51,11 +48,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'corsheaders',
-    'django_q',
+    # 'django_q',
     'api_users',
-    'api_payments',
-    'api_notification',
-    'api_auction',
 ]
 
 MIDDLEWARE = [
@@ -101,7 +95,7 @@ REST_FRAMEWORK = {
         'rest_framework.renderers.JSONRenderer',
     ),
     'DEFAULT_PERMISSION_CLASSES': [
-        'api_users.permissions.IsAuthenticated',
+        'rest_framework.permissions.IsAuthenticated',
     ],
     'EXCEPTION_HANDLER': 'backend.global_functions.custom_exception_handler',
 }
@@ -206,27 +200,27 @@ if os.environ.get('RUNNING_FROM_DOCKER', False):
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-Q_CLUSTER = {
-    'name': 'backend',
-    'workers': 3,
-    'recycle': 500,
-    'timeout': 60,
-    'compress': True,
-    'save_limit': 250,
-    'queue_limit': 500,
-    'cpu_affinity': 1,
-    'label': 'Django Q2',
-    'orm': 'default',
-    'ack_failures': True,
-    'max_attempts': 1,
-    'attempt_count': 1
-}
+# Q_CLUSTER = {
+#     'name': 'backend',
+#     'workers': 3,
+#     'recycle': 500,
+#     'timeout': 60,
+#     'compress': True,
+#     'save_limit': 250,
+#     'queue_limit': 500,
+#     'cpu_affinity': 1,
+#     'label': 'Django Q2',
+#     'orm': 'default',
+#     'ack_failures': True,
+#     'max_attempts': 1,
+#     'attempt_count': 1
+# }
 
-CHANNEL_LAYERS = {
-    "default": {
-        "BACKEND": "channels_redis.core.RedisChannelLayer",
-        "CONFIG": {
-            "hosts": [(os.environ.get('REDIS_HOST', "127.0.0.1"), os.environ.get('REDIS_PORT', '6379'))],
-        },
-    },
-}
+# CHANNEL_LAYERS = {
+#     "default": {
+#         "BACKEND": "channels_redis.core.RedisChannelLayer",
+#         "CONFIG": {
+#             "hosts": [(os.environ.get('REDIS_HOST', "127.0.0.1"), os.environ.get('REDIS_PORT', '6379'))],
+#         },
+#     },
+# }
