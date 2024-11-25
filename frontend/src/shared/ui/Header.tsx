@@ -1,29 +1,17 @@
-import React from "react";
-import { IoTrashOutline, IoAddCircleOutline } from "react-icons/io5";
-import { PiShareFatThin } from "react-icons/pi";
-import "./header.scss";
-const Header = () => {
+import { ReactNode } from "react";
+
+type HeaderProps = {
+  title: string;
+  children: ReactNode;
+};
+
+export function Header(props: HeaderProps) {
   return (
     <>
       <div className="header-content">
-        <h3>Данные студентов</h3>
-        <div className="button-container">
-          <button>
-            <IoTrashOutline />
-            Очистить данные студентов
-          </button>
-          <button>
-            <IoAddCircleOutline />
-            Добавить
-          </button>
-          <button>
-            <PiShareFatThin />
-            Экспорт
-          </button>
-        </div>
+        <h3>{props.title}</h3>
+        <div className="button-container">{props.children}</div>
       </div>
     </>
   );
-};
-
-export default Header;
+}

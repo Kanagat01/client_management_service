@@ -9,9 +9,25 @@ body {
   color: var(--default-font-color);
 }
 
-@media (max-width: 992px) {
-  html,
-  body {
-    // font-size: 8px;
-  }
+.app {
+  display: flex;
+  min-height: 100vh;
 }
+.content {
+  background-color: #d8d8d8;
+  margin-left: 240px;
+  padding: 0 30px;
+  flex-grow: 1;
+  // width: 1000Px;
+  scrollbar-width: none;
+}
+.content::-webkit-scrollbar {
+  display: none; 
+}
+
+// @media (max-width: 992px) {
+//   html,
+//   body {
+//     font-size: 8px;
+//   }
+// }

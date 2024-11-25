@@ -1,1 +1,2 @@
-export * from "./sidebar";
+export * from "./Sidebar";
+export * from "./StudentFilters";

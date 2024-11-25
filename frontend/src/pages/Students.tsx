@@ -1,16 +1,9 @@
-import React, { useEffect, useState } from "react";
-import {
-  ColumnDef,
-  SortingState,
-  getCoreRowModel,
-  getSortedRowModel,
-  useReactTable,
-} from "@tanstack/react-table";
+import React from "react";
 // import { HiOutlineDotsVertical } from "react-icons/hi";
-import { Sidebar } from "~/widgets";
-import { MainTable, TPaginator } from "~/shared/ui";
-import AddStudents from "~/shared/ui/AddStudents";
-import Header from "~/shared/ui/Header";
+import { IoTrashOutline, IoAddCircleOutline } from "react-icons/io5";
+import { PiShareFatThin } from "react-icons/pi";
+import { Sidebar, AddStudents } from "~/widgets";
+import { Header } from "~/shared/ui";
 
 const StudentsPage: React.FC = () => {
   // const headers = [
@@ -142,36 +135,27 @@ const StudentsPage: React.FC = () => {
       <Sidebar />
       <div className="content">
         {/* Здесь будет основной контент */}
-        <Header />
-        <AddStudents />
+        <Header title="Данные студентов">
+          <button>
+            <IoTrashOutline />
+            Очистить данные студентов
+          </button>
+          <button>
+            <IoAddCircleOutline />
+            Добавить
+          </button>
+          <button>
+            <PiShareFatThin />
+            Экспорт
+          </button>
+        </Header>
+        <AddStudents
+          inputs1={["TG ID", "Телефон", "Группа", "Логин"]}
+          checkboxInputs={["Верифицирован"]}
+        />
       </div>
     </div>
   );
 };
-
-export function DataList({
-  initialData,
-  columns,
-  paginator,
-}: {
-  initialData: any[];
-  columns: ColumnDef<unknown, any>[];
-  paginator?: TPaginator;
-}) {
-  const [data, setData] = useState(initialData);
-  useEffect(() => setData(initialData), [initialData]);
-
-  const [sorting, setSorting] = useState<SortingState>([]);
-  const table = useReactTable({
-    data,
-    columns,
-    state: { sorting },
-    getCoreRowModel: getCoreRowModel(),
-    onSortingChange: setSorting,
-    getSortedRowModel: getSortedRowModel(),
-    isMultiSortEvent: (_e) => true,
-  });
-  return <MainTable {...{ table, paginator }} />;
-}
 
 export default StudentsPage;
