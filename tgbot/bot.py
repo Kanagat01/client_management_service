@@ -1,6 +1,7 @@
 import asyncio
 from handlers.echo import router as echo_router
-from tgbot.handlers import sign_up_block, write_to_personal
+from handlers.sign_up_block import router as sign_up_block 
+from handlers.write_to_personal import router as write_to_personal
 from create_bot import bot, dp, scheduler, logger, register_global_middlewares, config
 
 routers = [
@@ -11,9 +12,7 @@ routers = [
 
 async def main():
     logger.info("Starting bot")
-    dp.include_routers(
-        routers,
-        echo_router)
+    dp.include_routers(*routers, echo_router)
 
     try:
         scheduler.start()
