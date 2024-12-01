@@ -72,3 +72,13 @@
     }
   }
 }
+@media (max-width: 528px) {
+  .header-content .button-container {
+    display: flex;
+    flex-flow: column;
+    font-size: 16px;
+    .export-add-wrapper button {
+      width: 50%;
+    }
+  }
+}

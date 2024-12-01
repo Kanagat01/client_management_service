@@ -84,13 +84,17 @@ export const Sidebar: React.FC = () => {
         className={`${styles["menu-btn"]} ${isOpen ? styles.menuBtnOpen : ""}`}
         onClick={() => setIsOpen(!isOpen)}
       >
-        {!isOpen ? (
-          <CiMenuBurger className={styles.menuIcon} />
-        ) : (
-          <IoMdClose className={styles.menuIcon} />
-        )}
+        <CiMenuBurger className={styles.menuIcon} />
       </button>
       <div className={`${styles.sidebar} ${isOpen ? styles.open : ""}`}>
+        <button
+          className={`${styles["close-btn"]} ${
+            isOpen ? styles.menuBtnOpen : ""
+          }`}
+          onClick={() => setIsOpen(!isOpen)}
+        >
+          <IoMdClose className={styles.menuIcon} />
+        </button>
         <div className={styles.logo}>
           <span>Campus</span>
         </div>
