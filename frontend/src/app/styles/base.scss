@@ -22,9 +22,14 @@ body {
   scrollbar-width: none;
 }
 .content::-webkit-scrollbar {
-  display: none; 
+  display: none;
 }
 
+@media (max-width: 768px) {
+  .content {
+    margin: 0;
+  }
+}
 // @media (max-width: 992px) {
 //   html,
 //   body {

@@ -140,14 +140,16 @@ const StudentsPage: React.FC = () => {
             <IoTrashOutline />
             Очистить данные студентов
           </button>
-          <button>
-            <IoAddCircleOutline />
-            Добавить
-          </button>
-          <button>
-            <PiShareFatThin />
-            Экспорт
-          </button>
+          <div className="export-add-wrapper">
+            <button>
+              <IoAddCircleOutline />
+              Добавить
+            </button>
+            <button>
+              <PiShareFatThin />
+              Экспорт
+            </button>
+          </div>
         </Header>
         <AddStudents
           inputs1={["TG ID", "Телефон", "Группа", "Логин"]}
