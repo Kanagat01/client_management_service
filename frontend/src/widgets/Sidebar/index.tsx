@@ -1,31 +1,121 @@
-import { ReactNode } from "react";
-import { NavLink, useLocation } from "react-router-dom";
-import { FaTruckMoving } from "react-icons/fa";
-import Routes from "~/shared/routes";
+import React, { useState } from "react";
 import styles from "./styles.module.scss";
 
-export function Sidebar() {
-  const currentRoute = useLocation().pathname;
-  const sections: Array<[ReactNode, string]> = [
+import {
+  IoSettingsOutline,
+  IoBookOutline,
+  IoCodeOutline,
+} from "react-icons/io5";
+import { MdOutlineAppRegistration, MdOutlineMailOutline } from "react-icons/md";
+import { IoMdNotificationsOutline, IoMdClose } from "react-icons/io";
+import { CiMenuBurger } from "react-icons/ci";
+import { RiGroupLine } from "react-icons/ri";
+import { BsThreeDots } from "react-icons/bs";
+
+export const Sidebar: React.FC = () => {
+  const [isOpen, setIsOpen] = useState(false);
+  const navItems: [React.ReactNode, string][] = [
     [
       <>
-        {Routes.ORDERS_BEING_EXECUTED}
-        <FaTruckMoving className={styles.icon} />
+        <CiMenuBurger /> Данные студентов
       </>,
-      Routes.ORDERS_BEING_EXECUTED,
+      "#",
+    ],
+    [
+      <>
+        <MdOutlineAppRegistration /> Записи студентов
+      </>,
+      "#",
+    ],
+    [
+      <>
+        <IoBookOutline /> Типы активностей
+      </>,
+      "#",
+    ],
+    [
+      <>
+        <IoMdNotificationsOutline /> Активность
+      </>,
+      "#",
+    ],
+    [
+      <>
+        <IoBookOutline /> Дисциплины
+      </>,
+      "#",
+    ],
+    [
+      <>
+        <RiGroupLine /> Группы
+      </>,
+      "#",
+    ],
+    [
+      <>
+        <IoCodeOutline /> Коды
+      </>,
+      "#",
+    ],
+    [
+      <>
+        <BsThreeDots /> Логи
+      </>,
+      "#",
+    ],
+    [
+      <>
+        <MdOutlineMailOutline /> Сообщения
+      </>,
+      "#",
+    ],
+    [
+      <>
+        <IoSettingsOutline /> Настройки
+      </>,
+      "#",
     ],
   ];
+
+  console.log(isOpen);
   return (
-    <aside className={styles.aside}>
-      {sections.map(([icon, route], key) => (
-        <NavLink
-          key={key}
-          to={route}
-          className={route === currentRoute ? styles.active : ""}
+    <>
+      <button
+        className={`${styles["menu-btn"]} ${isOpen ? styles.menuBtnOpen : ""}`}
+        onClick={() => setIsOpen(!isOpen)}
+      >
+        <CiMenuBurger className={styles.menuIcon} />
+      </button>
+      <div className={`${styles.sidebar} ${isOpen ? styles.open : ""}`}>
+        <button
+          className={`${styles["close-btn"]} ${
+            isOpen ? styles.menuBtnOpen : ""
+          }`}
+          onClick={() => setIsOpen(!isOpen)}
         >
-          {icon}
-        </NavLink>
-      ))}
-    </aside>
+          <IoMdClose className={styles.menuIcon} />
+        </button>
+        <div className={styles.logo}>
+          <span>Campus</span>
+        </div>
+        <nav className={styles.nav}>
+          <ul>
+            {navItems.map(([sectionTitle, link], key) => (
+              <li key={key}>
+                <a href={link}>{sectionTitle}</a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+        <div className={styles.profile}>
+          <img src="public/assets/favicon.png" alt="Ava" />
+          <div>
+            <p>admin</p>
+            <p className={styles.user}>Пользователь</p>
+          </div>
+          <IoMdNotificationsOutline fontSize="20px" cursor="pointer" />
+        </div>
+      </div>
+    </>
   );
-}
+};

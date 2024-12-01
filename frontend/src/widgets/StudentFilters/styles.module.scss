@@ -1,0 +1,111 @@
+.studentConteiner {
+  background-color: #fff;
+  margin: 20px 0;
+  padding: 20px;
+  border-radius: 10px;
+
+  .addStudent {
+    width: 100%;
+    display: flex;
+    gap: 20px;
+    justify-content: space-between;
+    margin: 10px 0;
+    box-sizing: border-box;
+    input {
+      padding: 5px 10px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    div {
+      gap: 20px;
+    }
+    p {
+      border: 1px solid rgb(118 118 118);
+      padding: 2px 10px;
+    }
+  }
+  span {
+    white-space: nowrap;
+    display: inline-block;
+    color: #000;
+  }
+  div p {
+    color: #000;
+    margin: 0;
+  }
+  .verification-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+    p {
+      color: #000;
+    }
+    .buttons-wrapper {
+      display: flex;
+      flex-flow: row;
+    }
+    button {
+      padding: 4px 8px;
+      background-color: #fff;
+      border: 1px solid rgb(118 118 118);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      &:hover {
+        background-color: #f0f0f0;
+      }
+    }
+  }
+}
+.filters {
+  display: flex;
+  width: 100%;
+}
+
+@media (max-width: 1200px) {
+  .header-content {
+    button {
+      font-size: 14px;
+    }
+  }
+}
+@media (max-width: 1100px) {
+  .studentConteiner {
+    font-size: 14px;
+  }
+  .addstudent:nth-child(1) {
+    width: 100%;
+  }
+}
+@media (max-width: 1050px) {
+  .addStudent {
+    display: flex;
+    flex-flow: column;
+    .entry {
+      width: 155px;
+    }
+  }
+}
+@media (max-width: 1000px) {
+}
+@media (max-width: 850px) {
+  .header-content {
+    button {
+      font-size: 12px;
+    }
+    .export-add-wrapper {
+      gap: 5px;
+    }
+  }
+}
+@media (max-width: 528px) {
+  .header-content .button-container {
+    display: flex;
+    flex-flow: column;
+    font-size: 16px;
+    .export-add-wrapper button {
+      width: 50%;
+    }
+  }
+}

@@ -1,0 +1,84 @@
+.header-content {
+  display: flex;
+  padding: 15px 20px;
+  background-color: #fff;
+  border-radius: 10px;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+  h3 {
+    color: #000;
+    font-weight: 100;
+    margin: 0;
+  }
+  .button-container {
+    display: flex;
+    flex-flow: row;
+    gap: 10px;
+
+    > button {
+      background-color: red;
+      color: white;
+      border: none;
+    }
+  }
+  button {
+    gap: 5px;
+    display: flex;
+    align-items: center;
+    background-color: transparent;
+    border: 2px solid #ccc;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+
+    &:not(:first-of-type):hover {
+      background-color: #f0f0f0;
+    }
+  }
+  .export-add-wrapper {
+    display: flex;
+    gap: 10px;
+  }
+}
+
+@media (max-width: 1200px) {
+  .header-content {
+    button {
+      font-size: 14px;
+    }
+  }
+}
+@media (max-width: 1100px) {
+  .header-content {
+    flex-flow: column;
+    align-items: flex-start;
+    .button-container {
+      margin-top: 10px;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+    }
+  }
+}
+@media (max-width: 850px) {
+  .header-content {
+    button {
+      font-size: 12px;
+    }
+    .export-add-wrapper {
+      gap: 5px;
+    }
+  }
+}
+@media (max-width: 528px) {
+  .header-content .button-container {
+    display: flex;
+    flex-flow: column;
+    font-size: 16px;
+    .export-add-wrapper button {
+      width: 50%;
+    }
+  }
+}
