@@ -3,10 +3,8 @@ from pathlib import Path
 
 from django.utils import timezone
 
-BASE_DIR = Path(__file__).resolve().parent.parent
 
-AUTH_USER_MODEL = 'api_users.UserModel'
-USERNAME_FIELD = 'email'
+BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.environ.get(
     "SECRET_KEY", default="django-insecure-3b!7h8__f5e2frki-d&*)gb5y@--&*e&#oh=41y)cq%jwh$g5c")
@@ -48,11 +46,11 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'corsheaders',
-    # 'django_q',
-    'api_users',
+    'api_students',
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
@@ -83,6 +81,8 @@ TEMPLATES = [
 
 # WSGI_APPLICATION = 'backend.wsgi.application'
 ASGI_APPLICATION = "backend.asgi.application"
+
+
 
 #
 AUTH_TOKEN_VALIDITY = timezone.timedelta(days=1)
