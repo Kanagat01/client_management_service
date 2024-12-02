@@ -3,9 +3,13 @@ import { MdRestartAlt } from "react-icons/md";
 import { Checkbox } from "~/shared/ui";
 import styles from "./styles.module.scss";
 import { ChangeEvent } from "react";
+type input = {
+  label: string;
+  key: string;
+};
 
 type AddStudentsProps = {
-  inputs1: string[];
+  inputs1: input[];
   checkboxInputs: string[];
 };
 
@@ -32,12 +36,27 @@ export const AddStudents = ({ inputs1, checkboxInputs }: AddStudentsProps) => {
             <p>15</p>
           </div>
           <div className={styles.filters}>
-            {inputs1.map((el, idx) => (
-              <div key={idx}>
-                <span>{el}</span>
-                <input type="text" onChange={formatPhoneInput} />
-              </div>
-            ))}
+            {inputs1.map((el, idx) => {
+              if (el.key === "phone") {
+                return (
+                  <div key={idx}>
+                    <span>{el.label}</span>
+                    <input
+                      type="text"
+                      name={el.key}
+                      onChange={formatPhoneInput}
+                    />
+                  </div>
+                );
+              } else {
+                return (
+                  <div key={idx}>
+                    <span>{el.label}</span>
+                    <input name={el.key} type="text" />
+                  </div>
+                );
+              }
+            })}{" "}
           </div>
         </div>
         <div className={styles["verification-controls"]}>

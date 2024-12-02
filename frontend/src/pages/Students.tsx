@@ -152,7 +152,24 @@ const StudentsPage: React.FC = () => {
           </div>
         </Header>
         <AddStudents
-          inputs1={["TG ID", "Телефон", "Группа", "Логин"]}
+          inputs1={[
+            {
+              label: "TG ID",
+              key: "tg_id",
+            },
+            {
+              label: "Телефон",
+              key: "phone",
+            },
+            {
+              label: "Группа",
+              key: "group",
+            },
+            {
+              label: "Логин",
+              key: "login",
+            },
+          ]}
           checkboxInputs={["Верифицирован"]}
         />
       </div>

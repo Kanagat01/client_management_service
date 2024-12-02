@@ -77,8 +77,11 @@
     display: flex;
     flex-flow: column;
     font-size: 16px;
+    > button {
+      width: 210px;
+    }
     .export-add-wrapper button {
-      width: 50%;
+      // width: 95;
     }
   }
 }
