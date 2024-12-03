@@ -1,4 +1,6 @@
 from rest_framework import viewsets
+from rest_framework.views import APIView
+from rest_framework.permissions import IsAuthenticated
 from .models import *
 from .serializers import *
 from backend.global_functions import success_with_text, error_with_text
@@ -14,9 +16,12 @@ class StudentRecordViewSet(viewsets.ModelViewSet):
     serializer_class = StudentRecordSerializer
 
 
-class LogViewSet(viewsets.ModelViewSet):
-    queryset = Log.objects.all()
-    serializer_class = LogSerializer
+class LogView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        logs = Log.objects.all()
+        return success_with_text(LogSerializer(logs, many=True).data)
 
 
 class MessageViewSet(viewsets.ModelViewSet):
@@ -27,8 +32,3 @@ class MessageViewSet(viewsets.ModelViewSet):
 class NotificationViewSet(viewsets.ModelViewSet):
     queryset = Notification.objects.all()
     serializer_class = NotificationSerializer
-
-
-class TelegramAccountViewSet(viewsets.ModelViewSet):
-    queryset = TelegramAccount.objects.all()
-    serializer_class = TelegramAccountSerializer

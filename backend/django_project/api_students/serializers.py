@@ -30,9 +30,3 @@ class NotificationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Notification
         fields = '__all__'
-
-
-class TelegramAccountSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = TelegramAccount
-        fields = '__all__'

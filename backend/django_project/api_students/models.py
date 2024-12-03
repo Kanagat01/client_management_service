@@ -40,17 +40,33 @@ class Student(models.Model):
     registration_date = models.DateTimeField(
         auto_now_add=True, verbose_name="Дата/время регистрации")
 
-    def __str__(self):
-        return self.full_name
-
     class Meta:
         verbose_name = "Студент"
         verbose_name_plural = "Студенты"
 
+    def __str__(self):
+        return self.full_name
+
+    def save(self, *args, **kwargs):
+        if self.pk:
+            old_instance = Student.objects.get(pk=self.pk)
+            for field in self._meta.fields:
+                field_name = field.name
+                old_value = getattr(old_instance, field_name)
+                new_value = getattr(self, field_name)
+                if old_value != new_value:
+                    Log.objects.create(
+                        student=self,
+                        field_name=field_name,
+                        old_value=old_value,
+                        new_value=new_value
+                    )
+        super().save(*args, **kwargs)
+
 
 class StudentRecord(models.Model):
     student = models.ForeignKey(
-        Student, on_delete=models.CASCADE, related_name='records_students_student', default=1)
+        Student, on_delete=models.CASCADE, related_name='records', default=1)
     type_activity = models.CharField(max_length=150)
     discipline = models.CharField(max_length=150)
     date = models.DateField(verbose_name="Дата экзамена")
@@ -58,16 +74,32 @@ class StudentRecord(models.Model):
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
 
-    def __str__(self):
-        return f"{self.student.full_name} - {self.type_activity} - {self.discipline.name}"
-
     class Meta:
         verbose_name = "Записи студента"
         verbose_name_plural = "Записи студентов"
 
+    def __str__(self):
+        return f"{self.student.full_name} - {self.type_activity} - {self.discipline}"
+
+    def save(self, *args, **kwargs):
+        if self.pk:
+            old_instance = StudentRecord.objects.get(pk=self.pk)
+            for field in self._meta.fields:
+                field_name = field.name
+                old_value = getattr(old_instance, field_name)
+                new_value = getattr(self, field_name)
+                if old_value != new_value:
+                    Log.objects.create(
+                        student=self.student,
+                        field_name=field_name,
+                        old_value=old_value,
+                        new_value=new_value
+                    )
+        super().save(*args, **kwargs)
+
 
 class Log(models.Model):
-    student = models.ForeignKey('Student', on_delete=models.CASCADE,
+    student = models.ForeignKey(Student, on_delete=models.CASCADE,
                                 verbose_name="Студент", related_name="logs", default=1)
     field_name = models.CharField(
         max_length=255, verbose_name="Измененное поле")
@@ -75,11 +107,11 @@ class Log(models.Model):
         null=True, blank=True, verbose_name="Старое значение")
     new_value = models.TextField(
         null=True, blank=True, verbose_name="Новое значение")
-    timestamp = models.DateTimeField(
+    created_at = models.DateTimeField(
         auto_now_add=True, verbose_name="Дата изменения")
 
     def __str__(self):
-        return f"{self.student.full_name} ({self.student.telegram_link}) - {self.field_name}"
+        return f"Лог #{self.pk} - Студент {self.student.full_name}"
 
     class Meta:
         verbose_name = "Лог изменений"
@@ -100,7 +132,7 @@ class Message(models.Model):
     is_group_message = models.BooleanField(default=True)
 
     def __str__(self):
-        return f"Message to {self.group.name if self.is_group_message else self.student.username}"
+        return f"Сообщение для {self.group if self.is_group_message else self.student.username}"
 
     def send_message(self):
         '''Эта функция будет отправлять сообщения через API (например, Telegram или WhatsApp)'''
@@ -120,19 +152,6 @@ class Message(models.Model):
         verbose_name_plural = "Сообщения"
 
 
-class TelegramAccount(models.Model):
-    user = models.OneToOneField(Student, on_delete=models.CASCADE)
-    telegram_id = models.CharField(max_length=100)
-    group = models.CharField(max_length=150)
-
-    def __str__(self):
-        return f"{self.user.username} - {self.telegram_id}"
-
-    class Meta:
-        verbose_name = "Телеграм аккаунт"
-        verbose_name_plural = "Телеграм аккаунты"
-
-
 class Notification(models.Model):
     group = models.CharField(max_length=150)
     message = models.ForeignKey(Message, on_delete=models.CASCADE)
@@ -144,7 +163,7 @@ class Notification(models.Model):
         pass
 
     def __str__(self):
-        return f"Notification for {self.group.name} | {self.message.text[:20]}"
+        return f"Уведомления для {self.group} | {self.message.text[:20]}"
 
     class Meta:
         verbose_name = "Уведомление"
