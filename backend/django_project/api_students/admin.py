@@ -23,11 +23,12 @@ class StudentRecordAdmin(admin.ModelAdmin):
 @admin.register(Log)
 class LogAdmin(admin.ModelAdmin):
     list_display = ('student', 'field_name', 'old_value',
-                    'new_value', 'timestamp')
-    list_filter = ('field_name', 'timestamp')
+                    'new_value', 'created_at')
+    readonly_fields = ('created_at',)
+    list_filter = ('field_name', 'created_at')
     search_fields = ('student__full_name', 'field_name',
                      'old_value', 'new_value')
-    ordering = ('timestamp',)
+    ordering = ('created_at',)
 
 
 @admin.register(Message)
@@ -42,12 +43,6 @@ class MessageAdmin(admin.ModelAdmin):
     def mark_as_sent(self, request, queryset):
         queryset.update(is_sent=True)
     mark_as_sent.short_description = "Отметить как отправленные"
-
-
-@admin.register(TelegramAccount)
-class TelegramAccountAdmin(admin.ModelAdmin):
-    list_display = ('user', 'telegram_id', 'group')
-    search_fields = ('user__username', 'telegram_id')
 
 
 @admin.register(Notification)
