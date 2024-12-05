@@ -16,12 +16,17 @@
       width: 100%;
       box-sizing: border-box;
     }
-    div {
-      gap: 20px;
-    }
     p {
       border: 1px solid rgb(118 118 118);
-      padding: 2px 10px;
+      padding: 5px 10px;
+    }
+    .filters {
+      display: flex;
+      width: 100%;
+      justify-content: space-between;
+      div {
+        width: calc(25% - 20px);
+      }
     }
   }
   span {
@@ -58,11 +63,6 @@
     }
   }
 }
-.filters {
-  display: flex;
-  width: 100%;
-}
-
 @media (max-width: 1200px) {
   .header-content {
     button {
@@ -88,24 +88,99 @@
   }
 }
 @media (max-width: 1000px) {
-}
-@media (max-width: 850px) {
-  .header-content {
-    button {
-      font-size: 12px;
-    }
-    .export-add-wrapper {
-      gap: 5px;
+  .studentConteiner {
+    .addStudent {
+      gap: 0;
+      .filters {
+        display: flex;
+        flex-wrap: wrap;
+        width: 100%;
+        justify-content: space-between;
+        div {
+          margin-top: 10px;
+          width: calc(50% - 20px);
+        }
+      }
     }
   }
 }
-@media (max-width: 528px) {
-  .header-content .button-container {
-    display: flex;
-    flex-flow: column;
-    font-size: 16px;
-    .export-add-wrapper button {
-      width: 50%;
+@media (max-width: 768px) {
+  .studentConteiner {
+    .addStudent {
+      // gap: 0px;
+      .filters {
+        display: flex;
+        width: 100%;
+        justify-content: space-between;
+        div {
+          margin-top: 10px;
+          width: calc(25% - 20px);
+        }
+      }
+    }
+  }
+}
+@media (max-width: 850px) {
+  .addStudent {
+    font-size: 12px;
+  }
+}
+@media (max-width: 720px) {
+  .studentConteiner {
+    .addStudent {
+      .filters {
+        div {
+          margin-top: 10px;
+          width: calc(50% - 20px);
+        }
+      }
+    }
+  }
+}
+@media (max-width: 426px) {
+  .studentConteiner {
+    .verification-controls {
+      font-size: 12px;
+
+      button {
+        padding: 4px 4px;
+      }
+    }
+  }
+}
+@media (max-width: 376px) {
+  .studentConteiner {
+    .verification-controls {
+      display: flex;
+      flex-flow: column;
+      align-items: start;
+    }
+    .verification-controls {
+      > div {
+        display: flex;
+        p {
+          order: 2;
+          margin-left: 5px;
+        }
+      }
+    }
+    .buttons-wrapper {
+      display: flex;
+      width: 100%;
+      margin-top: 10px;
+      justify-content: space-between;
+      align-items: end;
+      button {
+        width: calc(50% - 5px);
+      }
+    }
+    .addStudent {
+      .filters {
+        div {
+          margin-top: 10px;
+          width: calc(50% - 5px);
+        }
+      }
     }
   }
 }

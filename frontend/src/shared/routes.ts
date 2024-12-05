@@ -1,7 +1,8 @@
 enum Routes {
   LOGIN = "/login",
   REGISTER = "/register",
-  STUDENTS = "/Students"
+  STUDENTS = "/students",
+  GROUPS = "/groups"
 }
 
 export default Routes;

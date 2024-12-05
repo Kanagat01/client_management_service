@@ -2,11 +2,13 @@ import { ReactNode } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import urls from "~/shared/routes";
 import StudentsPage from "./Students";
+import GroupsPage from "./Groups";
 import { PrivateRoute } from "./PrivateRoute";
 
 export const Routing = () => {
   const private_routes: Array<[string, ReactNode]> = [
     [urls.STUDENTS, <StudentsPage />],
+    [urls.GROUPS, <GroupsPage />],
   ];
 
   return (

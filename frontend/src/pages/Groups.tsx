@@ -1,29 +1,30 @@
-import React, { useEffect, useState } from "react";
-// import { HiOutlineDotsVertical } from "react-icons/hi";
-import { IoTrashOutline, IoAddCircleOutline } from "react-icons/io5";
 import { CiExport } from "react-icons/ci";
-import { Sidebar, AddStudents } from "~/widgets";
+import { Sidebar } from "~/widgets";
 import { Header, MainTable } from "~/shared/ui";
 import {
   createColumnHelper,
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
+import { useEffect, useState } from "react";
 import axios from "axios";
+import "./../app/styles/groupsTable.scss";
 
+// move to entities Group
 type TGroup = {
   id: number;
-  full_name: string;
-  phone: string;
-};
-const groupKeys = ["id", "full_name", "phone"] as (keyof TGroup)[];
-const groupHeaders: Record<keyof TGroup, string> = {
-  id: "ID",
-  full_name: "Name",
-  phone: "Phone",
+  label: string;
+  description: string;
 };
 
-const StudentsPage: React.FC = () => {
+const groupKeys = ["id", "label", "description"] as (keyof TGroup)[];
+const groupHeaders: Record<keyof TGroup, string> = {
+  id: "ID",
+  label: "Группа",
+  description: "Факультет",
+};
+
+export default function StudentsPage() {
   const [data, setData] = useState<TGroup[]>([]);
   const columnHelper = createColumnHelper<TGroup>();
   const columns = groupKeys.map((key, index) =>
@@ -41,10 +42,11 @@ const StudentsPage: React.FC = () => {
     columns,
     getCoreRowModel: getCoreRowModel(),
   });
+
   useEffect(() => {
     const getData = async () => {
       const response = await axios.get(
-        "http://localhost:8000/api_students/students/"
+        "https://ruz.fa.ru/api/search?term=%D0%A222-&type=group"
       );
       console.log(response.data);
       console.log(323);
@@ -53,53 +55,20 @@ const StudentsPage: React.FC = () => {
     };
     getData();
   }, []);
-
   return (
     <div className="app">
       <Sidebar />
       <div className="content">
-        {/* Здесь будет основной контент */}
         <Header title="Данные студентов">
-          <button>
-            <IoTrashOutline />
-            Очистить данные студентов
-          </button>
           <div className="export-add-wrapper">
-            <button>
-              <IoAddCircleOutline fontSize={18} />
-              <p>Добавить</p>
-            </button>
             <button>
               <CiExport fontSize={18} />
               <p>Экспорт</p>
             </button>
           </div>
         </Header>
-        <AddStudents
-          inputs1={[
-            {
-              label: "TG ID",
-              key: "tg_id",
-            },
-            {
-              label: "Телефон",
-              key: "phone",
-            },
-            {
-              label: "Группа",
-              key: "group",
-            },
-            {
-              label: "Логин",
-              key: "login",
-            },
-          ]}
-          checkboxInputs={["Верифицирован"]}
-        />
         <MainTable table={table} />
       </div>
     </div>
   );
-};
-
-export default StudentsPage;
+}
