@@ -1,6 +1,4 @@
-import React, { useState } from "react";
-import styles from "./styles.module.scss";
-
+import { FC, ReactNode, useState } from "react";
 import {
   IoSettingsOutline,
   IoBookOutline,
@@ -11,15 +9,17 @@ import { IoMdNotificationsOutline, IoMdClose } from "react-icons/io";
 import { CiMenuBurger } from "react-icons/ci";
 import { RiGroupLine } from "react-icons/ri";
 import { BsThreeDots } from "react-icons/bs";
+import urls from "~/shared/routes";
+import styles from "./styles.module.scss";
 
-export const Sidebar: React.FC = () => {
+export const Sidebar: FC = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const navItems: [React.ReactNode, string][] = [
+  const navItems: [ReactNode, string][] = [
     [
       <>
         <CiMenuBurger /> Данные студентов
       </>,
-      "#",
+      urls.STUDENTS,
     ],
     [
       <>
@@ -49,7 +49,7 @@ export const Sidebar: React.FC = () => {
       <>
         <RiGroupLine /> Группы
       </>,
-      "#",
+      urls.GROUPS,
     ],
     [
       <>
@@ -61,7 +61,7 @@ export const Sidebar: React.FC = () => {
       <>
         <BsThreeDots /> Логи
       </>,
-      "#",
+      urls.LOGS,
     ],
     [
       <>
@@ -76,8 +76,6 @@ export const Sidebar: React.FC = () => {
       "#",
     ],
   ];
-
-  console.log(isOpen);
   return (
     <>
       <button
@@ -108,7 +106,7 @@ export const Sidebar: React.FC = () => {
           </ul>
         </nav>
         <div className={styles.profile}>
-          <img src="public/assets/favicon.png" alt="Ava" />
+          <img src="assets/favicon.png" alt="Ava" />
           <div>
             <p>admin</p>
             <p className={styles.user}>Пользователь</p>

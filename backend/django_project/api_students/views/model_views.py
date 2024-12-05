@@ -1,9 +1,9 @@
 from rest_framework import viewsets
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
-from .models import *
-from .serializers import *
 from backend.global_functions import success_with_text, error_with_text
+from api_students.models import *
+from api_students.serializers import *
 
 
 class StudentViewSet(viewsets.ModelViewSet):

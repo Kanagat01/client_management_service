@@ -1,8 +1,9 @@
+import { ChangeEvent } from "react";
 import { BiFilterAlt } from "react-icons/bi";
 import { MdRestartAlt } from "react-icons/md";
 import { Checkbox } from "~/shared/ui";
 import styles from "./styles.module.scss";
-import { ChangeEvent } from "react";
+
 type input = {
   label: string;
   key: string;
