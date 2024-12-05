@@ -18,6 +18,12 @@ def validate_group(group):
         raise ValidationError("Группа не существует или недоступна")
 
 
+class PasswordReset(models.Model):
+    email = models.EmailField()
+    token = models.CharField(max_length=100)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+
 class Student(models.Model):
     full_name = models.CharField(max_length=255, verbose_name="Полное имя")
     telegram_id = models.CharField(

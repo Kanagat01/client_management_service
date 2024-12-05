@@ -28,6 +28,7 @@ SMS_PASSWORD = os.environ.get(
 
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 EMAIL_HOST_USER = "example@gmail.com"
+
 # EMAIL_HOST = os.environ.get("EMAIL_HOST")
 # EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")
 # EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
@@ -81,7 +82,6 @@ TEMPLATES = [
 
 # WSGI_APPLICATION = 'backend.wsgi.application'
 ASGI_APPLICATION = "backend.asgi.application"
-
 
 
 #

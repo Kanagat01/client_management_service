@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import *
+from api_students.models import *
 
 
 class StudentSerializer(serializers.ModelSerializer):
