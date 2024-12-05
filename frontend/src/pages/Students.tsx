@@ -19,8 +19,8 @@ type TGroup = {
 const groupKeys = ["id", "full_name", "phone"] as (keyof TGroup)[];
 const groupHeaders: Record<keyof TGroup, string> = {
   id: "ID",
-  full_name: "full_name",
-  phone: "phone",
+  full_name: "Name",
+  phone: "Phone",
 };
 
 const StudentsPage: React.FC = () => {
