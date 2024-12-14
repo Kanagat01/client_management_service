@@ -24,6 +24,59 @@ class PasswordReset(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
 
+class Group(models.Model):
+    code = models.CharField(unique=True, max_length=50,
+                            verbose_name="Код группы")
+    fa_id = models.IntegerField(verbose_name="FA ID")
+    description = models.CharField(max_length=150, verbose_name="Описание")
+    created_at = models.DateTimeField(
+        auto_now_add=True, verbose_name="Дата создания")
+    updated_at = models.DateTimeField(
+        auto_now=True, verbose_name="Последнее изменение")
+
+    def __str__(self):
+        return self.code
+
+
+class Discipline(models.Model):
+    name = models.CharField(max_length=150, verbose_name="Название")
+    fa_id = models.IntegerField(verbose_name="FA ID")
+
+    def __str__(self):
+        return self.name
+
+
+class ActivityType(models.Model):
+    name = models.CharField(max_length=150, verbose_name="Название")
+    fa_id = models.IntegerField(verbose_name="FA ID")
+
+    def __str__(self):
+        return self.name
+
+
+class Activity(models.Model):
+    activity_type = models.ForeignKey(
+        ActivityType, models.CASCADE, verbose_name="Тип активности")
+    discipline = models.ForeignKey(
+        Discipline, models.CASCADE, verbose_name="Дисциплина")
+    group = models.ForeignKey(Group, models.CASCADE, verbose_name="Группа")
+    note = models.CharField(verbose_name="Заметка",
+                            max_length=250, blank=True, null=True)
+    teacher = models.CharField(verbose_name="Лектор", max_length=150)
+    date = models.DateField(verbose_name='Дата')
+    time_start = models.TimeField(verbose_name='Время начала')
+    time_end = models.TimeField(verbose_name='Время окончания')
+    updated_at = models.DateTimeField(
+        auto_now=True, verbose_name="Дата изменения")
+    marked_as_proctoring = models.BooleanField(
+        verbose_name="Установлена как прокторинг")
+    marked_by_students_as_proctoring = models.BooleanField(
+        verbose_name="Помечена студентами как прокторинг")
+
+    def __str__(self):
+        return f"{self.group.code} {self.discipline.name} {self.date} {self.time_start} {self.time_start}"
+
+
 class Student(models.Model):
     full_name = models.CharField(max_length=255, verbose_name="Полное имя")
     telegram_id = models.CharField(
@@ -34,8 +87,8 @@ class Student(models.Model):
         max_length=50, verbose_name="Логин", unique=True)
     # Пароль хранится в текстовом виде
     password = models.TextField(verbose_name="Пароль")
-    group = models.CharField(
-        max_length=50, verbose_name="Группа", blank=True, null=True)
+    group = models.ForeignKey(
+        Group, on_delete=models.SET_NULL, verbose_name="Группа", blank=True, null=True)
     phone = models.CharField(
         max_length=16,
         verbose_name="Телефон (WhatsApp)",
@@ -72,10 +125,12 @@ class Student(models.Model):
 
 class StudentRecord(models.Model):
     student = models.ForeignKey(
-        Student, on_delete=models.CASCADE, related_name='records', default=1)
-    type_activity = models.CharField(max_length=150)
-    discipline = models.CharField(max_length=150)
-    date = models.DateField(verbose_name="Дата экзамена")
+        Student, on_delete=models.CASCADE, related_name='records', verbose_name="Студент")
+    activity = models.ForeignKey(
+        Activity, on_delete=models.SET_NULL, null=True, verbose_name="Активность")
+    date = models.DateField(verbose_name='Дата')
+    time_start = models.TimeField(verbose_name='Время начала')
+    time_end = models.TimeField(verbose_name='Время конца')
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
@@ -85,7 +140,7 @@ class StudentRecord(models.Model):
         verbose_name_plural = "Записи студентов"
 
     def __str__(self):
-        return f"{self.student.full_name} - {self.type_activity} - {self.discipline}"
+        return f"{self.student.full_name} - {self.activity.discipline}"
 
     def save(self, *args, **kwargs):
         if self.pk:
@@ -104,6 +159,17 @@ class StudentRecord(models.Model):
         super().save(*args, **kwargs)
 
 
+class Code(models.Model):
+    code = models.CharField(verbose_name="Код", max_length=250)
+    recipient = models.ForeignKey(
+        Student, models.CASCADE, verbose_name="Получатель")
+    activity = models.ForeignKey(
+        Activity, models.CASCADE, verbose_name="Активность")
+
+    def __str__(self):
+        return f"Код #{self.pk}"
+
+
 class Log(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE,
                                 verbose_name="Студент", related_name="logs", default=1)
@@ -117,7 +183,7 @@ class Log(models.Model):
         auto_now_add=True, verbose_name="Дата изменения")
 
     def __str__(self):
-        return f"Лог #{self.pk} - Студент {self.student.full_name}"
+        return f"Лог #{self.pk} - {self.student}"
 
     class Meta:
         verbose_name = "Лог изменений"
@@ -125,52 +191,14 @@ class Log(models.Model):
 
 
 class Message(models.Model):
+    group = models.ForeignKey(Group, models.CASCADE, verbose_name="Группа")
     text = models.TextField(verbose_name="Текст сообщения")
-    date_sent = models.DateTimeField(
-        auto_now_add=True, verbose_name="Дата отправки")
-    scheduled_date = models.DateTimeField(
-        null=True, blank=True, verbose_name="Дата отправки по расписанию")
-    is_sent = models.BooleanField(default=False, verbose_name="Отправлено?")
-    group = models.CharField(max_length=150)
-    student = models.ForeignKey(
-        Student, related_name='messages', on_delete=models.CASCADE, null=True, blank=True)
-    # True for group, False for individual
-    is_group_message = models.BooleanField(default=True)
+    schedule_date = models.DateTimeField(verbose_name="Дата и время рассылки")
+    is_sent = models.BooleanField(verbose_name="Отправлено")
 
     def __str__(self):
-        return f"Сообщение для {self.group if self.is_group_message else self.student.username}"
-
-    def send_message(self):
-        '''Эта функция будет отправлять сообщения через API (например, Telegram или WhatsApp)'''
-        if self.is_group_message:
-            pass
-        else:
-            pass
-
-    def schedule_message(self):
-        if self.scheduled_date and self.scheduled_date <= now():
-            self.send_message()
-            self.is_sent = True
-            self.save()
+        return f"Рассылка #{self.pk} - Группа {self.group}"
 
     class Meta:
         verbose_name = "Сообщение"
         verbose_name_plural = "Сообщения"
-
-
-class Notification(models.Model):
-    group = models.CharField(max_length=150)
-    message = models.ForeignKey(Message, on_delete=models.CASCADE)
-    notification_date = models.DateTimeField(default=now)
-    is_notified = models.BooleanField(default=False)
-
-    def send_telegram_notification(self):
-        '''Этот метод отправляет уведомление через Telegram API'''
-        pass
-
-    def __str__(self):
-        return f"Уведомления для {self.group} | {self.message.text[:20]}"
-
-    class Meta:
-        verbose_name = "Уведомление"
-        verbose_name_plural = "Уведомления"

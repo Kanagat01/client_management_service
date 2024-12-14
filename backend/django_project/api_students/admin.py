@@ -14,8 +14,7 @@ class StudentAdmin(admin.ModelAdmin):
 
 @admin.register(StudentRecord)
 class StudentRecordAdmin(admin.ModelAdmin):
-    list_display = ('student', 'type_activity', 'discipline',
-                    'date')
+    list_display = ('student', 'activity', 'date')
     search_fields = ('student__full_name',)
     ordering = ('date',)
 
@@ -31,23 +30,4 @@ class LogAdmin(admin.ModelAdmin):
     ordering = ('created_at',)
 
 
-@admin.register(Message)
-class MessageAdmin(admin.ModelAdmin):
-    list_display = ('text', 'date_sent', 'scheduled_date',
-                    'is_sent', 'group', 'student', 'is_group_message')
-    list_filter = ('is_sent', 'is_group_message', 'date_sent')
-    search_fields = ('text', 'student__username')
-    ordering = ('scheduled_date',)
-    actions = ['mark_as_sent']
-
-    def mark_as_sent(self, request, queryset):
-        queryset.update(is_sent=True)
-    mark_as_sent.short_description = "Отметить как отправленные"
-
-
-@admin.register(Notification)
-class NotificationAdmin(admin.ModelAdmin):
-    list_display = ('group', 'message', 'notification_date', 'is_notified')
-    list_filter = ('is_notified', 'notification_date')
-    search_fields = ('message__text',)
-    ordering = ('notification_date',)
+admin.site.register(Message)

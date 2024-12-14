@@ -9,6 +9,8 @@ class StudentSerializer(serializers.ModelSerializer):
 
 
 class StudentRecordSerializer(serializers.ModelSerializer):
+    student = StudentSerializer()
+
     class Meta:
         model = StudentRecord
         fields = '__all__'
@@ -23,10 +25,4 @@ class LogSerializer(serializers.ModelSerializer):
 class MessageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Message
-        fields = '__all__'
-
-
-class NotificationSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Notification
         fields = '__all__'
