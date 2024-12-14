@@ -1,5 +1,4 @@
 import { ReactNode, useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
 import { Preloader } from "~/shared/ui";
 
 const CenteredPreloader = () => {
@@ -20,7 +19,6 @@ export function RenderPromise<T, E = Error>(
   promiseFn: () => Promise<T>,
   handlers: Handlers<T, E>
 ) {
-  const { t } = useTranslation();
   const { loading = <CenteredPreloader />, success, error } = handlers;
   const [state, setState] = useState<{
     loading: boolean;
@@ -61,6 +59,6 @@ export function RenderPromise<T, E = Error>(
   } else {
     if (state.error)
       return typeof error === "function" ? error(state.error) : error;
-    else throw Error(t("common.unknownError", { error: state.error }));
+    else throw Error(`Неизвестная ошибка: ${state.error}`);
   }
 }
