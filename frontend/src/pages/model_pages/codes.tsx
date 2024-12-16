@@ -1,11 +1,11 @@
-import axios from "axios";
 import { NavLink } from "react-router-dom";
 import { BsPlusCircle } from "react-icons/bs";
 import { ReactNode, useEffect, useState } from "react";
 import { SlActionRedo, SlActionUndo } from "react-icons/sl";
 import { CommandBar, FilterBar } from "~/widgets";
-import { TStudent, useStudentTable } from "~/entities/Student";
+import { TCode, useCodeTable } from "~/entities/Code";
 import { MainTable, Modal } from "~/shared/ui";
+import { apiInstance } from "~/shared/api";
 
 const menuList = [
   <NavLink className="btn btn-link icon-link" to="#">
@@ -27,11 +27,7 @@ const filters: [string, ReactNode][] = [
     "Записи на странице",
     <div
       data-controller="select"
-      data-select-placeholder=""
-      data-select-allow-empty="1"
       data-select-message-notfound="Результаты не найдены"
-      data-select-allow-add="false"
-      data-select-message-add="Добавить"
     >
       <select className="form-control">
         <option value="">Не выбрано</option>
@@ -47,11 +43,7 @@ const filters: [string, ReactNode][] = [
     "Код",
     <div
       data-controller="select"
-      data-select-placeholder=""
-      data-select-allow-empty="1"
       data-select-message-notfound="Результаты не найдены"
-      data-select-allow-add="false"
-      data-select-message-add="Добавить"
     >
       <select className="form-control">
         <option value="">Не выбрано</option>
@@ -62,11 +54,7 @@ const filters: [string, ReactNode][] = [
     "Получатель",
     <div
       data-controller="select"
-      data-select-placeholder=""
-      data-select-allow-empty="1"
       data-select-message-notfound="Результаты не найдены"
-      data-select-allow-add="false"
-      data-select-message-add="Добавить"
     >
       <select className="form-control">
         <option value="">Не выбрано</option>
@@ -76,13 +64,14 @@ const filters: [string, ReactNode][] = [
 ];
 
 export function CodesPage() {
-  const [data, setData] = useState<TStudent[]>([]);
-  const table = useStudentTable(data);
+  const [data, setData] = useState<TCode[]>([]);
+  const table = useCodeTable(data);
 
   useEffect(() => {
     const getData = async () => {
-      const response = await axios.get("http://localhost:8000/api/students/");
-      console.log("respData", response.data);
+      const response = await apiInstance.get(
+        "http://localhost:8000/api/codes/"
+      );
       setData(response.data);
     };
     getData();
@@ -90,21 +79,13 @@ export function CodesPage() {
   return (
     <>
       <CommandBar title="Редактор кодов" menuList={menuList} />
-      <form
-        id="post-form"
-        className="mb-md-4 h-100"
-        method="post"
-        encType="multipart/form-data"
-        data-form-failed-validation-message-value="Пожалуйста, проверьте введенные данные, возможны указания на других языках."
-      >
+      <div className="mb-md-4 h-100">
         <FilterBar filters={filters} />
-
         <div className="bg-white rounded shadow-sm mb-3">
           <MainTable table={table} />
         </div>
-
         <Modal />
-      </form>
+      </div>
     </>
   );
 }

@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.apps import apps
 from .models import *
 
 
@@ -30,4 +31,8 @@ class LogAdmin(admin.ModelAdmin):
     ordering = ('created_at',)
 
 
-admin.site.register(Message)
+app = apps.get_app_config('api_students')
+
+for model in app.get_models():
+    if model not in admin.site._registry:
+        admin.site.register(model)

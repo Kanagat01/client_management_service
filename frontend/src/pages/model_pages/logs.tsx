@@ -1,8 +1,8 @@
-import axios from "axios";
 import { ReactNode, useEffect, useState } from "react";
 import { CommandBar, FilterBar } from "~/widgets";
-import { TStudent, useStudentTable } from "~/entities/Student";
+import { TLog, useLogTable } from "~/entities/LogModel";
 import { MainTable, Modal } from "~/shared/ui";
+import { apiInstance } from "~/shared/api";
 
 const filters: [string, ReactNode][] = [
   [
@@ -55,13 +55,12 @@ const filters: [string, ReactNode][] = [
 ];
 
 export function LogsPage() {
-  const [data, setData] = useState<TStudent[]>([]);
-  const table = useStudentTable(data);
+  const [data, setData] = useState<TLog[]>([]);
+  const table = useLogTable(data);
 
   useEffect(() => {
     const getData = async () => {
-      const response = await axios.get("http://localhost:8000/api/students/");
-      console.log("respData", response.data);
+      const response = await apiInstance.get("http://localhost:8000/api/logs/");
       setData(response.data);
     };
     getData();
@@ -74,7 +73,6 @@ export function LogsPage() {
         className="mb-md-4 h-100"
         method="post"
         encType="multipart/form-data"
-        data-form-failed-validation-message-value="Пожалуйста, проверьте введенные данные, возможны указания на других языках."
       >
         <FilterBar filters={filters} />
 

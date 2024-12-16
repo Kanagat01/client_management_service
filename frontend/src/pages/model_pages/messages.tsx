@@ -1,10 +1,10 @@
-import axios from "axios";
 import { NavLink } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { BsCheckCircle } from "react-icons/bs";
 import { CommandBar } from "~/widgets";
-import { TStudent, useStudentTable } from "~/entities/Student";
+import { TMessage, useMessageTable } from "~/entities/Message";
 import { MainTable, Modal } from "~/shared/ui";
+import { apiInstance } from "~/shared/api";
 
 const menuList = [
   <NavLink className="btn btn-link icon-link" to="#">
@@ -14,13 +14,12 @@ const menuList = [
 ];
 
 export function MessagesPage() {
-  const [data, setData] = useState<TStudent[]>([]);
-  const table = useStudentTable(data);
+  const [data, setData] = useState<TMessage[]>([]);
+  const table = useMessageTable(data);
 
   useEffect(() => {
     const getData = async () => {
-      const response = await axios.get("http://localhost:8000/api/students/");
-      console.log("respData", response.data);
+      const response = await apiInstance.get("api/messages/");
       setData(response.data);
     };
     getData();
@@ -28,17 +27,12 @@ export function MessagesPage() {
   return (
     <>
       <CommandBar title="Список отправленных сообщений" menuList={menuList} />
-      <form
-        id="post-form"
-        className="mb-md-4 h-100"
-        method="post"
-        encType="multipart/form-data"
-      >
+      <div className="mb-md-4 h-100">
         <div className="bg-white rounded shadow-sm mb-3">
           <MainTable table={table} />
         </div>
         <Modal />
-      </form>
+      </div>
     </>
   );
 }

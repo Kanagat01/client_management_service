@@ -1,5 +1,8 @@
 export type TGroup = {
   id: number;
-  label: string;
+  code: string;
+  fa_id: number;
   description: string;
+  created_at: string;
+  updated_at: string;
 };

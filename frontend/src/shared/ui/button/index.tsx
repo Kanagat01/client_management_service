@@ -26,10 +26,7 @@ export const OutlineButton: FC<
 );
 
 export const EditButton = () => (
-  <a
-    className="btn btn-link icon-link"
-    href="https://cammpuss.ru/admin/students/1/edit"
-  >
+  <a className="btn btn-link icon-link">
     <BsPencil />
     <span>Редактировать</span>
   </a>
@@ -39,7 +36,6 @@ export const DeleteButton = () => (
   <button
     data-button-confirm="Вы уверены, что хотите очистить данные этого студента?"
     className="btn btn-link icon-link"
-    type="submit"
   >
     <BsTrash3 />
     Очистить данные

@@ -1,9 +1,11 @@
-import { TStudent } from "~/entities/Student";
+import { TActivity } from "~/entities/Activity";
 
 export type TStudentRecord = {
   id: number;
+  student: string;
+  telegram_link: string;
+  activity: TActivity;
   date: string;
-  student: TStudent;
-  activity_type: string;
-  discipline: string;
+  time_start: string;
+  time_end: string;
 };

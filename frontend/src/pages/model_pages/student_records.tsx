@@ -1,11 +1,15 @@
 import Flatpickr from "react-flatpickr";
+import { Russian } from "flatpickr/dist/l10n/ru.js";
 import { NavLink } from "react-router-dom";
 import { SlActionRedo } from "react-icons/sl";
 import { BsPlusCircle } from "react-icons/bs";
-import { Russian } from "flatpickr/dist/l10n/ru.js";
 import { ReactNode, useEffect, useState } from "react";
+
 import { CommandBar, FilterBar } from "~/widgets";
-import { TStudent, useStudentTable } from "~/entities/Student";
+import {
+  TStudentRecord,
+  useStudentRecordTable,
+} from "~/entities/StudentRecord";
 import { MainTable, Modal } from "~/shared/ui";
 import { apiInstance } from "~/shared/api";
 
@@ -99,11 +103,7 @@ const filters: [string, ReactNode][] = [
     "Дисциплина",
     <div
       data-controller="select"
-      data-select-placeholder=""
-      data-select-allow-empty="1"
       data-select-message-notfound="Результаты не найдены"
-      data-select-allow-add="false"
-      data-select-message-add="Добавить"
     >
       <select className="form-control" name="group_id" title="Группа">
         <option value="">Не выбрано</option>
@@ -144,8 +144,8 @@ const filters: [string, ReactNode][] = [
 ];
 
 export function StudentRecordsPage() {
-  const [data, setData] = useState<TStudent[]>([]);
-  const table = useStudentTable(data);
+  const [data, setData] = useState<TStudentRecord[]>([]);
+  const table = useStudentRecordTable(data);
 
   useEffect(() => {
     const getData = async () => {
@@ -157,19 +157,13 @@ export function StudentRecordsPage() {
   return (
     <>
       <CommandBar title="Записи студентов" menuList={menuList} />
-      <form
-        id="post-form"
-        className="mb-md-4 h-100"
-        method="post"
-        encType="multipart/form-data"
-        data-form-failed-validation-message-value="Пожалуйста, проверьте введенные данные, возможны указания на других языках."
-      >
+      <div className="mb-md-4 h-100">
         <FilterBar filters={filters} />
         <div className="bg-white rounded shadow-sm mb-3">
           <MainTable table={table} />
         </div>
         <Modal />
-      </form>
+      </div>
     </>
   );
 }

@@ -1,11 +1,11 @@
-import axios from "axios";
 import { NavLink } from "react-router-dom";
 import { BsPlusCircle } from "react-icons/bs";
 import { SlActionUndo } from "react-icons/sl";
 import { ReactNode, useEffect, useState } from "react";
 import { CommandBar, FilterBar } from "~/widgets";
-import { TStudent, useStudentTable } from "~/entities/Student";
+import { TDiscipline, useDisciplineTable } from "~/entities/Discipline";
 import { MainTable, Modal } from "~/shared/ui";
+import { apiInstance } from "~/shared/api";
 
 const menuList = [
   <NavLink className="btn btn-link icon-link" to="#">
@@ -42,13 +42,12 @@ const filters: [string, ReactNode][] = [
 ];
 
 export function DisciplinesPage() {
-  const [data, setData] = useState<TStudent[]>([]);
-  const table = useStudentTable(data);
+  const [data, setData] = useState<TDiscipline[]>([]);
+  const table = useDisciplineTable(data);
 
   useEffect(() => {
     const getData = async () => {
-      const response = await axios.get("http://localhost:8000/api/students/");
-      console.log("respData", response.data);
+      const response = await apiInstance.get("api/disciplines/");
       setData(response.data);
     };
     getData();
@@ -56,13 +55,7 @@ export function DisciplinesPage() {
   return (
     <>
       <CommandBar title="Дисциплины" menuList={menuList} />
-      <form
-        id="post-form"
-        className="mb-md-4 h-100"
-        method="post"
-        encType="multipart/form-data"
-        data-form-failed-validation-message-value="Пожалуйста, проверьте введенные данные, возможны указания на других языках."
-      >
+      <div className="mb-md-4 h-100">
         <FilterBar filters={filters} />
 
         <div className="bg-white rounded shadow-sm mb-3">
@@ -70,7 +63,7 @@ export function DisciplinesPage() {
         </div>
 
         <Modal />
-      </form>
+      </div>
     </>
   );
 }

@@ -25,12 +25,58 @@ export const validatePassword = (password: string): string => {
 export const isValidEmail = (email: string) =>
   /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
-export const dateTimeToString = (datetime: string | Date) => {
-  return new Date(datetime).toLocaleDateString("ru", {
-    year: "numeric",
-    month: "numeric",
-    day: "numeric",
-    hour: "numeric",
-    minute: "numeric",
-  });
+export const dateToString = (date: string | Date) => {
+  date = new Date(date);
+  const day = date.getDate().toString().padStart(2, "0");
+  const month = (date.getMonth() + 1).toString().padStart(2, "0");
+  const year = date.getFullYear();
+  return `${day}-${month}-${year}`;
 };
+
+export const dateTimeToString = (datetime: string | Date) => {
+  const date = new Date(datetime);
+
+  const day = date.getDate().toString().padStart(2, "0");
+  const month = (date.getMonth() + 1).toString().padStart(2, "0");
+  const year = date.getFullYear();
+
+  const hours = date.getHours().toString().padStart(2, "0");
+  const minutes = date.getMinutes().toString().padStart(2, "0");
+
+  return `${day}-${month}-${year} ${hours}:${minutes}`;
+};
+
+export function dateTimeWithWeekday(datetime: string | Date) {
+  const months = [
+    "Янв",
+    "Фев",
+    "Мар",
+    "Апр",
+    "Май",
+    "Июн",
+    "Июл",
+    "Авг",
+    "Сен",
+    "Окт",
+    "Ноя",
+    "Дек",
+  ];
+  const weekdays = ["Вск", "Пнд", "Втр", "Срд", "Чтв", "Птн", "Сбт"];
+
+  const date = new Date(datetime);
+  const day = date.getDate();
+  const month = months[date.getMonth()];
+  const year = date.getFullYear();
+  const weekday = weekdays[date.getDay()];
+  const hours = date.getHours().toString().padStart(2, "0");
+  const minutes = date.getMinutes().toString().padStart(2, "0");
+
+  return (
+    <time className="mb-0 text-capitalize">
+      {month} {day}, {year}
+      <span className="text-muted d-block">
+        {weekday}, {hours}:{minutes}
+      </span>
+    </time>
+  );
+}

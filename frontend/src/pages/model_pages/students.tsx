@@ -28,11 +28,7 @@ const filters: [string, ReactNode][] = [
     "Записи на странице",
     <div
       data-controller="select"
-      data-select-placeholder=""
-      data-select-allow-empty="1"
       data-select-message-notfound="Результаты не найдены"
-      data-select-allow-add="false"
-      data-select-message-add="Добавить"
     >
       <select className="form-control" title="Записи на странице">
         <option value="">Не выбрано</option>
