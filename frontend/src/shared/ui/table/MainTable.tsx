@@ -1,13 +1,15 @@
 import { flexRender, Table } from "@tanstack/react-table";
-import { Pagination, TPagination } from "./Pagination";
 import { BsJournalX } from "react-icons/bs";
 import { ColumnSelector } from "./helpers";
+import { Pagination, TPagination } from "./Pagination";
+import { Fragment } from "react";
 
 type MainTableProps = {
   table: Table<any>;
   pagination?: TPagination;
+  recordsRange?: string;
 };
-export function MainTable({ table, pagination }: MainTableProps) {
+export function MainTable({ table, pagination, recordsRange }: MainTableProps) {
   const headerGroups = table.getHeaderGroups();
   const rows = table.getRowModel().rows;
   return rows.length !== 0 ? (
@@ -17,12 +19,14 @@ export function MainTable({ table, pagination }: MainTableProps) {
           <thead>
             {headerGroups.map((headerGroup) => (
               <tr key={headerGroup.id}>
-                {headerGroup.headers.map((header) =>
-                  flexRender(
-                    header.column.columnDef.header,
-                    header.getContext()
-                  )
-                )}
+                {headerGroup.headers.map((header) => (
+                  <Fragment key={header.id}>
+                    {flexRender(
+                      header.column.columnDef.header,
+                      header.getContext()
+                    )}
+                  </Fragment>
+                ))}
               </tr>
             ))}
           </thead>
@@ -30,11 +34,11 @@ export function MainTable({ table, pagination }: MainTableProps) {
           <tbody>
             {rows.map((row) => (
               <tr key={row.id} className="position-relative">
-                {row
-                  .getVisibleCells()
-                  .map((cell) =>
-                    flexRender(cell.column.columnDef.cell, cell.getContext())
-                  )}
+                {row.getVisibleCells().map((cell) => (
+                  <Fragment key={cell.id}>
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </Fragment>
+                ))}
               </tr>
             ))}
           </tbody>
@@ -42,10 +46,10 @@ export function MainTable({ table, pagination }: MainTableProps) {
       </div>
       <footer className="pb-3 w-100 v-md-center px-4 d-flex flex-wrap">
         <div className="col-auto me-auto">
-          <ColumnSelector />
+          <ColumnSelector table={table} />
 
           <small className="text-muted d-block">
-            Отображено записей: 1-15 из 97
+            {recordsRange && `Отображено записей: {recordsRange}`}
           </small>
         </div>
         <div className="col-auto overflow-auto flex-shrink-1 mt-3 mt-sm-0">

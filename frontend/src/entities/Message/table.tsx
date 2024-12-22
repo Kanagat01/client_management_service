@@ -43,6 +43,7 @@ export const useMessageTable = (data: TMessage[]) => {
               return <DefaultCell>{value}</DefaultCell>;
             },
             header: () => <DefaultHeader>{header}</DefaultHeader>,
+            meta: { label: header },
           })
   );
   const table = useReactTable({

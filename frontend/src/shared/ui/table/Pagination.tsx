@@ -1,5 +1,5 @@
-import { MouseEvent } from "react";
-import { NavLink, useLocation, useNavigate } from "react-router-dom";
+// import { MouseEvent } from "react";
+import { NavLink } from "react-router-dom";
 
 export type TPagination = { pagesTotal: number; currentPage: number };
 
@@ -16,42 +16,44 @@ export const Pagination = (paginator: TPagination) => {
     for (let i = currentPage - 5; i <= currentPage + 5; i++) pages.push(i);
   }
 
-  const navigate = useNavigate();
-  const location = useLocation();
-  const handlePageClick = (e: MouseEvent<HTMLAnchorElement>, page: number) => {
-    if (page === currentPage) return;
+  // const navigate = useNavigate();
+  // const location = useLocation();
+  // const handlePageClick = (e: MouseEvent<HTMLAnchorElement>, page: number) => {
+  //   if (page === currentPage) return;
 
-    e.preventDefault();
-    const searchParams = new URLSearchParams(location.search);
-    searchParams.set("page", page.toString());
-    navigate(`${location.pathname}?${searchParams.toString()}`);
-  };
+  //   e.preventDefault();
+  //   const searchParams = new URLSearchParams(location.search);
+  //   searchParams.set("page", page.toString());
+  //   navigate(`${location.pathname}?${searchParams.toString()}`);
+  // };
   return (
-    <ul className="pagination">
-      <li className="page-item disabled">
-        <span className="page-link">&laquo;</span>
-      </li>
-      {[1, 2, 3, 4, 5, 6, 7].map((page) => (
-        <li className={`page-item ${currentPage == page ? "active" : ""}`}>
-          <NavLink
-            to="#"
-            className="page-link"
-            onClick={(e) => handlePageClick(e, page)}
-          >
-            {page}
+    <div className="col-auto overflow-auto flex-shrink-1 mt-3 mt-sm-0">
+      <ul className="pagination">
+        <li className="page-item">
+          <NavLink className="page-link" to="#" rel="prev">
+            «
           </NavLink>
         </li>
-      ))}
-      <li className="page-item">
-        <NavLink
-          to="#"
-          className="page-link"
-          rel="next"
-          onClick={(e) => handlePageClick(e, currentPage + 1)}
-        >
-          &raquo;
-        </NavLink>
-      </li>
-    </ul>
+        {pages.map((page) => (
+          <li
+            key={page}
+            className={`page-item ${page === currentPage && "active"}`}
+          >
+            {page === currentPage ? (
+              <span className="page-link">{page}</span>
+            ) : (
+              <NavLink className="page-link" to="#">
+                {page}
+              </NavLink>
+            )}
+          </li>
+        ))}
+        <li className="page-item">
+          <NavLink className="page-link" to="#" rel="next">
+            »
+          </NavLink>
+        </li>
+      </ul>
+    </div>
   );
 };

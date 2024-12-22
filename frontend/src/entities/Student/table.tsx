@@ -4,6 +4,7 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { ReactNode } from "react";
+import { BsStar } from "react-icons/bs";
 import {
   DefaultHeader,
   DefaultCell,
@@ -11,6 +12,7 @@ import {
   EditButton,
   useActionsColumn,
   VerificationButton,
+  BanBtn,
 } from "~/shared/ui";
 import { dateTimeToString } from "~/shared/lib";
 import { TStudent } from "./types";
@@ -18,9 +20,7 @@ import { TStudent } from "./types";
 type TStudentColumn = keyof TStudent | "actions";
 
 export const studentColumns: Partial<Record<TStudentColumn, string>> = {
-  // id: "ID",
   full_name: "Студент",
-  // telegram_id: "TG ID",
   telegram_link: "Ссылка",
   username: "Логин",
   password: "Пароль",
@@ -41,17 +41,26 @@ export const useStudentTable = (data: TStudent[]) => {
           <EditButton />,
           <DeleteButton />,
           <VerificationButton />,
+          <BanBtn />,
         ])
       : columnHelper.accessor(fieldName, {
           id: `column_${index}`,
           cell: (info) => {
             let value: ReactNode = info.row.original[fieldName];
-            if (fieldName === "registration_date") {
+            if (fieldName === "full_name") {
+              if (info.row.original.is_verified)
+                value = (
+                  <div className="d-flex align-items-center">
+                    <BsStar className="me-1" /> {value}
+                  </div>
+                );
+            } else if (fieldName === "registration_date") {
               value = dateTimeToString(value as string);
             }
             return <DefaultCell>{value}</DefaultCell>;
           },
           header: () => <DefaultHeader>{header}</DefaultHeader>,
+          meta: { label: header },
         })
   );
   const table = useReactTable({

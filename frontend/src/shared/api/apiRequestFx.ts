@@ -12,7 +12,7 @@ export const apiRequestFx = createEffect<RequestParams, any, Error>(
   async ({ method, url, data }) => {
     try {
       const response = await apiInstance({ method, url, data });
-      return response?.data?.message;
+      return response?.data;
     } catch (error) {
       if (error instanceof AxiosError) {
         if (error.response?.status! > 499)

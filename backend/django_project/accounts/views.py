@@ -11,8 +11,8 @@ from rest_framework.request import Request
 from rest_framework.authtoken.models import Token
 from backend.settings import EMAIL_HOST_USER, REACT_RESET_PASSWORD_URL
 from backend.global_functions import success_with_text, error_with_text
-from api_students.serializers import LoginSerializer, PasswordResetSerializer, PasswordResetConfirmSerializer
-from api_students.models import PasswordReset
+from .serializers import LoginSerializer, PasswordResetSerializer, PasswordResetConfirmSerializer
+from .models import PasswordReset
 
 
 class Login(APIView):

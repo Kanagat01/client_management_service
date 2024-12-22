@@ -1,8 +1,9 @@
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode } from "react";
+import { useUnit } from "effector-react";
 import { CommandBar, FilterBar } from "~/widgets";
-import { TLog, useLogTable } from "~/entities/LogModel";
-import { MainTable, Modal } from "~/shared/ui";
-import { apiInstance } from "~/shared/api";
+import { $logs, getLogsFx, useLogTable } from "~/entities/LogModel";
+import { RenderPromise } from "~/shared/api";
+import { MainTable } from "~/shared/ui";
 
 const filters: [string, ReactNode][] = [
   [
@@ -18,7 +19,7 @@ const filters: [string, ReactNode][] = [
       <select className="form-control">
         <option value="">Не выбрано</option>
         {[15, 30, 100, "Все"].map((cnt) => (
-          <option value={cnt} selected={cnt === 15}>
+          <option key={cnt} value={cnt} selected={cnt === 15}>
             {cnt}
           </option>
         ))}
@@ -55,33 +56,21 @@ const filters: [string, ReactNode][] = [
 ];
 
 export function LogsPage() {
-  const [data, setData] = useState<TLog[]>([]);
+  const data = useUnit($logs);
   const table = useLogTable(data);
 
-  useEffect(() => {
-    const getData = async () => {
-      const response = await apiInstance.get("http://localhost:8000/api/logs/");
-      setData(response.data);
-    };
-    getData();
-  }, []);
   return (
     <>
       <CommandBar title="Логи" menuList={[]} />
-      <form
-        id="post-form"
-        className="mb-md-4 h-100"
-        method="post"
-        encType="multipart/form-data"
-      >
+      <div className="mb-md-4 h-100">
         <FilterBar filters={filters} />
 
         <div className="bg-white rounded shadow-sm mb-3">
-          <MainTable table={table} />
+          {RenderPromise(getLogsFx, {
+            success: <MainTable table={table} />,
+          })}
         </div>
-
-        <Modal />
-      </form>
+      </div>
     </>
   );
 }

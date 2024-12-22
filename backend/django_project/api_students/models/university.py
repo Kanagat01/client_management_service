@@ -61,4 +61,4 @@ class Activity(models.Model):
         verbose_name="Помечена студентами как прокторинг")
 
     def __str__(self):
-        return f"{self.group.code} {self.discipline.name} {self.date} {self.time_start} {self.time_start}"
+        return f"{self.group.code} {self.discipline.name} {self.date} {str(self.time_start)[:5]} {str(self.time_end)[:5]}"

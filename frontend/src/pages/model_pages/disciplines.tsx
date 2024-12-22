@@ -1,11 +1,16 @@
+import { ReactNode } from "react";
+import { useUnit } from "effector-react";
 import { NavLink } from "react-router-dom";
 import { BsPlusCircle } from "react-icons/bs";
 import { SlActionUndo } from "react-icons/sl";
-import { ReactNode, useEffect, useState } from "react";
 import { CommandBar, FilterBar } from "~/widgets";
-import { TDiscipline, useDisciplineTable } from "~/entities/Discipline";
-import { MainTable, Modal } from "~/shared/ui";
-import { apiInstance } from "~/shared/api";
+import {
+  $disciplines,
+  getDisciplinesFx,
+  useDisciplineTable,
+} from "~/entities/Discipline";
+import { RenderPromise } from "~/shared/api";
+import { MainTable } from "~/shared/ui";
 
 const menuList = [
   <NavLink className="btn btn-link icon-link" to="#">
@@ -32,7 +37,7 @@ const filters: [string, ReactNode][] = [
       <select className="form-control" title="Записи на странице">
         <option value="">Не выбрано</option>
         {[15, 30, 100, "Все"].map((cnt) => (
-          <option value={cnt} selected={cnt === 15}>
+          <option key={cnt} value={cnt} selected={cnt === 15}>
             {cnt}
           </option>
         ))}
@@ -42,16 +47,9 @@ const filters: [string, ReactNode][] = [
 ];
 
 export function DisciplinesPage() {
-  const [data, setData] = useState<TDiscipline[]>([]);
+  const data = useUnit($disciplines);
   const table = useDisciplineTable(data);
 
-  useEffect(() => {
-    const getData = async () => {
-      const response = await apiInstance.get("api/disciplines/");
-      setData(response.data);
-    };
-    getData();
-  }, []);
   return (
     <>
       <CommandBar title="Дисциплины" menuList={menuList} />
@@ -59,10 +57,10 @@ export function DisciplinesPage() {
         <FilterBar filters={filters} />
 
         <div className="bg-white rounded shadow-sm mb-3">
-          <MainTable table={table} />
+          {RenderPromise(getDisciplinesFx, {
+            success: <MainTable table={table} />,
+          })}
         </div>
-
-        <Modal />
       </div>
     </>
   );

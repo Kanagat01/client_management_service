@@ -1,25 +1,17 @@
-import { Button } from "react-bootstrap";
+import { ReactNode } from "react";
+import { useUnit } from "effector-react";
 import { NavLink } from "react-router-dom";
-import { SlActionRedo } from "react-icons/sl";
-import { BsTrash, BsPlusCircle } from "react-icons/bs";
-import { ReactNode, useEffect, useState } from "react";
+import { BsPlusCircle } from "react-icons/bs";
 import { CommandBar, FilterBar } from "~/widgets";
-import { TStudent, useStudentTable } from "~/entities/Student";
-import { apiInstance } from "~/shared/api";
-import { MainTable } from "~/shared/ui";
+import { $students, getStudentsFx, useStudentTable } from "~/entities/Student";
+import { MainTable, DeleteAllBtn } from "~/shared/ui";
+import { RenderPromise } from "~/shared/api";
 
 const menuList = [
-  <Button variant="danger" style={{ height: "fit-content" }}>
-    <BsTrash />
-    Очистить данные студентов
-  </Button>,
+  <DeleteAllBtn />,
   <NavLink className="btn btn-link icon-link" to="#">
     <BsPlusCircle />
     <span>Добавить</span>
-  </NavLink>,
-  <NavLink className="btn btn-link icon-link" to="#">
-    <SlActionRedo />
-    <span>Экспорт</span>
   </NavLink>,
 ];
 
@@ -33,7 +25,7 @@ const filters: [string, ReactNode][] = [
       <select className="form-control" title="Записи на странице">
         <option value="">Не выбрано</option>
         {[15, 30, 100, "Все"].map((cnt) => (
-          <option value={cnt} selected={cnt === 15}>
+          <option key={cnt} value={cnt} selected={cnt === 15}>
             {cnt}
           </option>
         ))}
@@ -55,16 +47,14 @@ const filters: [string, ReactNode][] = [
     "Группа",
     <div
       data-controller="select"
-      data-select-placeholder=""
-      data-select-allow-empty="1"
       data-select-message-notfound="Результаты не найдены"
-      data-select-allow-add="false"
-      data-select-message-add="Добавить"
     >
       <select className="form-control" name="group_id" title="Группа">
         <option value="">Не выбрано</option>
-        {["ДЭФР22-1", "ДЦПУП23-1", "ДММ20-1", "ДМФ22-1"].map((group, key) => (
-          <option value={key}>{group}</option>
+        {["ДЭФР22-1", "ДЦПУП23-1", "ДММ20-1", "ДМФ22-1"].map((group) => (
+          <option key={group} value={group}>
+            {group}
+          </option>
         ))}
       </select>
     </div>,
@@ -85,31 +75,20 @@ const filters: [string, ReactNode][] = [
 ];
 
 export function StudentsPage() {
-  const [data, setData] = useState<TStudent[]>([]);
+  const data = useUnit($students);
   const table = useStudentTable(data);
 
-  useEffect(() => {
-    const getData = async () => {
-      const response = await apiInstance.get("api/students/");
-      setData(response.data);
-    };
-    getData();
-  }, []);
   return (
     <>
       <CommandBar title="Данные студентов" menuList={menuList} />
-      <form
-        id="post-form"
-        className="mb-md-4 h-100"
-        method="post"
-        encType="multipart/form-data"
-        data-form-failed-validation-message-value="Пожалуйста, проверьте введенные данные, возможны указания на других языках."
-      >
+      <div className="mb-md-4 h-100">
         <FilterBar filters={filters} />
         <div className="bg-white rounded shadow-sm mb-3">
-          <MainTable table={table} />
+          {RenderPromise(getStudentsFx, {
+            success: <MainTable table={table} />,
+          })}
         </div>
-      </form>
+      </div>
     </>
   );
 }

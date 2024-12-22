@@ -59,6 +59,7 @@ export const useStudentRecordTable = (data: TStudentRecord[]) => {
               return <DefaultCell>{fieldValue as string}</DefaultCell>;
             },
             header: () => <DefaultHeader>{header}</DefaultHeader>,
+            meta: { label: header },
           })
   );
 

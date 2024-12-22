@@ -49,6 +49,7 @@ export const useActivityTable = (data: TActivity[]) => {
               return <DefaultCell>{fieldValue}</DefaultCell>;
             },
             header: () => <DefaultHeader>{header}</DefaultHeader>,
+            meta: { label: header },
           })
   );
   const table = useReactTable({

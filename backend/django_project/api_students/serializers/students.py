@@ -9,6 +9,13 @@ class StudentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Student
         fields = '__all__'
+        extra_kwargs = {}
+
+    def __init__(self, *args, **kwargs):
+        extra_kwargs = kwargs.pop('extra_kwargs', None)
+        if extra_kwargs:
+            self.Meta.extra_kwargs.update(extra_kwargs)
+        super().__init__(*args, **kwargs)
 
 
 class StudentRecordSerializer(serializers.ModelSerializer):

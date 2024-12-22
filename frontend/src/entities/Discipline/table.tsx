@@ -33,6 +33,7 @@ export const useDisciplineTable = (data: TDiscipline[]) => {
             <DefaultCell>{info.row.original[fieldName]}</DefaultCell>
           ),
           header: () => <DefaultHeader>{header}</DefaultHeader>,
+          meta: { label: header },
         })
   );
 

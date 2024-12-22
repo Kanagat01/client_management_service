@@ -1,11 +1,13 @@
+import { ReactNode } from "react";
+import { useUnit } from "effector-react";
 import { NavLink } from "react-router-dom";
 import { BsPlusCircle } from "react-icons/bs";
-import { ReactNode, useEffect, useState } from "react";
-import { SlActionRedo, SlActionUndo } from "react-icons/sl";
+import { SlActionUndo } from "react-icons/sl";
 import { CommandBar, FilterBar } from "~/widgets";
-import { TCode, useCodeTable } from "~/entities/Code";
-import { MainTable, Modal } from "~/shared/ui";
-import { apiInstance } from "~/shared/api";
+import { $codes, getCodesFx, useCodeTable } from "~/entities/Code";
+import { ExportBtn, MainTable } from "~/shared/ui";
+import { RenderPromise } from "~/shared/api";
+import { API_URL } from "~/shared/config";
 
 const menuList = [
   <NavLink className="btn btn-link icon-link" to="#">
@@ -16,10 +18,9 @@ const menuList = [
     <SlActionUndo />
     <span>Импорт из Excel</span>
   </NavLink>,
-  <NavLink className="btn btn-link icon-link" to="#">
-    <SlActionRedo />
-    <span>Экспорт</span>
-  </NavLink>,
+  <ExportBtn
+    link={`${API_URL}/api/export_codes/?token=${localStorage.getItem("token")}`}
+  />,
 ];
 
 const filters: [string, ReactNode][] = [
@@ -32,7 +33,7 @@ const filters: [string, ReactNode][] = [
       <select className="form-control">
         <option value="">Не выбрано</option>
         {[15, 30, 100, "Все"].map((cnt) => (
-          <option value={cnt} selected={cnt === 15}>
+          <option key={cnt} value={cnt} selected={cnt === 15}>
             {cnt}
           </option>
         ))}
@@ -64,27 +65,19 @@ const filters: [string, ReactNode][] = [
 ];
 
 export function CodesPage() {
-  const [data, setData] = useState<TCode[]>([]);
+  const data = useUnit($codes);
   const table = useCodeTable(data);
 
-  useEffect(() => {
-    const getData = async () => {
-      const response = await apiInstance.get(
-        "http://localhost:8000/api/codes/"
-      );
-      setData(response.data);
-    };
-    getData();
-  }, []);
   return (
     <>
       <CommandBar title="Редактор кодов" menuList={menuList} />
       <div className="mb-md-4 h-100">
         <FilterBar filters={filters} />
         <div className="bg-white rounded shadow-sm mb-3">
-          <MainTable table={table} />
+          {RenderPromise(getCodesFx, {
+            success: <MainTable table={table} />,
+          })}
         </div>
-        <Modal />
       </div>
     </>
   );

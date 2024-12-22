@@ -1,7 +1,8 @@
-import { useState, PropsWithChildren, ReactNode } from "react";
-import { ColumnHelper } from "@tanstack/react-table";
+import { useState, PropsWithChildren, ReactNode, useRef } from "react";
+import { ColumnHelper, Table } from "@tanstack/react-table";
 import { BsThreeDotsVertical } from "react-icons/bs";
-import { Dropdown } from "react-bootstrap";
+import { Button, Dropdown } from "react-bootstrap";
+import { usePopper } from "react-popper";
 
 export const DefaultHeader = ({ children }: PropsWithChildren) => (
   <th className="text-start">
@@ -49,69 +50,79 @@ export const useActionsColumn = (
 ) => {
   return columnHelper.display({
     id: "column_actions",
+    meta: { label: header },
     header: () => (
       <th className="text-center" style={{ width: "100px" }}>
         <div className="d-inline-flex align-items-center">{header}</div>
       </th>
     ),
-    cell: () => (
-      <td className="text-center" colSpan={1} style={{ minWidth: "100px" }}>
-        <div>
+    cell: () => {
+      const buttonRef = useRef<HTMLButtonElement | null>(null);
+      const menuRef = useRef<HTMLDivElement | null>(null);
+      const { styles, attributes } = usePopper(
+        buttonRef.current,
+        menuRef.current,
+        { strategy: "fixed" }
+      );
+      return (
+        <td className="text-center" colSpan={1} style={{ minWidth: "100px" }}>
           <div className="form-group mb-0">
-            <button
-              className="btn btn-link icon-link"
-              type="button"
-              data-bs-toggle="dropdown"
-              aria-expanded="false"
-              data-bs-popper-config='{"strategy": "fixed"}'
-            >
-              <BsThreeDotsVertical />
-            </button>
+            <Dropdown>
+              <Dropdown.Toggle
+                ref={buttonRef}
+                as={Button}
+                variant="link"
+                className="icon-link"
+              >
+                <BsThreeDotsVertical />
+              </Dropdown.Toggle>
 
-            <div
-              className="dropdown-menu dropdown-menu-end dropdown-menu-arrow bg-white"
-              x-placement="bottom-end"
-            >
-              {actions.map((action) => (
-                <div className="form-group mb-0">{action}</div>
-              ))}
-            </div>
+              <Dropdown.Menu
+                ref={menuRef}
+                style={{ ...styles.popper }}
+                {...attributes.popper}
+                popperConfig={{ strategy: "fixed" }}
+              >
+                {actions.map((action, key) => (
+                  <div key={key} className="form-group mb-0">
+                    {action}
+                  </div>
+                ))}
+              </Dropdown.Menu>
+            </Dropdown>
           </div>
-        </div>
-      </td>
-    ),
+        </td>
+      );
+    },
   });
 };
 
-export const ColumnSelector = () => {
-  const [columns, setColumns] = useState({
-    id: true,
-    code: true,
-    "group-id": true,
-    description: true,
-    "created-at": true,
-    "updated-at": true,
-  });
+export const ColumnSelector = ({ table }: { table: Table<any> }) => {
+  const allColumns = table.getAllColumns();
 
-  const toggleColumn = (column: keyof typeof columns) => {
-    setColumns((prev) => ({
-      ...prev,
-      [column]: !prev[column],
-    }));
+  const [columnVisibility, setColumnVisibility] = useState<
+    Record<string, boolean>
+  >(
+    allColumns.reduce((acc, column) => {
+      acc[column.id] = column.getIsVisible();
+      return acc;
+    }, {} as Record<string, boolean>)
+  );
+
+  const columnLabels = allColumns.reduce((acc, column) => {
+    const label =
+      (column.columnDef.meta as { label?: string })?.label || column.id;
+    acc[column.id] = label;
+    return acc;
+  }, {} as Record<string, string>);
+
+  const toggleColumn = (columnId: string) => {
+    setColumnVisibility((prev) => {
+      const newVisibility = { ...prev, [columnId]: !prev[columnId] };
+      table.getColumn(columnId)?.toggleVisibility(newVisibility[columnId]);
+      return newVisibility;
+    });
   };
-
-  const getColumnLabel = (column: string) => {
-    const labels: Record<string, string> = {
-      id: "ID",
-      code: "Код",
-      "group-id": "ID группы",
-      description: "Описание",
-      "created-at": "Дата создания",
-      "updated-at": "Последнее изменение",
-    };
-    return labels[column] || column;
-  };
-
   return (
     <Dropdown drop="up" className="d-inline-block">
       <Dropdown.Toggle variant="link" className="btn-sm p-0 m-0">
@@ -119,7 +130,7 @@ export const ColumnSelector = () => {
       </Dropdown.Toggle>
 
       <Dropdown.Menu className="dropdown-column-menu dropdown-scrollable">
-        {Object.entries(columns).map(([column, isVisible]) => (
+        {Object.entries(columnVisibility).map(([column, isVisible]) => (
           <Dropdown.Item key={column} className="d-flex align-items-center">
             <div className="form-check h-auto w-100 d-flex align-items-center ps-0">
               <input
@@ -127,13 +138,13 @@ export const ColumnSelector = () => {
                 className="custom-control-input"
                 type="checkbox"
                 checked={isVisible}
-                onClick={() => toggleColumn(column as keyof typeof columns)}
+                onClick={() => toggleColumn(column)}
               />
               <label
                 htmlFor={column}
                 className="form-check-label d-block w-100 cursor ms-2 user-select-none"
               >
-                {getColumnLabel(column)}
+                {columnLabels[column]}
               </label>
             </div>
           </Dropdown.Item>

@@ -37,6 +37,7 @@ export const useCodeTable = (data: TCode[]) => {
               <DefaultCell>{info.row.original[fieldName]}</DefaultCell>
             ),
             header: () => <DefaultHeader>{header}</DefaultHeader>,
+            meta: { label: header },
           })
   );
   const table = useReactTable({

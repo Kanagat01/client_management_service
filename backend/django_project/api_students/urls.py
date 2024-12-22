@@ -15,9 +15,8 @@ router.register(r'messages', MessageViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
-
-    path('login/', Login.as_view()),
-    path('reset_password/', PasswordResetView.as_view()),
-    path('reset_password_confirm/<str:token>/',
-         PasswordResetConfirmView.as_view(), name="password_reset_confirm"),
+    path('delete_all_students/', delete_all_students_view),
+    # path('export_students/', export_students_view),
+    path('export_student_records/', export_student_records_view),
+    path('export_codes/', export_codes_view),
 ]
