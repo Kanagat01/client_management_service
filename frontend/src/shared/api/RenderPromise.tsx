@@ -1,26 +1,32 @@
-import { ReactNode, useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
-import { Preloader } from "~/shared/ui";
+import { useState, useEffect, ReactNode, PropsWithChildren } from "react";
+import styles from "./styles.module.scss";
 
 const CenteredPreloader = () => {
   return (
-    <div className="d-flex align-items-center justify-content-center w-100">
-      <Preloader />
+    <div className={styles.center}>
+      {Array.from({ length: 5 }).map((_, key) => (
+        <div key={key} className={styles.wave}></div>
+      ))}
     </div>
   );
 };
 
+const ErrorDiv = ({ children }: PropsWithChildren) => (
+  <div className="text-center p-5 mt-5">
+    <div style={{ fontSize: "2.5rem", fontWeight: 500 }}>{children}</div>
+  </div>
+);
+
 type Handlers<T, E> = {
   loading?: ReactNode;
   success: ((data: T) => ReactNode) | ReactNode;
-  error: ((error: E) => ReactNode) | ReactNode;
+  error?: ((error: E) => ReactNode) | ReactNode;
 };
 
 export function RenderPromise<T, E = Error>(
   promiseFn: () => Promise<T>,
   handlers: Handlers<T, E>
 ) {
-  const { t } = useTranslation();
   const { loading = <CenteredPreloader />, success, error } = handlers;
   const [state, setState] = useState<{
     loading: boolean;
@@ -59,8 +65,15 @@ export function RenderPromise<T, E = Error>(
   } else if (state.data) {
     return typeof success === "function" ? success(state.data) : success;
   } else {
+    if (!error && state.error instanceof Error) {
+      return (
+        <ErrorDiv>
+          {state.error.name} {state.error.message}
+        </ErrorDiv>
+      );
+    }
     if (state.error)
       return typeof error === "function" ? error(state.error) : error;
-    else throw Error(t("common.unknownError", { error: state.error }));
+    return <ErrorDiv>Неизвестная ошибка: {state.error as ReactNode}</ErrorDiv>;
   }
 }

@@ -1,0 +1,53 @@
+.inputContainer {
+  display: flex;
+  flex-direction: column;
+  margin-right: 0.7rem;
+  font-size: 16px;
+
+  label {
+    color: rgba(#000, 0.5);
+    font-weight: 400;
+    line-height: 1.4rem;
+  }
+
+  input {
+    width: 100%;
+    height: 45px;
+    box-sizing: border-box;
+
+    &:focus-visible {
+      outline: none;
+    }
+  }
+
+  input,
+  .passwordInput {
+    border: none;
+    border-bottom: 2px solid var(--bs-gray);
+
+    &:-webkit-autofill,
+    &:-webkit-autofill:hover,
+    &:-webkit-autofill:focus {
+      -webkit-box-shadow: 0 0 0px 1000px white inset;
+    }
+  }
+
+  .passwordInput {
+    display: flex;
+    align-items: center;
+
+    input {
+      border: none;
+    }
+  }
+
+  .hidePasswordBtn {
+    padding-right: 5px;
+    color: var(--primary);
+  }
+}
+
+.errorText {
+  color: var(--danger);
+  margin-top: 0.25rem;
+}

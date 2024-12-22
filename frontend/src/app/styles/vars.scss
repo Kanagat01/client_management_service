@@ -1,9 +1,0 @@
-@import "./colors.scss";
-
-:root {
-  @each $name, $color in $colors {
-    --#{$name}: #{$color};
-  }
-
-  --default-border-radius: 20px;
-}

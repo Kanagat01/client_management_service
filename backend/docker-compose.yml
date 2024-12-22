@@ -76,7 +76,7 @@ services:
     restart: always
 
   react_app:
-    build: ../auction_frontend
+    build: ../frontend
     networks:
       - front
     volumes:
@@ -84,7 +84,7 @@ services:
     ports:
       - "3000:3000"
     env_file:
-      - ../auction_frontend/.env
+      - ../frontend/.env
     depends_on:
       - django_project
 

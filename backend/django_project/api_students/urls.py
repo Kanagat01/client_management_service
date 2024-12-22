@@ -5,15 +5,18 @@ from api_students.views import *
 router = DefaultRouter()
 router.register(r'students', StudentViewSet)
 router.register(r'student-records', StudentRecordViewSet)
+router.register(r'activity-types', ActivityTypeViewSet)
+router.register(r'activities', ActivityViewSet)
+router.register(r'disciplines', DisciplineViewSet)
+router.register(r'groups', GroupViewSet)
+router.register(r'codes', CodeViewSet)
+router.register(r'logs', LogViewSet)
 router.register(r'messages', MessageViewSet)
-router.register(r'notifications', NotificationViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
-    path('logs/', LogView.as_view()),
-
-    path('login/', Login.as_view()),
-    path('reset_password/', PasswordResetView.as_view()),
-    path('reset_password_confirm/<str:token>/',
-         PasswordResetConfirmView.as_view(), name="password_reset_confirm"),
+    path('delete_all_students/', delete_all_students_view),
+    # path('export_students/', export_students_view),
+    path('export_student_records/', export_student_records_view),
+    path('export_codes/', export_codes_view),
 ]

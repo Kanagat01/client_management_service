@@ -1,0 +1,72 @@
+$box-shadow: 0 5px 10px 0px rgba(0, 0, 0, 0.1);
+
+.limiter {
+  width: 100%;
+  margin: 0 auto;
+}
+
+.containerLogin {
+  width: 100%;
+  min-height: 100vh;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  padding: 15px;
+  background: #f2f2f2;
+}
+
+.wrapLogin {
+  width: 390px;
+  background: #fff;
+  border-radius: 10px;
+  overflow: hidden;
+  padding: 77px 55px 33px;
+
+  box-shadow: $box-shadow;
+  -moz-box-shadow: $box-shadow;
+  -webkit-box-shadow: $box-shadow;
+  -o-box-shadow: $box-shadow;
+  -ms-box-shadow: $box-shadow;
+}
+
+.title,
+.subtitle {
+  display: block;
+  font-family: "Poppins-Bold";
+  font-size: 30px;
+  line-height: 1.2;
+  text-align: center;
+  padding-bottom: 26px;
+}
+
+.subtitle {
+  font-family: "Times New Roman", Times, serif;
+  font-size: 25px;
+}
+
+.button {
+  width: 100%;
+  height: 50px;
+  padding: 0 20px;
+  font-size: 15px;
+  text-transform: uppercase;
+}
+
+.link {
+  font-family: "Poppins-Regular";
+  font-size: 16px;
+  line-height: 1.5;
+  text-decoration: none;
+}
+
+@media (max-width: 576px) {
+  .wrapLogin {
+    padding: 30px;
+    padding-top: 75px;
+  }
+}

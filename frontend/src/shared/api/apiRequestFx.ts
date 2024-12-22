@@ -1,6 +1,5 @@
-import { t } from "i18next";
-import { createEffect } from "effector";
 import { AxiosError, Method } from "axios";
+import { createEffect } from "effector";
 import { apiInstance } from ".";
 
 export type RequestParams = {
@@ -13,11 +12,11 @@ export const apiRequestFx = createEffect<RequestParams, any, Error>(
   async ({ method, url, data }) => {
     try {
       const response = await apiInstance({ method, url, data });
-      return response?.data?.message;
+      return response?.data;
     } catch (error) {
       if (error instanceof AxiosError) {
         if (error.response?.status! > 499)
-          throw t("common.serverError", { code: error.response?.status });
+          throw `Серверная ошибка. Код ${error.response?.status}`;
         const data = error.response?.data;
         if (data && "detail" in data && !("message" in data)) {
           if (
@@ -27,7 +26,7 @@ export const apiRequestFx = createEffect<RequestParams, any, Error>(
             setTimeout(() => {
               window.location.reload();
             }, 5000);
-            throw t("common.actionForbidden");
+            throw "У вас недостаточно прав для выполнения данного действия";
           }
           throw data.detail;
         }

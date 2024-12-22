@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { MainTable, TPaginator } from "~/shared/ui";
+import { MainTable, TPagination } from "~/shared/ui";
 import {
   ColumnDef,
   SortingState,
@@ -15,7 +15,7 @@ export function DataList({
 }: {
   initialData: any[];
   columns: ColumnDef<unknown, any>[];
-  paginator?: TPaginator;
+  paginator?: TPagination;
 }) {
   const [data, setData] = useState(initialData);
   useEffect(() => setData(initialData), [initialData]);

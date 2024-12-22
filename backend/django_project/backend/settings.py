@@ -19,7 +19,7 @@ CSRF_TRUSTED_ORIGINS = os.environ.get(
 CORS_ALLOW_ALL_ORIGINS = True
 
 REACT_RESET_PASSWORD_URL = os.environ.get(
-    "REACT_RESET_PASSWORD_URL", "http://localhost:5173/reset-password-confirm/")
+    "REACT_RESET_PASSWORD_URL", "http://localhost:5173/forgot-password-confirm/")
 
 SMS_LOGIN = os.environ.get(
     "SMS_LOGIN", "")
@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'corsheaders',
+    'accounts',
     'api_students',
 ]
 
