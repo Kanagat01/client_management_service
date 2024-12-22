@@ -3,6 +3,7 @@ import { SlActionRedo } from "react-icons/sl";
 import { IoBanOutline } from "react-icons/io5";
 import {
   BsArrowUp,
+  BsCheckCircle,
   BsPencil,
   BsPlusCircle,
   BsTrash,
@@ -12,13 +13,25 @@ import { ConfirmModal } from "~/shared/ui";
 import { useModalState } from "~/shared/lib";
 import { BtnWithConfirmation, BtnWithFormModal } from "./types";
 
-export function CreateBtn(props: BtnWithFormModal) {
+export function CreateBtn({
+  checkCircleVariant = false,
+  ...props
+}: BtnWithFormModal & { checkCircleVariant?: boolean }) {
   const [show, changeShow] = useModalState(false);
   return (
     <>
       <Button variant="link" className="icon-link" onClick={changeShow}>
-        <BsPlusCircle />
-        <span>Добавить</span>
+        {checkCircleVariant ? (
+          <>
+            <BsCheckCircle />
+            <span>Создать</span>
+          </>
+        ) : (
+          <>
+            <BsPlusCircle />
+            <span>Добавить</span>
+          </>
+        )}
       </Button>
       <Modal show={show} onHide={changeShow}>
         <Modal.Header closeButton>

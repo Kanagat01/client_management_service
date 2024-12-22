@@ -1,16 +1,17 @@
 import { useUnit } from "effector-react";
-import { NavLink } from "react-router-dom";
-import { BsCheckCircle } from "react-icons/bs";
 import { CommandBar } from "~/widgets";
 import { $messages, getMessagesFx, useMessageTable } from "~/entities/Message";
-import { MainTable } from "~/shared/ui";
+import { CreateBtn, MainTable } from "~/shared/ui";
 import { RenderPromise } from "~/shared/api";
 
 const menuList = [
-  <NavLink className="btn btn-link icon-link" to="#">
-    <BsCheckCircle />
-    <span>Создать</span>
-  </NavLink>,
+  <CreateBtn
+    title="Создать рассылку"
+    inputs={<h1>тут будет форма</h1>}
+    onReset={() => {}}
+    onSubmit={() => {}}
+    checkCircleVariant
+  />,
 ];
 
 export function MessagesPage() {
