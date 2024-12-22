@@ -6,8 +6,8 @@ import {
 import {
   DefaultHeader,
   DefaultCell,
-  EditButton,
-  DeleteButton,
+  EditBtn,
+  DeleteBtn,
   useActionsColumn,
 } from "~/shared/ui";
 import { TCode } from "./types";
@@ -27,10 +27,7 @@ export const useCodeTable = (data: TCode[]) => {
   const columns = (Object.entries(columnsRecord) as [TColumn, string][]).map(
     ([fieldName, header], index) =>
       fieldName === "actions"
-        ? useActionsColumn(columnHelper, header, [
-            <EditButton />,
-            <DeleteButton />,
-          ])
+        ? useActionsColumn(columnHelper, header, [<EditBtn />, <DeleteBtn />])
         : columnHelper.accessor(fieldName, {
             id: `column_${index}`,
             cell: (info) => (

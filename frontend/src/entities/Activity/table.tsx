@@ -8,7 +8,7 @@ import { dateTimeWithWeekday, dateToString } from "~/shared/lib";
 import {
   DefaultCell,
   DefaultHeader,
-  EditButton,
+  EditBtn,
   useActionsColumn,
 } from "~/shared/ui";
 import { TActivity } from "./types";
@@ -36,7 +36,7 @@ export const useActivityTable = (data: TActivity[]) => {
   let columns = (Object.entries(activityColumns) as [TColumn, string][]).map(
     ([fieldName, header], index) =>
       fieldName === "actions"
-        ? useActionsColumn(columnHelper, header, [<EditButton />])
+        ? useActionsColumn(columnHelper, header, [<EditBtn />])
         : columnHelper.accessor(fieldName, {
             id: `column_${index}`,
             cell: (info) => {

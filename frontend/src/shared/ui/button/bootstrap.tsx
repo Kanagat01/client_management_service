@@ -1,46 +1,179 @@
-import { Button } from "react-bootstrap";
+import { Button, Modal } from "react-bootstrap";
 import { SlActionRedo } from "react-icons/sl";
 import { IoBanOutline } from "react-icons/io5";
-import { BsArrowUp, BsPencil, BsTrash, BsTrash3 } from "react-icons/bs";
+import {
+  BsArrowUp,
+  BsPencil,
+  BsPlusCircle,
+  BsTrash,
+  BsTrash3,
+} from "react-icons/bs";
+import { ConfirmModal } from "~/shared/ui";
+import { useModalState } from "~/shared/lib";
+import { BtnWithConfirmation, BtnWithFormModal } from "./types";
 
-export const EditButton = () => (
-  <a className="btn btn-link icon-link">
-    <BsPencil />
-    <span>Редактировать</span>
-  </a>
-);
+export function CreateBtn(props: BtnWithFormModal) {
+  const [show, changeShow] = useModalState(false);
+  return (
+    <>
+      <Button variant="link" className="icon-link" onClick={changeShow}>
+        <BsPlusCircle />
+        <span>Добавить</span>
+      </Button>
+      <Modal show={show} onHide={changeShow}>
+        <Modal.Header closeButton>
+          <h4 className="modal-title text-black fw-light">{props.title}</h4>
+        </Modal.Header>
+        <Modal.Body>
+          <form className="p-4">{props.inputs}</form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button
+            variant="link"
+            onClick={() => {
+              props.onReset();
+              changeShow();
+            }}
+          >
+            Отмена
+          </Button>
+          <div data-confirm-target="button">
+            <Button
+              variant="danger"
+              onClick={() => {
+                props.onSubmit();
+                changeShow();
+              }}
+            >
+              Подтвердить
+            </Button>
+          </div>
+        </Modal.Footer>
+      </Modal>
+    </>
+  );
+}
 
-export const DeleteAllBtn = () => (
-  <Button variant="danger" style={{ height: "fit-content" }}>
-    <BsTrash />
-    Очистить данные студентов
-  </Button>
-);
+export function EditBtn(props: BtnWithFormModal) {
+  const [show, changeShow] = useModalState(false);
+  return (
+    <>
+      <Button variant="link" className="icon-link" onClick={changeShow}>
+        <BsPencil />
+        <span>Редактировать</span>
+      </Button>
+      <Modal show={show} onHide={changeShow}>
+        <Modal.Header closeButton>
+          <h4 className="modal-title text-black fw-light">{props.title}</h4>
+        </Modal.Header>
+        <Modal.Body>
+          <form className="p-4">{props.inputs}</form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button
+            variant="link"
+            onClick={() => {
+              props.onReset();
+              changeShow();
+            }}
+          >
+            Отмена
+          </Button>
+          <div data-confirm-target="button">
+            <Button
+              variant="danger"
+              onClick={() => {
+                props.onSubmit();
+                changeShow();
+              }}
+            >
+              Подтвердить
+            </Button>
+          </div>
+        </Modal.Footer>
+      </Modal>
+    </>
+  );
+}
 
-export const DeleteButton = () => (
-  <Button
-    data-button-confirm="Вы уверены, что хотите очистить данные этого студента?"
-    variant="link"
-    className="icon-link"
-  >
-    <BsTrash3 />
-    Очистить данные
-  </Button>
-);
+export function DeleteAllBtn({
+  title = "Очистить все данные",
+  ...props
+}: BtnWithConfirmation) {
+  const [show, changeShow] = useModalState(false);
+  return (
+    <>
+      <Button
+        variant="danger"
+        style={{ height: "fit-content" }}
+        onClick={changeShow}
+      >
+        <BsTrash />
+        {title}
+      </Button>
+      <ConfirmModal
+        show={show}
+        changeShow={changeShow}
+        content={props.content}
+        onConfirm={props.onConfirm}
+      />
+    </>
+  );
+}
 
-export const VerificationButton = () => (
-  <Button variant="link" className="icon-link">
-    <BsArrowUp />
-    Верифицировать
-  </Button>
-);
+export function DeleteBtn(props: Omit<BtnWithConfirmation, "title">) {
+  const [show, changeShow] = useModalState(false);
+  return (
+    <>
+      <Button variant="link" className="icon-link" onClick={changeShow}>
+        <BsTrash3 />
+        Очистить данные
+      </Button>
+      <ConfirmModal
+        show={show}
+        changeShow={changeShow}
+        content={props.content}
+        onConfirm={props.onConfirm}
+      />
+    </>
+  );
+}
 
-export const BanBtn = () => (
-  <Button variant="link" className="icon-link">
-    <IoBanOutline />
-    Заблокировать
-  </Button>
-);
+export function VerificationBtn(props: Omit<BtnWithConfirmation, "title">) {
+  const [show, changeShow] = useModalState(false);
+  return (
+    <>
+      <Button variant="link" className="icon-link" onClick={changeShow}>
+        <BsArrowUp />
+        Верифицировать
+      </Button>
+      <ConfirmModal
+        show={show}
+        changeShow={changeShow}
+        content={props.content}
+        onConfirm={props.onConfirm}
+      />
+    </>
+  );
+}
+
+export function BanBtn(props: Omit<BtnWithConfirmation, "title">) {
+  const [show, changeShow] = useModalState(false);
+  return (
+    <>
+      <Button variant="link" className="icon-link" onClick={changeShow}>
+        <IoBanOutline />
+        Заблокировать
+      </Button>
+      <ConfirmModal
+        show={show}
+        changeShow={changeShow}
+        content={props.content}
+        onConfirm={props.onConfirm}
+      />
+    </>
+  );
+}
 
 export const ExportBtn = ({ link }: { link: string }) => (
   <a className="btn btn-link icon-link" href={link} target="blank">

@@ -7,8 +7,8 @@ import {
   DefaultHeader,
   DefaultCell,
   useActionsColumn,
-  EditButton,
-  DeleteButton,
+  EditBtn,
+  DeleteBtn,
 } from "~/shared/ui";
 import { TMessage } from "./types";
 import { dateTimeToString } from "~/shared/lib";
@@ -29,10 +29,7 @@ export const useMessageTable = (data: TMessage[]) => {
   const columns = (Object.entries(columnsRecord) as [TColumn, string][]).map(
     ([fieldName, header], index) =>
       fieldName === "actions"
-        ? useActionsColumn(columnHelper, header, [
-            <EditButton />,
-            <DeleteButton />,
-          ])
+        ? useActionsColumn(columnHelper, header, [<EditBtn />, <DeleteBtn />])
         : columnHelper.accessor(fieldName, {
             id: `column_${index}`,
             cell: (info) => {

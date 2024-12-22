@@ -19,7 +19,7 @@ class Student(models.Model):
     username = models.CharField(
         max_length=50, verbose_name="Логин", unique=True)
     # Пароль хранится в текстовом виде
-    password = models.TextField(verbose_name="Пароль")
+    password = models.CharField(max_length=100, verbose_name="Пароль")
     group = models.ForeignKey(
         Group, on_delete=models.SET_NULL, verbose_name="Группа", blank=True, null=True)
     phone = models.CharField(

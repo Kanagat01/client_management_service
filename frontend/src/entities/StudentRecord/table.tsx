@@ -7,10 +7,9 @@ import { TActivity } from "~/entities/Activity";
 import {
   DefaultCell,
   DefaultHeader,
-  DeleteButton,
-  EditButton,
+  DeleteBtn,
+  EditBtn,
   useActionsColumn,
-  VerificationButton,
 } from "~/shared/ui";
 import { dateToString } from "~/shared/lib";
 import { TStudentRecord } from "./types";
@@ -37,9 +36,14 @@ export const useStudentRecordTable = (data: TStudentRecord[]) => {
     ([fieldName, header], index) =>
       fieldName === "actions"
         ? useActionsColumn(columnHelper, header, [
-            <EditButton key="edit" />,
-            <DeleteButton key="delete" />,
-            <VerificationButton key="verify" />,
+            <EditBtn
+              key="edit"
+              title={""}
+              inputs={undefined}
+              onSubmit={() => {}}
+              onReset={() => {}}
+            />,
+            <DeleteBtn key="delete" content={""} onConfirm={() => {}} />,
           ])
         : columnHelper.accessor(fieldName as keyof TStudentRecord, {
             id: `column_${index}`,

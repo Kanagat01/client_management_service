@@ -6,7 +6,7 @@ import {
 import {
   DefaultCell,
   DefaultHeader,
-  EditButton,
+  EditBtn,
   useActionsColumn,
 } from "~/shared/ui";
 import { TDiscipline } from "./types";
@@ -26,7 +26,7 @@ export const useDisciplineTable = (data: TDiscipline[]) => {
     Object.entries(disciplineColumns) as [TColumn, string][]
   ).map(([fieldName, header], index) =>
     fieldName === "actions"
-      ? useActionsColumn(columnHelper, header, [<EditButton />])
+      ? useActionsColumn(columnHelper, header, [<EditBtn />])
       : columnHelper.accessor(fieldName, {
           id: `column_${index}`,
           cell: (info) => (

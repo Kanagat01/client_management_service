@@ -1,18 +1,27 @@
 import { ReactNode } from "react";
 import { useUnit } from "effector-react";
-import { NavLink } from "react-router-dom";
-import { BsPlusCircle } from "react-icons/bs";
 import { CommandBar, FilterBar } from "~/widgets";
-import { $students, getStudentsFx, useStudentTable } from "~/entities/Student";
-import { MainTable, DeleteAllBtn } from "~/shared/ui";
+import {
+  $students,
+  deleteAllStudents,
+  getStudentsFx,
+  useStudentTable,
+} from "~/entities/Student";
+import { MainTable, DeleteAllBtn, CreateBtn } from "~/shared/ui";
 import { RenderPromise } from "~/shared/api";
 
 const menuList = [
-  <DeleteAllBtn />,
-  <NavLink className="btn btn-link icon-link" to="#">
-    <BsPlusCircle />
-    <span>Добавить</span>
-  </NavLink>,
+  <DeleteAllBtn
+    title="Очистить данные студентов"
+    content="Вы уверены, что хотите очистить все данные студентов?"
+    onConfirm={deleteAllStudents}
+  />,
+  <CreateBtn
+    title="Создать студента"
+    inputs={<h1>Тут будет форма</h1>}
+    onReset={() => {}}
+    onSubmit={() => {}}
+  />,
 ];
 
 const filters: [string, ReactNode][] = [

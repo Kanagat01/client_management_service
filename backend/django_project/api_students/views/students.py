@@ -15,7 +15,7 @@ class StudentViewSet(viewsets.ModelViewSet):
 
 @api_view(['GET'])
 def delete_all_students_view(request):
-    Student.objects.all()
+    Student.objects.all().delete()
     return success_with_text("ok")
 
 

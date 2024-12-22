@@ -8,11 +8,11 @@ import { BsStar } from "react-icons/bs";
 import {
   DefaultHeader,
   DefaultCell,
-  DeleteButton,
-  EditButton,
   useActionsColumn,
-  VerificationButton,
   BanBtn,
+  EditBtn,
+  DeleteBtn,
+  VerificationBtn,
 } from "~/shared/ui";
 import { dateTimeToString } from "~/shared/lib";
 import { TStudent } from "./types";
@@ -38,10 +38,23 @@ export const useStudentTable = (data: TStudent[]) => {
   ).map(([fieldName, header], index) =>
     fieldName === "actions"
       ? useActionsColumn(columnHelper, header, [
-          <EditButton />,
-          <DeleteButton />,
-          <VerificationButton />,
-          <BanBtn />,
+          <EditBtn
+            title="Редактировать студента"
+            inputs={<h1>тут будет форма</h1>}
+            onReset={() => {}}
+            onSubmit={() => {}}
+          />,
+          <DeleteBtn
+            content="Вы уверены, что хотите очистить данные этого студента?"
+            onConfirm={() => {}}
+          />,
+          <VerificationBtn content="" onConfirm={() => {}} />,
+          <BanBtn
+            content={""}
+            onConfirm={function (): void {
+              throw new Error("Function not implemented.");
+            }}
+          />,
         ])
       : columnHelper.accessor(fieldName, {
           id: `column_${index}`,

@@ -1,6 +1,7 @@
-import { Button, Modal } from "react-bootstrap";
+import { Button } from "react-bootstrap";
 import { BsBoxArrowLeft } from "react-icons/bs";
 import { useModalState } from "~/shared/lib";
+import { ConfirmModal } from "~/shared/ui";
 import { logout } from ".";
 
 export function LogoutBtn() {
@@ -11,26 +12,12 @@ export function LogoutBtn() {
         <BsBoxArrowLeft />
         Выход
       </Button>
-      <Modal show={show} onHide={changeShow}>
-        <Modal.Header closeButton>
-          <h4 className="modal-title text-black fw-light">Вы уверены?</h4>
-        </Modal.Header>
-        <Modal.Body>
-          <div className="p-4">
-            Вы уверены, что хотите очистить данные всех студентов?
-          </div>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="link" onClick={changeShow}>
-            Отмена
-          </Button>
-          <div data-confirm-target="button">
-            <Button variant="danger" onClick={logout}>
-              Выйти
-            </Button>
-          </div>
-        </Modal.Footer>
-      </Modal>
+      <ConfirmModal
+        show={show}
+        changeShow={changeShow}
+        content="Вы уверены, что хотите выйти?"
+        onConfirm={logout}
+      />
     </>
   );
 }
