@@ -11,6 +11,7 @@ export type BtnWithConfirmation = {
 export type BtnWithFormModal = {
   title: string;
   inputs: ReactNode;
+  onOpen: () => void;
   onSubmit: () => void;
   onReset: () => void;
 };

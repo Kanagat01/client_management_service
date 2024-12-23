@@ -1,93 +1,78 @@
 import { ReactNode } from "react";
 import { useUnit } from "effector-react";
 import { CommandBar, FilterBar } from "~/widgets";
+import { PageSizeSelector } from "~/features/PageSizeSelector";
 import {
   $activities,
   getActivitiesFx,
   useActivityTable,
 } from "~/entities/Activity";
-import { MainTable } from "~/shared/ui";
+import { MainTable, TomSelectInput } from "~/shared/ui";
 import { RenderPromise } from "~/shared/api";
 
-const filters: [string, ReactNode][] = [
-  [
-    "Записи на странице",
-    <div data-select-message-notfound="Результаты не найдены">
-      <select className="form-control" title="Записи на странице">
-        <option value="">Не выбрано</option>
-        {[15, 30, 100, "Все"].map((cnt) => (
-          <option key={cnt} value={cnt} selected={cnt === 15}>
-            {cnt}
-          </option>
-        ))}
-      </select>
-    </div>,
-  ],
-  [
-    "Тип активности",
-    <div data-select-message-notfound="Результаты не найдены">
-      <select className="form-control" name="group_id" title="Группа">
-        <option value="">Не выбрано</option>
-        {["ДЭФР22-1", "ДЦПУП23-1", "ДММ20-1", "ДМФ22-1"].map((group) => (
-          <option key={group} value={group}>
-            {group}
-          </option>
-        ))}
-      </select>
-    </div>,
-  ],
-  [
-    "Дисциплина",
-    <div data-select-message-notfound="Результаты не найдены">
-      <select className="form-control" name="group_id" title="Группа">
-        <option value="">Не выбрано</option>
-        {["ДЭФР22-1", "ДЦПУП23-1", "ДММ20-1", "ДМФ22-1"].map((group) => (
-          <option key={group} value={group}>
-            {group}
-          </option>
-        ))}
-      </select>
-    </div>,
-  ],
-  [
-    "Группа",
-    <div data-select-message-notfound="Результаты не найдены">
-      <select className="form-control" name="group_id" title="Группа">
-        <option value="">Не выбрано</option>
-        {["ДЭФР22-1", "ДЦПУП23-1", "ДММ20-1", "ДМФ22-1"].map((group) => (
-          <option key={group} value={group}>
-            {group}
-          </option>
-        ))}
-      </select>
-    </div>,
-  ],
-  [
-    "Прокторинг",
-    <div data-select-message-notfound="Результаты не найдены">
-      <select className="form-control" name="group_id" title="Группа">
-        <option value=""></option>
-        {["Да", "Нет"].map((group) => (
-          <option key={group} value={group}>
-            {group}
-          </option>
-        ))}
-      </select>
-    </div>,
-  ],
-  [
-    "Возможно прокторинг",
-    <div data-select-message-notfound="Результаты не найдены">
-      <select className="form-control" name="group_id" title="Группа">
-        <option value=""></option>
-        {["Да", "Нет"].map((group) => (
-          <option key={group} value={group}>
-            {group}
-          </option>
-        ))}
-      </select>
-    </div>,
-  ],
+const filters: ReactNode[] = [
+  <PageSizeSelector />,
+  <TomSelectInput
+    name="activity_type"
+    label="Тип активности"
+    placeholder="Не выбрано"
+    options={[
+      ...["Не выбрано", "ДЭФР22-1", "ДЦПУП23-1", "ДММ20-1", "ДМФ22-1"].map(
+        (el) => ({
+          value: el,
+          label: el,
+        })
+      ),
+    ]}
+  />,
+  <TomSelectInput
+    name="discipline"
+    label="Дисциплина"
+    placeholder="Не выбрано"
+    options={[
+      ...["Не выбрано", "ДЭФР22-1", "ДЦПУП23-1", "ДММ20-1", "ДМФ22-1"].map(
+        (el) => ({
+          value: el,
+          label: el,
+        })
+      ),
+    ]}
+  />,
+  <TomSelectInput
+    name="group_id"
+    label="Группа"
+    placeholder="Не выбрано"
+    options={[
+      ...["Не выбрано", "ДЭФР22-1", "ДЦПУП23-1", "ДММ20-1", "ДМФ22-1"].map(
+        (el) => ({
+          value: el,
+          label: el,
+        })
+      ),
+    ]}
+  />,
+  <TomSelectInput
+    name="proctoring"
+    label="Прокторинг"
+    placeholder="Не выбрано"
+    options={[
+      ...["Не выбрано", "Да", "Нет"].map((el) => ({
+        value: el,
+        label: el,
+      })),
+    ]}
+  />,
+  <TomSelectInput
+    name="proctoring_possible" // ???
+    label="Возможно прокторинг"
+    placeholder="Не выбрано"
+    options={[
+      ...["Не выбрано", "Да", "Нет"].map((el) => ({
+        value: el,
+        label: el,
+      })),
+    ]}
+  />,
 ];
 
 export function ActivitiesPage() {

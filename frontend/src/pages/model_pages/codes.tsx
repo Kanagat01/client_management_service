@@ -1,67 +1,57 @@
 import { ReactNode } from "react";
 import { useUnit } from "effector-react";
-import { NavLink } from "react-router-dom";
-import { BsPlusCircle } from "react-icons/bs";
-import { SlActionUndo } from "react-icons/sl";
 import { CommandBar, FilterBar } from "~/widgets";
+import { PageSizeSelector } from "~/features/PageSizeSelector";
 import { $codes, getCodesFx, useCodeTable } from "~/entities/Code";
-import { ExportBtn, MainTable } from "~/shared/ui";
+import {
+  CreateBtn,
+  ExportBtn,
+  ImportBtn,
+  MainTable,
+  TomSelectInput,
+} from "~/shared/ui";
 import { RenderPromise } from "~/shared/api";
 import { API_URL } from "~/shared/config";
+import { importCodes } from "~/features/import-data";
 
 const menuList = [
-  <NavLink className="btn btn-link icon-link" to="#">
-    <BsPlusCircle />
-    <span>Добавить</span>
-  </NavLink>,
-  <NavLink className="btn btn-link icon-link" to="#">
-    <SlActionUndo />
-    <span>Импорт из Excel</span>
-  </NavLink>,
+  <CreateBtn
+    title={"Создать код"}
+    inputs={undefined}
+    onOpen={() => {}}
+    onSubmit={() => {}}
+    onReset={() => {}}
+  />,
+  <ImportBtn onSubmit={() => importCodes({ url: "/api/import-codes/" })} />,
   <ExportBtn
-    link={`${API_URL}/api/export_codes/?token=${localStorage.getItem("token")}`}
+    link={`${API_URL}/api/export-codes/?token=${localStorage.getItem("token")}`}
   />,
 ];
 
-const filters: [string, ReactNode][] = [
-  [
-    "Записи на странице",
-    <div
-      data-controller="select"
-      data-select-message-notfound="Результаты не найдены"
-    >
-      <select className="form-control">
-        <option value="">Не выбрано</option>
-        {[15, 30, 100, "Все"].map((cnt) => (
-          <option key={cnt} value={cnt} selected={cnt === 15}>
-            {cnt}
-          </option>
-        ))}
-      </select>
-    </div>,
-  ],
-  [
-    "Код",
-    <div
-      data-controller="select"
-      data-select-message-notfound="Результаты не найдены"
-    >
-      <select className="form-control">
-        <option value="">Не выбрано</option>
-      </select>
-    </div>,
-  ],
-  [
-    "Получатель",
-    <div
-      data-controller="select"
-      data-select-message-notfound="Результаты не найдены"
-    >
-      <select className="form-control">
-        <option value="">Не выбрано</option>
-      </select>
-    </div>,
-  ],
+const filters: ReactNode[] = [
+  <PageSizeSelector />,
+  <TomSelectInput
+    name="code"
+    label="Код"
+    placeholder="Не выбрано"
+    options={[
+      ...["Не выбрано", "code1"].map((el) => ({
+        value: el,
+        label: el,
+      })),
+    ]}
+  />,
+  <TomSelectInput
+    name="receiver"
+    label="Получатель"
+    placeholder="Не выбрано"
+    options={[
+      ...["Не выбрано", "Kanagat"].map((el) => ({
+        value: el,
+        label: el,
+      })),
+    ]}
+  />,
 ];
 
 export function CodesPage() {

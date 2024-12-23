@@ -12,6 +12,7 @@ import {
   useActionsColumn,
 } from "~/shared/ui";
 import { TActivity } from "./types";
+import { editActivitySubmitted, setEditActivity } from "./model";
 
 type TColumn = keyof TActivity | "actions";
 
@@ -36,7 +37,15 @@ export const useActivityTable = (data: TActivity[]) => {
   let columns = (Object.entries(activityColumns) as [TColumn, string][]).map(
     ([fieldName, header], index) =>
       fieldName === "actions"
-        ? useActionsColumn(columnHelper, header, [<EditBtn />])
+        ? useActionsColumn(columnHelper, header, (row: TActivity) => [
+            <EditBtn
+              title={"Редактировать активность"}
+              inputs={undefined}
+              onOpen={() => setEditActivity(row)}
+              onSubmit={editActivitySubmitted}
+              onReset={() => setEditActivity(null)}
+            />,
+          ])
         : columnHelper.accessor(fieldName, {
             id: `column_${index}`,
             cell: (info) => {

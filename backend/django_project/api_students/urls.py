@@ -15,8 +15,10 @@ router.register(r'messages', MessageViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
-    path('delete_all_students/', delete_all_students_view),
-    # path('export_students/', export_students_view),
-    path('export_student_records/', export_student_records_view),
-    path('export_codes/', export_codes_view),
+    path('delete-all-students/', delete_all_students_view),
+    # path('export-students/', export_students_view),
+    path('export-student-records/', export_student_records_view),
+    path('export-codes/', export_codes_view),
+    path('import-disciplines/', import_disciplines_view),
+    path('import-codes/', import_codes_view),
 ]

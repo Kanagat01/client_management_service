@@ -1,6 +1,6 @@
 import { attach, createStore, Effect } from "effector";
-import { TCode } from "./types";
 import { apiRequestFx, RequestParams } from "~/shared/api";
+import { TCode } from "./types";
 
 export const $codes = createStore<TCode[]>([]);
 

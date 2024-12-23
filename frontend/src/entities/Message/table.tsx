@@ -29,7 +29,16 @@ export const useMessageTable = (data: TMessage[]) => {
   const columns = (Object.entries(columnsRecord) as [TColumn, string][]).map(
     ([fieldName, header], index) =>
       fieldName === "actions"
-        ? useActionsColumn(columnHelper, header, [<EditBtn />, <DeleteBtn />])
+        ? useActionsColumn(columnHelper, header, () => [
+            <EditBtn
+              title={""}
+              inputs={undefined}
+              onOpen={() => {}}
+              onSubmit={() => {}}
+              onReset={() => {}}
+            />,
+            <DeleteBtn content={""} onConfirm={() => {}} />,
+          ])
         : columnHelper.accessor(fieldName, {
             id: `column_${index}`,
             cell: (info) => {

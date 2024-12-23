@@ -35,6 +35,7 @@
     "react-svg": "^16.1.33",
     "react-table": "^7.8.0",
     "styled-components": "^6.1.13",
+    "tom-select": "^2.4.1",
     "xlsx": "^0.18.5"
   },
   "devDependencies": {

@@ -26,7 +26,15 @@ export const useDisciplineTable = (data: TDiscipline[]) => {
     Object.entries(disciplineColumns) as [TColumn, string][]
   ).map(([fieldName, header], index) =>
     fieldName === "actions"
-      ? useActionsColumn(columnHelper, header, [<EditBtn />])
+      ? useActionsColumn(columnHelper, header, (row: TDiscipline) => [
+          <EditBtn
+            title={""}
+            inputs={undefined}
+            onOpen={() => {}}
+            onSubmit={() => {}}
+            onReset={() => {}}
+          />,
+        ])
       : columnHelper.accessor(fieldName, {
           id: `column_${index}`,
           cell: (info) => (

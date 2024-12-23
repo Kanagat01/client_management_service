@@ -3,23 +3,20 @@ import { Button } from "react-bootstrap";
 import { BsArrowRepeat, BsFunnel } from "react-icons/bs";
 
 type FilterBarProps = {
-  filters: [string, ReactNode][];
+  filters: ReactNode[];
 };
 
 export function FilterBar(props: FilterBarProps) {
   return (
     <div className="g-0 bg-white rounded mb-3">
       <div className="row align-items-center p-4" data-controller="filter">
-        {props.filters.map(([label, filter], key) => (
+        {props.filters.map((filter, key) => (
           <div
             key={key}
             className="col-sm-auto col-md mb-3 align-self-start"
             style={{ minWidth: "200px" }}
           >
-            <div className="form-group">
-              <label className="form-label">{label}</label>
-              {filter}
-            </div>
+            {filter}
           </div>
         ))}
         <div className="col-sm-auto ms-auto text-end">

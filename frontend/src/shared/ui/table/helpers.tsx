@@ -46,7 +46,7 @@ export const DefaultCell = ({ children }: PropsWithChildren) => {
 export const useActionsColumn = (
   columnHelper: ColumnHelper<any>,
   header: ReactNode,
-  actions: ReactNode[]
+  actions: (row: any) => ReactNode[]
 ) => {
   return columnHelper.display({
     id: "column_actions",
@@ -56,7 +56,7 @@ export const useActionsColumn = (
         <div className="d-inline-flex align-items-center">{header}</div>
       </th>
     ),
-    cell: () => {
+    cell: (info) => {
       const buttonRef = useRef<HTMLButtonElement | null>(null);
       const menuRef = useRef<HTMLDivElement | null>(null);
       const { styles, attributes } = usePopper(
@@ -83,7 +83,7 @@ export const useActionsColumn = (
                 {...attributes.popper}
                 popperConfig={{ strategy: "fixed" }}
               >
-                {actions.map((action, key) => (
+                {actions(info.row.original).map((action, key) => (
                   <div key={key} className="form-group mb-0">
                     {action}
                   </div>

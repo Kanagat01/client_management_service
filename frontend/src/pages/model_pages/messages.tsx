@@ -8,6 +8,7 @@ const menuList = [
   <CreateBtn
     title="Создать рассылку"
     inputs={<h1>тут будет форма</h1>}
+    onOpen={() => {}}
     onReset={() => {}}
     onSubmit={() => {}}
     checkCircleVariant

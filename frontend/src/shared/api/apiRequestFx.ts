@@ -6,12 +6,13 @@ export type RequestParams = {
   method: Method;
   url: string;
   data?: object;
+  headers?: object;
 };
 
 export const apiRequestFx = createEffect<RequestParams, any, Error>(
-  async ({ method, url, data }) => {
+  async (apiConfig) => {
     try {
-      const response = await apiInstance({ method, url, data });
+      const response = await apiInstance(apiConfig);
       return response?.data;
     } catch (error) {
       if (error instanceof AxiosError) {

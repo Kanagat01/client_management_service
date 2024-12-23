@@ -35,11 +35,12 @@ export const useStudentRecordTable = (data: TStudentRecord[]) => {
   const columns = Object.entries(studentRecordColumns).map(
     ([fieldName, header], index) =>
       fieldName === "actions"
-        ? useActionsColumn(columnHelper, header, [
+        ? useActionsColumn(columnHelper, header, (row: TStudentRecord) => [
             <EditBtn
               key="edit"
               title={""}
               inputs={undefined}
+              onOpen={() => {}}
               onSubmit={() => {}}
               onReset={() => {}}
             />,
