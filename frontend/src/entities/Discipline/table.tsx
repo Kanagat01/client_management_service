@@ -3,13 +3,9 @@ import {
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import {
-  DefaultCell,
-  DefaultHeader,
-  EditBtn,
-  useActionsColumn,
-} from "~/shared/ui";
+import { DefaultCell, DefaultHeader, useActionsColumn } from "~/shared/ui";
 import { TDiscipline } from "./types";
+import { EditDiscipline } from "./ui";
 
 type TColumn = keyof TDiscipline | "actions";
 
@@ -27,13 +23,7 @@ export const useDisciplineTable = (data: TDiscipline[]) => {
   ).map(([fieldName, header], index) =>
     fieldName === "actions"
       ? useActionsColumn(columnHelper, header, (row: TDiscipline) => [
-          <EditBtn
-            title={""}
-            inputs={undefined}
-            onOpen={() => {}}
-            onSubmit={() => {}}
-            onReset={() => {}}
-          />,
+          <EditDiscipline {...row} />,
         ])
       : columnHelper.accessor(fieldName, {
           id: `column_${index}`,

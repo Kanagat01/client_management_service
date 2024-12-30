@@ -7,17 +7,17 @@ import {
   DefaultHeader,
   DefaultCell,
   useActionsColumn,
-  EditBtn,
+  CreateOrEditBtn,
   DeleteBtn,
 } from "~/shared/ui";
-import { TMessage } from "./types";
 import { dateTimeToString } from "~/shared/lib";
+import { TMessage } from "./types";
 
 type TColumn = keyof TMessage | "actions";
 
 const columnsRecord: Record<TColumn, string> = {
   id: "Номер рассылки",
-  group: "Группа",
+  receiver: "Получатель",
   text: "Содержание",
   schedule_datetime: "Запланированное время рассылки",
   is_sent: "Отправлено",
@@ -30,10 +30,10 @@ export const useMessageTable = (data: TMessage[]) => {
     ([fieldName, header], index) =>
       fieldName === "actions"
         ? useActionsColumn(columnHelper, header, () => [
-            <EditBtn
+            <CreateOrEditBtn
+              variant="edit"
               title={""}
               inputs={undefined}
-              onOpen={() => {}}
               onSubmit={() => {}}
               onReset={() => {}}
             />,

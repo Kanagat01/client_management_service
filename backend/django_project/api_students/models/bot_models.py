@@ -19,11 +19,11 @@ class Message(models.Model):
     text = models.TextField(verbose_name="Текст сообщения")
     schedule_datetime = models.DateTimeField(
         verbose_name="Дата и время рассылки")
-    is_sent = models.BooleanField(verbose_name="Отправлено")
-
-    def __str__(self):
-        return f"Рассылка #{self.pk} - Группа {self.group}"
+    is_sent = models.BooleanField(verbose_name="Отправлено", default=False)
 
     class Meta:
         verbose_name = "Сообщение"
         verbose_name_plural = "Сообщения"
+
+    def __str__(self):
+        return f"Рассылка #{self.pk} - Группа {self.group}"

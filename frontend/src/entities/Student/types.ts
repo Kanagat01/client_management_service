@@ -3,8 +3,8 @@ export type TStudent = {
   full_name: string;
   telegram_id: string;
   telegram_link: string;
-  username: string;
-  password: string;
+  fa_login: string;
+  fa_password: string;
   group: string;
   phone: string;
   is_verified: boolean;

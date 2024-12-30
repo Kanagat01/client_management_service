@@ -1,27 +1,15 @@
 import { ReactNode } from "react";
 import { useUnit } from "effector-react";
 import { CommandBar, FilterBar } from "~/widgets";
+import { importCodes } from "~/features/import-data";
 import { PageSizeSelector } from "~/features/PageSizeSelector";
-import { $codes, getCodesFx, useCodeTable } from "~/entities/Code";
-import {
-  CreateBtn,
-  ExportBtn,
-  ImportBtn,
-  MainTable,
-  TomSelectInput,
-} from "~/shared/ui";
+import { $codes, CreateCode, getCodesFx, useCodeTable } from "~/entities/Code";
+import { ExportBtn, ImportBtn, MainTable, TomSelectInput } from "~/shared/ui";
 import { RenderPromise } from "~/shared/api";
 import { API_URL } from "~/shared/config";
-import { importCodes } from "~/features/import-data";
 
 const menuList = [
-  <CreateBtn
-    title={"Создать код"}
-    inputs={undefined}
-    onOpen={() => {}}
-    onSubmit={() => {}}
-    onReset={() => {}}
-  />,
+  <CreateCode />,
   <ImportBtn onSubmit={() => importCodes({ url: "/api/import-codes/" })} />,
   <ExportBtn
     link={`${API_URL}/api/export-codes/?token=${localStorage.getItem("token")}`}

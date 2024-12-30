@@ -1,4 +1,6 @@
+import { ChangeEvent } from "react";
 import { Button, Modal } from "react-bootstrap";
+import { createEvent, createStore } from "effector";
 import { SlActionRedo, SlActionUndo } from "react-icons/sl";
 import { IoBanOutline } from "react-icons/io5";
 import {
@@ -11,101 +13,49 @@ import {
 } from "react-icons/bs";
 import { ConfirmModal } from "~/shared/ui";
 import { useModalState } from "~/shared/lib";
-import { BtnWithConfirmation, BtnWithFormModal } from "./types";
-import { createEvent, createStore } from "effector";
-import { ChangeEvent } from "react";
+import { BtnWithConfirmation, CreateOrEditBtnProps } from "./types";
 
-export function CreateBtn({
-  checkCircleVariant = false,
-  ...props
-}: BtnWithFormModal & { checkCircleVariant?: boolean }) {
+export function CreateOrEditBtn({ variant, ...props }: CreateOrEditBtnProps) {
+  const variantData = {
+    create: { icon: <BsCheckCircle />, text: "Создать" },
+    add: { icon: <BsPlusCircle />, text: "Добавить" },
+    edit: { icon: <BsPencil />, text: "Редактировать" },
+  };
+
   const [show, changeShow] = useModalState(false);
   return (
     <>
       <Button variant="link" className="icon-link" onClick={changeShow}>
-        {checkCircleVariant ? (
-          <>
-            <BsCheckCircle />
-            <span>Создать</span>
-          </>
-        ) : (
-          <>
-            <BsPlusCircle />
-            <span>Добавить</span>
-          </>
-        )}
+        {variantData[variant].icon}
+        <span>{variantData[variant].text}</span>
       </Button>
       <Modal show={show} onHide={changeShow}>
         <Modal.Header closeButton>
           <h4 className="modal-title text-black fw-light">{props.title}</h4>
         </Modal.Header>
         <Modal.Body>
-          <form className="p-4">{props.inputs}</form>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button
-            variant="link"
-            onClick={() => {
+          <form
+            id="create-or-edit-form"
+            className="p-4"
+            onReset={() => {
               props.onReset();
               changeShow();
             }}
-          >
-            Отмена
-          </Button>
-          <div>
-            <Button
-              variant="danger"
-              onClick={() => {
-                props.onSubmit();
-                changeShow();
-              }}
-            >
-              Подтвердить
-            </Button>
-          </div>
-        </Modal.Footer>
-      </Modal>
-    </>
-  );
-}
-
-export function EditBtn(props: BtnWithFormModal) {
-  const [show, changeShow] = useModalState(false);
-  const openModal = () => {
-    props.onOpen();
-    changeShow();
-  };
-  return (
-    <>
-      <Button variant="link" className="icon-link" onClick={openModal}>
-        <BsPencil />
-        <span>Редактировать</span>
-      </Button>
-      <Modal show={show} onHide={changeShow}>
-        <Modal.Header closeButton>
-          <h4 className="modal-title text-black fw-light">{props.title}</h4>
-        </Modal.Header>
-        <Modal.Body>
-          <form className="p-4">{props.inputs}</form>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button
-            variant="link"
-            onClick={() => {
-              props.onReset();
+            onSubmit={(e) => {
+              e.preventDefault();
+              props.onSubmit();
               changeShow();
             }}
           >
+            {props.inputs}
+          </form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button form="create-or-edit-form" variant="link" type="reset">
             Отмена
           </Button>
           <div>
-            <Button
-              variant="danger"
-              onClick={() => {
-                props.onSubmit();
-                changeShow();
-              }}
-            >
+            <Button form="create-or-edit-form" variant="danger" type="submit">
               Подтвердить
             </Button>
           </div>

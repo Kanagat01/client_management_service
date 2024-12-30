@@ -1,19 +1,9 @@
-
-import requests
 from django.db import models
-from django.core.exceptions import ValidationError
-
-
-def validate_group(group):
-    url = f'https://rus.fs.ru/check_group/{group}'
-    response = requests.get(url)
-    if response.status_code != 200 or not response.json().get('exists'):
-        raise ValidationError("Группа не существует или недоступна")
 
 
 class Group(models.Model):
     code = models.CharField(unique=True, max_length=50,
-                            verbose_name="Код группы", validators=[validate_group])
+                            verbose_name="Код группы")
     fa_id = models.IntegerField(verbose_name="FA ID", unique=True)
     description = models.CharField(max_length=150, verbose_name="Описание")
     created_at = models.DateTimeField(

@@ -6,7 +6,7 @@ import {
 import {
   DefaultHeader,
   DefaultCell,
-  EditBtn,
+  CreateOrEditBtn,
   DeleteBtn,
   useActionsColumn,
 } from "~/shared/ui";
@@ -28,10 +28,10 @@ export const useCodeTable = (data: TCode[]) => {
     ([fieldName, header], index) =>
       fieldName === "actions"
         ? useActionsColumn(columnHelper, header, (row: TCode) => [
-            <EditBtn
+            <CreateOrEditBtn
+              variant="edit"
               title={""}
               inputs={undefined}
-              onOpen={() => {}}
               onSubmit={() => {}}
               onReset={() => {}}
             />,

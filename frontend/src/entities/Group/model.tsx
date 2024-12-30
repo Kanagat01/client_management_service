@@ -1,8 +1,7 @@
-import { attach, createStore, Effect } from "effector";
+import toast from "react-hot-toast";
+import { attach, createEvent, createStore, Effect } from "effector";
 import { apiRequestFx, RequestParams } from "~/shared/api";
 import { TGroup } from "./types";
-
-export const $groups = createStore<TGroup[]>([]);
 
 export const getGroupsFx: Effect<void, TGroup[]> = attach({
   effect: apiRequestFx,
@@ -11,4 +10,29 @@ export const getGroupsFx: Effect<void, TGroup[]> = attach({
     url: "/api/groups/",
   }),
 });
-$groups.on(getGroupsFx.doneData, (_, state) => state);
+
+export const setGroups = createEvent<TGroup[]>();
+export const $groups = createStore<TGroup[]>([])
+  .on(getGroupsFx.doneData, (_, state) => state)
+  .on(setGroups, (_, state) => state);
+
+const createGroupFx: Effect<{ code: string }, { message: TGroup }> = attach({
+  effect: apiRequestFx,
+  mapParams: (data): RequestParams => ({
+    method: "post",
+    url: "/api/groups/",
+    data,
+  }),
+});
+
+export const createGroup = createEvent<{ code: string }>();
+createGroup.watch((data) => {
+  toast.promise(createGroupFx(data), {
+    loading: "Добавляем группу...",
+    success: (response) => {
+      setGroups([...$groups.getState(), response.message]);
+      return "Группа успешно добавлена";
+    },
+    error: (err) => `Произошла ошибка: ${err}`,
+  });
+});

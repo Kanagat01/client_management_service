@@ -5,20 +5,15 @@ import { PageSizeSelector } from "~/features/PageSizeSelector";
 import { importCodes } from "~/features/import-data";
 import {
   $disciplines,
+  CreateDiscipline,
   getDisciplinesFx,
   useDisciplineTable,
 } from "~/entities/Discipline";
 import { RenderPromise } from "~/shared/api";
-import { CreateBtn, ImportBtn, MainTable } from "~/shared/ui";
+import { ImportBtn, MainTable } from "~/shared/ui";
 
 const menuList = [
-  <CreateBtn
-    title={""}
-    inputs={undefined}
-    onOpen={() => {}}
-    onSubmit={() => {}}
-    onReset={() => {}}
-  />,
+  <CreateDiscipline />,
   <ImportBtn
     onSubmit={() => importCodes({ url: "/api/import-disciplines/" })}
   />,

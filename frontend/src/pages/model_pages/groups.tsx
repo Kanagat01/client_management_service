@@ -2,20 +2,16 @@ import { ReactNode } from "react";
 import { useUnit } from "effector-react";
 import { CommandBar, FilterBar } from "~/widgets";
 import { PageSizeSelector } from "~/features/PageSizeSelector";
-import { $groups, getGroupsFx, useGroupTable } from "~/entities/Group";
+import {
+  $groups,
+  CreateGroup,
+  getGroupsFx,
+  useGroupTable,
+} from "~/entities/Group";
+import { MainTable } from "~/shared/ui";
 import { RenderPromise } from "~/shared/api";
-import { CreateBtn, MainTable } from "~/shared/ui";
 
-const menuList = [
-  <CreateBtn
-    title={""}
-    inputs={undefined}
-    onOpen={() => {}}
-    onSubmit={() => {}}
-    onReset={() => {}}
-  />,
-];
-
+const menuList = [<CreateGroup />];
 const filters: ReactNode[] = [<PageSizeSelector />];
 
 export function GroupsPage() {

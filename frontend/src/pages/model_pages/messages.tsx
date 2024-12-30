@@ -1,19 +1,15 @@
 import { useUnit } from "effector-react";
 import { CommandBar } from "~/widgets";
-import { $messages, getMessagesFx, useMessageTable } from "~/entities/Message";
-import { CreateBtn, MainTable } from "~/shared/ui";
+import {
+  $messages,
+  CreateMessage,
+  getMessagesFx,
+  useMessageTable,
+} from "~/entities/Message";
+import { MainTable } from "~/shared/ui";
 import { RenderPromise } from "~/shared/api";
 
-const menuList = [
-  <CreateBtn
-    title="Создать рассылку"
-    inputs={<h1>тут будет форма</h1>}
-    onOpen={() => {}}
-    onReset={() => {}}
-    onSubmit={() => {}}
-    checkCircleVariant
-  />,
-];
+const menuList = [<CreateMessage />];
 
 export function MessagesPage() {
   const data = useUnit($messages);

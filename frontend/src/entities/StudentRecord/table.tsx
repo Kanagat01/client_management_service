@@ -8,7 +8,7 @@ import {
   DefaultCell,
   DefaultHeader,
   DeleteBtn,
-  EditBtn,
+  CreateOrEditBtn,
   useActionsColumn,
 } from "~/shared/ui";
 import { dateToString } from "~/shared/lib";
@@ -36,15 +36,14 @@ export const useStudentRecordTable = (data: TStudentRecord[]) => {
     ([fieldName, header], index) =>
       fieldName === "actions"
         ? useActionsColumn(columnHelper, header, (row: TStudentRecord) => [
-            <EditBtn
-              key="edit"
+            <CreateOrEditBtn
+              variant="edit"
               title={""}
               inputs={undefined}
-              onOpen={() => {}}
               onSubmit={() => {}}
               onReset={() => {}}
             />,
-            <DeleteBtn key="delete" content={""} onConfirm={() => {}} />,
+            <DeleteBtn content={""} onConfirm={() => {}} />,
           ])
         : columnHelper.accessor(fieldName as keyof TStudentRecord, {
             id: `column_${index}`,

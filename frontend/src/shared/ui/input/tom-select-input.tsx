@@ -6,15 +6,18 @@ interface TomSelectInputProps {
   options: { value: string; label: string }[];
   name?: string;
   placeholder?: string;
-  onChange?: (value: string) => void;
+  value?: string;
+  onChange?: (value: string | number) => void;
+  required?: boolean;
 }
 
 export const TomSelectInput: React.FC<TomSelectInputProps> = ({
-  name,
   label,
   options,
   placeholder = "",
+  value,
   onChange,
+  ...selectProps
 }) => {
   const selectRef = useRef<HTMLSelectElement | null>(null);
 
@@ -28,9 +31,8 @@ export const TomSelectInput: React.FC<TomSelectInputProps> = ({
       onType: () => {
         tomSelectInstance.clear();
       },
-      onChange: (value: string) => {
-        if (onChange) onChange(value);
-      },
+      valueField: value,
+      onChange: onChange,
       render: {
         no_results: () => {
           const noResultsDiv = document.createElement("div");
@@ -54,9 +56,9 @@ export const TomSelectInput: React.FC<TomSelectInputProps> = ({
       <div>
         <select
           ref={selectRef}
-          id={`field-${name}`}
-          name={name}
+          id={`field-${selectProps.name}`}
           className="form-control tomselected ts-hidden-accessible"
+          {...selectProps}
         >
           {options.map((option, index) => (
             <option key={index} value={option.value}>

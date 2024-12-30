@@ -1,27 +1,20 @@
 import { ReactNode } from "react";
-import Flatpickr from "react-flatpickr";
 import { useUnit } from "effector-react";
-import { Russian } from "flatpickr/dist/l10n/ru.js";
 
 import { CommandBar, FilterBar } from "~/widgets";
 import { PageSizeSelector } from "~/features/PageSizeSelector";
 import {
   $studentRecords,
+  CreateStudentRecord,
   getStudentRecordsFx,
   useStudentRecordTable,
 } from "~/entities/StudentRecord";
-import { CreateBtn, ExportBtn, MainTable, TomSelectInput } from "~/shared/ui";
+import { ExportBtn, MainTable, BsInput, TomSelectInput } from "~/shared/ui";
 import { RenderPromise } from "~/shared/api";
 import { API_URL } from "~/shared/config";
 
 const menuList = [
-  <CreateBtn
-    title={""}
-    inputs={undefined}
-    onOpen={() => {}}
-    onSubmit={() => {}}
-    onReset={() => {}}
-  />,
+  <CreateStudentRecord />,
   <ExportBtn
     link={`${API_URL}/api/export-student-records/?token=${localStorage.getItem(
       "token"
@@ -79,29 +72,13 @@ const filters: ReactNode[] = [
       ),
     ]}
   />,
-  <div className="form-group">
+  <div className="row">
     <label className="form-label">Выберите диапазон дат</label>
-    <div className="row">
-      {["date_range[start]", "date_range[end]"].map((name, key) => (
-        <div
-          key={key}
-          className={`col-md-6 ${key === 0 ? "pe" : "ps"}-auto ${
-            key === 0 ? "pe" : "ps"
-          }-md-1`}
-        >
-          <div className="form-group">
-            <Flatpickr
-              name={name}
-              className="form-control"
-              options={{
-                locale: Russian,
-                mode: "single",
-                dateFormat: "Y-m-d",
-              }}
-            />
-          </div>
-        </div>
-      ))}
+    <div className="col-md-6">
+      <BsInput label="" variant="input" type="date" />
+    </div>
+    <div className="col-md-6">
+      <BsInput label="" variant="input" type="date" />
     </div>
   </div>,
 ];

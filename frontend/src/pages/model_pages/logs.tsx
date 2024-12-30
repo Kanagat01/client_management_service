@@ -4,7 +4,7 @@ import { CommandBar, FilterBar } from "~/widgets";
 import { PageSizeSelector } from "~/features/PageSizeSelector";
 import { $logs, getLogsFx, useLogTable } from "~/entities/LogModel";
 import { RenderPromise } from "~/shared/api";
-import { MainTable, TextInput, TomSelectInput } from "~/shared/ui";
+import { MainTable, BsInput, TomSelectInput } from "~/shared/ui";
 
 const filters: ReactNode[] = [
   <PageSizeSelector />,
@@ -19,8 +19,8 @@ const filters: ReactNode[] = [
       })),
     ]}
   />,
-  <TextInput label="Старое значение" />,
-  <TextInput label="Новое значение" />,
+  <BsInput variant="input" label="Старое значение" />,
+  <BsInput variant="input" label="Новое значение" />,
 ];
 
 export function LogsPage() {

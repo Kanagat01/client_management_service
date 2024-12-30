@@ -10,9 +10,9 @@ import {
   DefaultCell,
   useActionsColumn,
   BanBtn,
-  EditBtn,
   DeleteBtn,
   VerificationBtn,
+  CreateOrEditBtn,
 } from "~/shared/ui";
 import { dateTimeToString } from "~/shared/lib";
 import { TStudent } from "./types";
@@ -37,10 +37,10 @@ export const useStudentTable = (data: TStudent[]) => {
     ([fieldName, header], index) =>
       fieldName === "actions"
         ? useActionsColumn(columnHelper, header, (row: TStudent) => [
-            <EditBtn
+            <CreateOrEditBtn
+              variant="edit"
               title="Редактировать студента"
               inputs={<h1>тут будет форма</h1>}
-              onOpen={() => {}}
               onReset={() => {}}
               onSubmit={() => {}}
             />,

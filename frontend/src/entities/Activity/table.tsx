@@ -8,7 +8,7 @@ import { dateTimeWithWeekday, dateToString } from "~/shared/lib";
 import {
   DefaultCell,
   DefaultHeader,
-  EditBtn,
+  CreateOrEditBtn,
   useActionsColumn,
 } from "~/shared/ui";
 import { TActivity } from "./types";
@@ -38,10 +38,10 @@ export const useActivityTable = (data: TActivity[]) => {
     ([fieldName, header], index) =>
       fieldName === "actions"
         ? useActionsColumn(columnHelper, header, (row: TActivity) => [
-            <EditBtn
+            <CreateOrEditBtn
+              variant="edit"
               title={"Редактировать активность"}
               inputs={undefined}
-              onOpen={() => setEditActivity(row)}
               onSubmit={editActivitySubmitted}
               onReset={() => setEditActivity(null)}
             />,

@@ -19,6 +19,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='group',
             name='code',
-            field=models.CharField(max_length=50, unique=True, validators=[api_students.models.university.validate_group], verbose_name='Код группы'),
+            field=models.CharField(
+                max_length=50, unique=True, verbose_name='Код группы'),
         ),
     ]

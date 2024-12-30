@@ -3,8 +3,8 @@ from api_students.models import Discipline, Group, ActivityType, Activity
 from .base import create_model_serializer
 
 
-DisciplineSerializer = create_model_serializer(Discipline)
 GroupSerializer = create_model_serializer(Group)
+DisciplineSerializer = create_model_serializer(Discipline)
 ActivityTypeSerializer = create_model_serializer(ActivityType)
 
 
