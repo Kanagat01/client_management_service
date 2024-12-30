@@ -1,4 +1,6 @@
 from django.db import models
+from django.core.exceptions import ValidationError
+import requests
 
 
 class Group(models.Model):
@@ -13,6 +15,28 @@ class Group(models.Model):
 
     def __str__(self):
         return self.code
+
+    @classmethod
+    def create(cls, code):
+        if Group.objects.filter(code=code).exists():
+            raise ValidationError("Группа уже существует")
+
+        group_data = None
+        url = f"https://ruz.fa.ru/api/search?term={code}&type=group"
+        response = requests.get(url, timeout=30)
+        if response.status_code == 200:
+            for group in response.json():
+                if group.get("label") == code:
+                    group_data = group
+        if not group_data:
+            raise ValidationError("Группа не существует")
+
+        group_data = {
+            "code": code, "fa_id": group_data.get("id"), "description": group_data.get("description", "")}
+        group = cls(**group_data)
+        group.full_clean()
+        group.save()
+        return group
 
 
 class Discipline(models.Model):

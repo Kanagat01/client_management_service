@@ -82,9 +82,7 @@ async def get_login(message: Message, state: FSMContext):
 @router.message(UserFSM.password)
 async def get_password(message: Message, state: FSMContext):
     state_data = await state.get_data()
-    print(state_data)
-    group_code = state_data["group"]["code"]
-    group = await sync_to_async(Group.objects.get)(code=group_code)
+    group = state_data["group"]
     login = state_data["login"]
     password = message.text
 

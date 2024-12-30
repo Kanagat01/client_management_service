@@ -1,23 +1,27 @@
 import requests
 from datetime import datetime, timedelta
+from asgiref.sync import sync_to_async
+from django.core.exceptions import ValidationError
 from aiogram import F, Router
 from aiogram.filters import Command
 from aiogram.types import Message, CallbackQuery
 from aiogram.fsm.context import FSMContext
 from misc.states import UserFSM
 from keyboards.reply import UserReplyKeyboard
+from api_students.models import Group
 
 
-def validate_group(group_name):
-    url = f"https://ruz.fa.ru/api/search?term={group_name}&type=group"
-    response = requests.get(url)
+async def validate_group(group_name):
+    group = await sync_to_async(Group.objects.filter)(code=group_name)
+    if await sync_to_async(group.exists)():
+        return await sync_to_async(group.first)()
 
-    if not response.status_code == 200:
+    try:
+        group = await sync_to_async(Group.create)(code=group_name)
+        return group
+    except ValidationError as e:
+        print(e)
         return None
-
-    for group in response.json():
-        if group.get("label") == group_name:
-            return group
 
 
 def get_schedule(group_id):
@@ -97,21 +101,21 @@ async def start(message: Message, state: FSMContext):
 
 @router.message(UserFSM.group)
 async def get_group(message: Message, state: FSMContext):
-    group: dict = validate_group(message.text)
+    group: Group = await validate_group(message.text)
     if group:
         await state.update_data(group=group)
         await state.set_state(UserFSM.password)
-        await message.answer(f"Группа {group['label']} успешно зарегистрирована!")
+        await message.answer(f"Группа {message.text} успешно зарегистрирована!")
 
-        await render_main_menu(state, message, group["id"])
+        await render_main_menu(state, message, group.fa_id)
     else:
-        await message.answer(f"Группа «{group}» не существует \n\nПроверьте название группы на http://ruz.fa.ru/ruz")
+        await message.answer(f"Группа «{message.text}» не существует \n\nПроверьте название группы на http://ruz.fa.ru/ruz")
 
 
 @router.callback_query(F.data == "back_to_main_menu")
 async def back_to_main_menu(callback: CallbackQuery, state: FSMContext):
     state_data = await state.get_data()
-    group_id = state_data["group"]["id"]
+    group_id = state_data["group"].fa_id
     await render_main_menu(state, callback.message, group_id)
 
 

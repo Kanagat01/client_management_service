@@ -71,24 +71,10 @@ class GroupViewSet(viewsets.GenericViewSet, mixins.CreateModelMixin, mixins.List
         if not code:
             return error_with_text("Поле 'code' является обязательным")
 
-        if Group.objects.filter(code=code).exists():
-            return error_with_text("Группа уже существует")
+        try:
+            group = Group.create(code=code)
+        except ValidationError as e:
+            return error_with_text(e.message)
 
-        group_data = None
-        url = f"https://ruz.fa.ru/api/search?term={code}&type=group"
-        response = requests.get(url, timeout=30)
-        if response.status_code == 200:
-            for group in response.json():
-                if group.get("label") == code:
-                    group_data = group
-        if not group_data:
-            return error_with_text("Группа не существует")
-
-        group_data = {
-            "code": group_data["label"], "fa_id": group_data["id"], "description": group_data["description"]}
-        serializer = self.get_serializer(data=group_data)
-        if not serializer.is_valid():
-            return error_with_text(serializer.errors)
-
-        serializer.save()
+        serializer = self.get_serializer(group)
         return success_with_text(serializer.data)
