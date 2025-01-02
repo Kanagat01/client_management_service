@@ -12,6 +12,6 @@ export type CreateOrEditBtnProps = {
   title: string;
   inputs: ReactNode;
   variant: "add" | "create" | "edit";
-  onSubmit: () => void;
+  onSubmit: (func: () => void) => void;
   onReset: () => void;
 };

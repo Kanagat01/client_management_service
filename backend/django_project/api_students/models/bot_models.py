@@ -1,5 +1,5 @@
 from django.db import models
-from django.core.exceptions import ValidationError
+from rest_framework.exceptions import ValidationError
 from django.core.validators import FileExtensionValidator
 from .students import Student
 from .university import Activity, Group

@@ -4,7 +4,7 @@ from asgiref.sync import sync_to_async
 from aiogram import F, Router
 from aiogram.types import Message, CallbackQuery
 from aiogram.fsm.context import FSMContext
-from django.core.exceptions import ValidationError
+from rest_framework.exceptions import ValidationError
 
 from backend.global_functions import send_whatsapp_sms
 from api_students.models import Student, StudentRecord

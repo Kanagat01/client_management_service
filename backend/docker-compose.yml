@@ -52,6 +52,18 @@ services:
     depends_on:
       - db
 
+  tgbot:
+    build: ./django_project
+    command: cd tgbot && python bot.py
+    networks:
+      - back
+    volumes:
+      - ./django_project/:/usr/src/app/
+    env_file:
+      - .env
+    depends_on:
+      - db
+
   nginx:
     build: ./nginx
     networks:

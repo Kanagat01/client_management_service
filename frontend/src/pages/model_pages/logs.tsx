@@ -4,11 +4,11 @@ import { CommandBar, FilterBar } from "~/widgets";
 import { PageSizeSelector } from "~/features/PageSizeSelector";
 import { $logs, getLogsFx, useLogTable } from "~/entities/LogModel";
 import { RenderPromise } from "~/shared/api";
-import { MainTable, BsInput, TomSelectInput } from "~/shared/ui";
+import { MainTable, BsInput, SelectInput } from "~/shared/ui";
 
 const filters: ReactNode[] = [
   <PageSizeSelector />,
-  <TomSelectInput
+  <SelectInput
     name="nickname"
     label="Никнейм"
     placeholder="Не выбрано"

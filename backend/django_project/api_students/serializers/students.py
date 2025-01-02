@@ -4,7 +4,7 @@ from .university import ActivitySerializer
 
 
 class StudentSerializer(serializers.ModelSerializer):
-    group = serializers.StringRelatedField()
+    group = serializers.PrimaryKeyRelatedField(queryset=Group.objects.all())
 
     class Meta:
         model = Student
@@ -16,6 +16,11 @@ class StudentSerializer(serializers.ModelSerializer):
         if extra_kwargs:
             self.Meta.extra_kwargs.update(extra_kwargs)
         super().__init__(*args, **kwargs)
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation['group'] = str(instance.group)
+        return representation
 
 
 class StudentRecordSerializer(serializers.ModelSerializer):

@@ -4,6 +4,7 @@ import { createEvent, createStore } from "effector";
 import { SlActionRedo, SlActionUndo } from "react-icons/sl";
 import { IoBanOutline } from "react-icons/io5";
 import {
+  BsArrowDown,
   BsArrowUp,
   BsCheckCircle,
   BsPencil,
@@ -43,8 +44,7 @@ export function CreateOrEditBtn({ variant, ...props }: CreateOrEditBtnProps) {
             }}
             onSubmit={(e) => {
               e.preventDefault();
-              props.onSubmit();
-              changeShow();
+              props.onSubmit(changeShow);
             }}
           >
             {props.inputs}
@@ -108,13 +108,24 @@ export function DeleteBtn(props: Omit<BtnWithConfirmation, "title">) {
   );
 }
 
-export function VerificationBtn(props: Omit<BtnWithConfirmation, "title">) {
+export function VerificationBtn(
+  props: Omit<BtnWithConfirmation, "title"> & { is_verified: boolean }
+) {
   const [show, changeShow] = useModalState(false);
   return (
     <>
       <Button variant="link" className="icon-link" onClick={changeShow}>
-        <BsArrowUp />
-        Верифицировать
+        {props.is_verified ? (
+          <>
+            <BsArrowDown />
+            Отменить верификацию
+          </>
+        ) : (
+          <>
+            <BsArrowUp />
+            Верифицировать
+          </>
+        )}
       </Button>
       <ConfirmModal
         show={show}
@@ -126,13 +137,24 @@ export function VerificationBtn(props: Omit<BtnWithConfirmation, "title">) {
   );
 }
 
-export function BanBtn(props: Omit<BtnWithConfirmation, "title">) {
+export function BanBtn(
+  props: Omit<BtnWithConfirmation, "title"> & { is_blocked: boolean }
+) {
   const [show, changeShow] = useModalState(false);
   return (
     <>
       <Button variant="link" className="icon-link" onClick={changeShow}>
-        <IoBanOutline />
-        Заблокировать
+        {props.is_blocked ? (
+          <>
+            <BsCheckCircle />
+            Разблокировать
+          </>
+        ) : (
+          <>
+            <IoBanOutline />
+            Заблокировать
+          </>
+        )}
       </Button>
       <ConfirmModal
         show={show}

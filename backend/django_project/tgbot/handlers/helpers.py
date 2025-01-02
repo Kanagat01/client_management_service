@@ -1,7 +1,7 @@
 import requests
 from datetime import datetime, timedelta
 from asgiref.sync import sync_to_async
-from django.core.exceptions import ValidationError
+from rest_framework.exceptions import ValidationError
 from api_students.models import Student, Group
 
 
@@ -18,7 +18,7 @@ async def validate_group(group_name):
         group = await sync_to_async(Group.create)(code=group_name)
         return group
     except ValidationError as e:
-        print(e)
+        print(e.detail)
         return None
 
 

@@ -12,9 +12,10 @@ import {
   BanBtn,
   DeleteBtn,
   VerificationBtn,
-  CreateOrEditBtn,
 } from "~/shared/ui";
 import { dateTimeToString } from "~/shared/lib";
+import { deleteStudent, editStudent } from "./model";
+import { CreateOrEditStudent } from "./ui";
 import { TStudent } from "./types";
 
 type TColumn = keyof TStudent | "actions";
@@ -22,11 +23,12 @@ type TColumn = keyof TStudent | "actions";
 export const studentColumns: Partial<Record<TColumn, string>> = {
   full_name: "Студент",
   telegram_link: "Ссылка",
-  username: "Логин",
-  password: "Пароль",
+  fa_login: "Логин",
+  fa_password: "Пароль",
   group: "Группа",
   phone: "Телефон",
   is_verified: "Верифицирован",
+  is_blocked: "Заблокирован",
   registration_date: "Дата/время регистрации",
   actions: "Действия",
 };
@@ -37,19 +39,45 @@ export const useStudentTable = (data: TStudent[]) => {
     ([fieldName, header], index) =>
       fieldName === "actions"
         ? useActionsColumn(columnHelper, header, (row: TStudent) => [
-            <CreateOrEditBtn
-              variant="edit"
-              title="Редактировать студента"
-              inputs={<h1>тут будет форма</h1>}
-              onReset={() => {}}
-              onSubmit={() => {}}
-            />,
+            <CreateOrEditStudent data={row} />,
             <DeleteBtn
               content="Вы уверены, что хотите очистить данные этого студента?"
-              onConfirm={() => {}}
+              onConfirm={() =>
+                deleteStudent({ id: row.id, full_name: row.full_name })
+              }
             />,
-            <VerificationBtn content="" onConfirm={() => {}} />,
-            <BanBtn content={""} onConfirm={() => {}} />,
+            <VerificationBtn
+              is_verified={row.is_verified}
+              content={`Вы уверены, что хотите ${
+                row.is_verified ? "отменить верификацию" : "верифицировать"
+              } студента "${row.full_name}"?`}
+              onConfirm={() =>
+                editStudent({
+                  ...row,
+                  is_verified: !row.is_verified,
+                  loading: `${
+                    row.is_verified ? "Отменяем верификацию у" : "Верифицируем"
+                  } студента "${row.full_name}"...`,
+                  success: `Студент "${row.full_name}" ${
+                    row.is_verified && "не "
+                  }верифицирован`,
+                })
+              }
+            />,
+            <BanBtn
+              is_blocked={row.is_blocked}
+              content={`Вы уверены, что хотите ${
+                row.is_blocked ? "разблокировать" : "заблокировать"
+              } студента "${row.full_name}"?`}
+              onConfirm={() =>
+                editStudent({
+                  ...row,
+                  is_blocked: !row.is_blocked,
+                  loading: `Блокируем студента "${row.full_name}"...`,
+                  success: `Студент "${row.full_name}" заблокирован`,
+                })
+              }
+            />,
           ])
         : columnHelper.accessor(fieldName, {
             id: `column_${index}`,

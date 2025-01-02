@@ -7,12 +7,12 @@ import {
   getActivitiesFx,
   useActivityTable,
 } from "~/entities/Activity";
-import { MainTable, TomSelectInput } from "~/shared/ui";
+import { MainTable, SelectInput } from "~/shared/ui";
 import { RenderPromise } from "~/shared/api";
 
 const filters: ReactNode[] = [
   <PageSizeSelector />,
-  <TomSelectInput
+  <SelectInput
     name="activity_type"
     label="Тип активности"
     placeholder="Не выбрано"
@@ -25,7 +25,7 @@ const filters: ReactNode[] = [
       ),
     ]}
   />,
-  <TomSelectInput
+  <SelectInput
     name="discipline"
     label="Дисциплина"
     placeholder="Не выбрано"
@@ -38,7 +38,7 @@ const filters: ReactNode[] = [
       ),
     ]}
   />,
-  <TomSelectInput
+  <SelectInput
     name="group_id"
     label="Группа"
     placeholder="Не выбрано"
@@ -51,7 +51,7 @@ const filters: ReactNode[] = [
       ),
     ]}
   />,
-  <TomSelectInput
+  <SelectInput
     name="proctoring"
     label="Прокторинг"
     placeholder="Не выбрано"
@@ -62,7 +62,7 @@ const filters: ReactNode[] = [
       })),
     ]}
   />,
-  <TomSelectInput
+  <SelectInput
     name="proctoring_possible" // ???
     label="Возможно прокторинг"
     placeholder="Не выбрано"

@@ -1,7 +1,7 @@
-import requests
 import pandas as pd
 from rest_framework import mixins, viewsets
 from rest_framework.decorators import api_view
+
 from backend.global_functions import error_with_text, success_with_text
 from api_students.models import *
 from api_students.serializers import *
@@ -74,7 +74,7 @@ class GroupViewSet(viewsets.GenericViewSet, mixins.CreateModelMixin, mixins.List
         try:
             group = Group.create(code=code)
         except ValidationError as e:
-            return error_with_text(e.message)
+            return error_with_text(e.detail)
 
         serializer = self.get_serializer(group)
         return success_with_text(serializer.data)

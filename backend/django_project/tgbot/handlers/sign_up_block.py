@@ -5,10 +5,11 @@ from asgiref.sync import sync_to_async
 from aiogram import F, Router
 from aiogram.types import Message, CallbackQuery
 from aiogram.fsm.context import FSMContext
-from django.core.exceptions import ValidationError
+from rest_framework.exceptions import ValidationError
 
 from backend.global_functions import send_whatsapp_sms
 from api_students.models import *
+from handlers.main import render_main_menu
 from handlers.helpers import get_student
 from keyboards.inline import UserInlineKeyboard
 from misc.states import UserFSM
@@ -19,13 +20,11 @@ router = Router()
 
 @router.message(F.text == "Выборочная запись на экзамены")
 @router.callback_query(F.data == "back_to_sign_up")
-async def sign_up_for_activities(message: Message | CallbackQuery, state: FSMContext):
-    await state.set_state(UserFSM.activities)
-    message = message.message if isinstance(
-        message, CallbackQuery) else message
-
+async def sign_up_for_activities(msg: Message | CallbackQuery, state: FSMContext):
+    message = msg.message if isinstance(msg, CallbackQuery) else msg
     text = 'Напишите через "," номера экзаменов на которые хотите записаться. Например: 1, 2, 3'
     kb = UserInlineKeyboard.go_back_btn(cb_data="back_to_main_menu")
+    await state.set_state(UserFSM.activities)
     await message.answer(text, reply_markup=kb)
 
 
@@ -109,7 +108,7 @@ async def get_password(message: Message, state: FSMContext):
         await choose_proctoring(message, state, state_data["activities"], "back_to_main_menu")
 
     except ValidationError as e:
-        await message.answer(e.message)
+        await message.answer(e.detail)
         await render_login(message, state)
         return
 
@@ -252,6 +251,8 @@ async def create_student_records(msg: Message | CallbackQuery, state: FSMContext
     await message.answer(f"Вы успешно записались на следующие экзамены:\n\n" + "\n".join(text))
     if has_proctoring and not student.is_verified:
         await get_verifiction_for_proctoring(message)
+
+    await render_main_menu(state, message, group.fa_id)
 
 
 async def get_verifiction_for_proctoring(message: Message):

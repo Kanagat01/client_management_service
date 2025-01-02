@@ -1,15 +1,16 @@
-import { ReactNode } from "react";
+import { ReactNode, useEffect } from "react";
 import { useUnit } from "effector-react";
 import { CommandBar, FilterBar } from "~/widgets";
 import { PageSizeSelector } from "~/features/PageSizeSelector";
 import {
   $students,
-  CreateStudent,
+  CreateOrEditStudent,
   deleteAllStudents,
   getStudentsFx,
   useStudentTable,
 } from "~/entities/Student";
-import { MainTable, DeleteAllBtn, BsInput, TomSelectInput } from "~/shared/ui";
+import { $groups, getGroupsFx } from "~/entities/Group";
+import { MainTable, DeleteAllBtn, BsInput, SelectInput } from "~/shared/ui";
 import { RenderPromise } from "~/shared/api";
 
 const menuList = [
@@ -18,16 +19,15 @@ const menuList = [
     content="Вы уверены, что хотите очистить все данные студентов?"
     onConfirm={deleteAllStudents}
   />,
-  <CreateStudent />,
+  <CreateOrEditStudent />,
 ];
 
 const filters: ReactNode[] = [
   <PageSizeSelector />,
   <BsInput variant="input" label="TG ID" name="tg_id" />,
-  <TomSelectInput
+  <SelectInput
     name="group_id"
     label="Группа"
-    placeholder="Не выбрано"
     options={[
       ...["Не выбрано", "ДЭФР22-1", "ДЦПУП23-1", "ДММ20-1", "ДМФ22-1"].map(
         (el) => ({
@@ -45,6 +45,10 @@ const filters: ReactNode[] = [
 export function StudentsPage() {
   const data = useUnit($students);
   const table = useStudentTable(data);
+
+  useEffect(() => {
+    if ($groups.getState().length === 0) getGroupsFx();
+  }, []);
 
   return (
     <>

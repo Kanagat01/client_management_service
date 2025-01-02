@@ -1,6 +1,6 @@
-from django.db import models
-from django.core.exceptions import ValidationError
 import requests
+from django.db import models
+from rest_framework.exceptions import ValidationError
 
 
 class Group(models.Model):

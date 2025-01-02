@@ -2,7 +2,10 @@ import re
 import requests
 from bs4 import BeautifulSoup
 from django.db import models
-from django.core.exceptions import ValidationError
+from rest_framework.exceptions import ValidationError
+from asgiref.sync import async_to_sync
+
+from tgbot.create_bot import bot
 from .university import Group, Activity
 
 
@@ -33,6 +36,8 @@ class Student(models.Model):
     )
     is_verified = models.BooleanField(
         default=False, verbose_name="Верифицирован")
+    is_blocked = models.BooleanField(
+        default=False, verbose_name="Заблокирован")
     registration_date = models.DateTimeField(
         auto_now_add=True, verbose_name="Дата/время регистрации")
 
@@ -64,6 +69,9 @@ class Student(models.Model):
         else:
             self.update_full_name()
 
+        if not self.telegram_link:
+            self.update_telegram_link()
+
         super().save(*args, **kwargs)
 
     def update_full_name(self):
@@ -81,6 +89,11 @@ class Student(models.Model):
 
         selector = "#inst110 > div > div > div.w-100.no-overflow > div.myprofileitem.fullname"
         self.full_name = soup.select_one(selector).text.strip()
+
+    def update_telegram_link(self):
+        user = async_to_sync(bot.get_chat)(self.telegram_id)
+        if user.username:
+            self.telegram_link = f"https://t.me/{user.username}"
 
 
 class StudentRecord(models.Model):

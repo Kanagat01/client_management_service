@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { BsInput, TomSelectInput, CreateOrEditBtn } from "~/shared/ui";
+import { BsInput, SelectInput, CreateOrEditBtn } from "~/shared/ui";
 import { createMessage } from "./model";
 import { TMessage } from "./types";
 
@@ -17,7 +17,7 @@ export function CreateMessage() {
       title="Создать рассылку"
       inputs={
         <div className="d-flex flex-column" style={{ gap: "1rem" }}>
-          <TomSelectInput
+          <SelectInput
             label="Получатель"
             value={data.receiver !== 0 ? "" : data.receiver.toString()} // TODO
             onChange={(newValue) => setData({ ...data, receiver: newValue })}

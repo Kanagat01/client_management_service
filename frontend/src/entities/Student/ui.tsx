@@ -1,37 +1,122 @@
-import { BsInput, CreateOrEditBtn, TomSelectInput } from "~/shared/ui";
+import { useUnit } from "effector-react";
+import { ChangeEvent, useEffect, useState } from "react";
+import { $groups } from "~/entities/Group";
+import { BsInput, CreateOrEditBtn, SelectInput } from "~/shared/ui";
+import { createStudent, editStudent } from "./model";
+import { TCreateStudent, TStudent } from "./types";
 
-export function CreateStudent() {
+const initialData: TCreateStudent = {
+  telegram_id: "",
+  fa_login: "",
+  fa_password: "",
+  phone: "",
+  group: "",
+  is_verified: false,
+};
+
+export function CreateOrEditStudent(props: {
+  data?: TCreateStudent | TStudent;
+}) {
+  const groups = useUnit($groups);
+
+  const data = props.data || initialData;
+  const [student, setStudent] = useState(data);
+
+  useEffect(() => {
+    if (typeof student.group === "string") {
+      const matchedGroup = groups.find((group) => group.code === student.group);
+      setStudent((prevStudent) => ({
+        ...prevStudent,
+        group: matchedGroup?.id || null,
+      }));
+    }
+  }, [student.group, groups]);
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { name, value, type, checked } = e.target;
+    setStudent((prevStudent) => ({
+      ...prevStudent,
+      [name]: type === "checkbox" ? checked : value,
+    }));
+  };
+
+  const handleReset = () => setStudent(data);
+  const handleSubmit = (changeShow: () => void) => {
+    if (props.data) {
+      editStudent({ ...(student as TStudent), changeShow });
+    } else {
+      createStudent({ ...(student as TCreateStudent), changeShow });
+    }
+  };
+
   return (
     <CreateOrEditBtn
-      variant="add"
-      title="Создать студента"
+      variant={props.data ? "edit" : "add"}
+      title={`${props.data ? "Редактировать" : "Создать"} студента`}
       inputs={
         <div className="d-flex flex-column" style={{ gap: "1rem" }}>
-          <BsInput variant="input" label="TG ID" name="tg_id" />
-          <BsInput variant="input" label="Логин" name="fa_login" />
-          <BsInput variant="input" label="Пароль" name="fa_password" />
-          <BsInput variant="input" label="Телефон" name="phone" />
-          <TomSelectInput
+          <BsInput
+            variant="input"
+            label="TG ID"
+            name="telegram_id"
+            value={student.telegram_id}
+            onChange={handleChange}
+            required
+          />
+          <BsInput
+            variant="input"
+            label="Логин"
+            name="fa_login"
+            value={student.fa_login}
+            onChange={handleChange}
+            required
+          />
+          <BsInput
+            variant="input"
+            label="Пароль"
+            name="fa_password"
+            value={student.fa_password}
+            onChange={handleChange}
+            required
+          />
+          <BsInput
+            variant="input"
+            label="Телефон"
+            name="phone"
+            type="tel"
+            value={student.phone}
+            onChange={handleChange}
+          />
+          <SelectInput
             label="Группа"
             name="group"
             options={[
-              ...[
-                "Не выбрано",
-                "ДЭФР22-1",
-                "ДЦПУП23-1",
-                "ДММ20-1",
-                "ДМФ22-1",
-              ].map((el) => ({
-                value: el,
-                label: el,
+              { value: "", label: "Не выбрано" },
+              ...groups.map(({ id, code }) => ({
+                value: id.toString(),
+                label: code,
               })),
             ]}
+            value={student.group?.toString()}
+            onChange={(value) =>
+              setStudent((prevStudent) => ({
+                ...prevStudent,
+                group: Number(value),
+              }))
+            }
+            required
           />
-          <BsInput variant="checkbox" label="Верифицирован" id="is_verified" />
+          <BsInput
+            variant="checkbox"
+            label="Верифицирован"
+            name="is_verified"
+            checked={student.is_verified}
+            onChange={handleChange}
+          />
         </div>
       }
-      onReset={() => {}}
-      onSubmit={() => {}}
+      onReset={handleReset}
+      onSubmit={handleSubmit}
     />
   );
 }

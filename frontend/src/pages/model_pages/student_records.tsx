@@ -9,7 +9,7 @@ import {
   getStudentRecordsFx,
   useStudentRecordTable,
 } from "~/entities/StudentRecord";
-import { ExportBtn, MainTable, BsInput, TomSelectInput } from "~/shared/ui";
+import { ExportBtn, MainTable, BsInput, SelectInput } from "~/shared/ui";
 import { RenderPromise } from "~/shared/api";
 import { API_URL } from "~/shared/config";
 
@@ -24,7 +24,7 @@ const menuList = [
 
 const filters: ReactNode[] = [
   <PageSizeSelector />,
-  <TomSelectInput
+  <SelectInput
     name="full_name"
     label="Студент"
     placeholder="Не выбрано"
@@ -35,7 +35,7 @@ const filters: ReactNode[] = [
       })),
     ]}
   />,
-  <TomSelectInput
+  <SelectInput
     name="activity_type"
     label="Тип активности"
     placeholder="Не выбрано"
@@ -46,7 +46,7 @@ const filters: ReactNode[] = [
       })),
     ]}
   />,
-  <TomSelectInput
+  <SelectInput
     name="group"
     label="Группа"
     placeholder="Не выбрано"
@@ -59,7 +59,7 @@ const filters: ReactNode[] = [
       ),
     ]}
   />,
-  <TomSelectInput
+  <SelectInput
     name="discipline"
     label="Дисциплина"
     placeholder="Не выбрано"

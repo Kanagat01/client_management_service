@@ -101,26 +101,27 @@ REST_FRAMEWORK = {
 }
 
 # Database
-# if os.environ.get('RUNNING_FROM_DOCKER', False):
-#     print("USING POSTGRESQL DATABASE")
-#     DATABASES = {
-#         "default": {
-#             "ENGINE": 'django.db.backends.postgresql',
-#             "NAME": os.environ.get("POSTGRES_DB"),
-#             "USER": os.environ.get("POSTGRES_USER"),
-#             "PASSWORD": os.environ.get("POSTGRES_PASSWORD"),
-#             "HOST": os.environ.get("POSTGRES_HOST"),
-#             "PORT": os.environ.get("POSTGRES_PORT"),
-#         }
-#     }
-# else:
-print("USING SQLITE DATABASE")
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+RUNNING_FROM_DOCKER = int(os.environ.get('RUNNING_FROM_DOCKER', default=0))
+if RUNNING_FROM_DOCKER:
+    print("USING POSTGRESQL DATABASE")
+    DATABASES = {
+        "default": {
+            "ENGINE": 'django.db.backends.postgresql',
+            "NAME": os.environ.get("POSTGRES_DB"),
+            "USER": os.environ.get("POSTGRES_USER"),
+            "PASSWORD": os.environ.get("POSTGRES_PASSWORD"),
+            "HOST": os.environ.get("POSTGRES_HOST"),
+            "PORT": os.environ.get("POSTGRES_PORT"),
+        }
     }
-}
+else:
+    print("USING SQLITE DATABASE")
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [

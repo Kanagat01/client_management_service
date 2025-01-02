@@ -1,16 +1,9 @@
-import { ChangeEvent } from "react";
-
-export const formatPhoneInput = (event: ChangeEvent<HTMLInputElement>) => {
-  const input = event.target;
-  const value = input.value.replace(/\D/g, "");
-  let formattedValue = "+7 ";
-
-  if (value.length > 1) formattedValue += "(" + value.slice(1, 4);
-  if (value.length > 4) formattedValue += ") " + value.slice(4, 7);
-  if (value.length > 7) formattedValue += "-" + value.slice(7, 9);
-  if (value.length > 9) formattedValue += "-" + value.slice(9, 11);
-
-  input.value = formattedValue;
+export const validateWhatsappNumber = (value: string): string => {
+  const pattern = /^\+\d{10,15}$/;
+  if (!pattern.test(value)) {
+    return "Введите корректный номер WhatsApp (формат: +1234567890)";
+  }
+  return "";
 };
 
 export const validatePassword = (password: string): string => {

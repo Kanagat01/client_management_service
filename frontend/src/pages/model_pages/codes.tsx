@@ -4,7 +4,7 @@ import { CommandBar, FilterBar } from "~/widgets";
 import { importCodes } from "~/features/import-data";
 import { PageSizeSelector } from "~/features/PageSizeSelector";
 import { $codes, CreateCode, getCodesFx, useCodeTable } from "~/entities/Code";
-import { ExportBtn, ImportBtn, MainTable, TomSelectInput } from "~/shared/ui";
+import { ExportBtn, ImportBtn, MainTable, SelectInput } from "~/shared/ui";
 import { RenderPromise } from "~/shared/api";
 import { API_URL } from "~/shared/config";
 
@@ -18,7 +18,7 @@ const menuList = [
 
 const filters: ReactNode[] = [
   <PageSizeSelector />,
-  <TomSelectInput
+  <SelectInput
     name="code"
     label="Код"
     placeholder="Не выбрано"
@@ -29,7 +29,7 @@ const filters: ReactNode[] = [
       })),
     ]}
   />,
-  <TomSelectInput
+  <SelectInput
     name="receiver"
     label="Получатель"
     placeholder="Не выбрано"
