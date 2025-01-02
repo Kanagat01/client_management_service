@@ -5,7 +5,5 @@ export type TStudentRecord = {
   student: string;
   telegram_link: string;
   activity: TActivity;
-  date: string;
-  time_start: string;
-  time_end: string;
+  marked_as_proctoring: boolean;
 };

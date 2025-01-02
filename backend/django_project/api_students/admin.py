@@ -15,9 +15,9 @@ class StudentAdmin(admin.ModelAdmin):
 
 @admin.register(StudentRecord)
 class StudentRecordAdmin(admin.ModelAdmin):
-    list_display = ('student', 'activity', 'date')
+    list_display = ('student', 'activity')
     search_fields = ('student__full_name',)
-    ordering = ('date',)
+    ordering = ('activity__date', 'activity__start_time')
 
 
 @admin.register(Log)
@@ -29,6 +29,14 @@ class LogAdmin(admin.ModelAdmin):
     search_fields = ('student__full_name', 'field_name',
                      'old_value', 'new_value')
     ordering = ('created_at',)
+
+
+@admin.register(InstructionForProctoring)
+class InstructionForProctoringAdmin(admin.ModelAdmin):
+    def has_add_permission(self, request):
+        if InstructionForProctoring.objects.exists():
+            return False
+        return super().has_add_permission(request)
 
 
 app = apps.get_app_config('api_students')

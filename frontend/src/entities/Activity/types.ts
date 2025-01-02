@@ -6,9 +6,7 @@ export type TActivity = {
   note?: string;
   teacher: string;
   date: string;
-  time_start: string;
-  time_end: string;
+  start_time: string;
+  end_time: string;
   updated_at: string;
-  marked_as_proctoring: boolean;
-  marked_by_students_as_proctoring: boolean;
 };

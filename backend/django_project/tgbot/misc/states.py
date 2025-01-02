@@ -6,4 +6,13 @@ class UserFSM(StatesGroup):
     login = State()
     password = State()
 
-    exams = State()
+    activities = State()
+    proctoring = State()
+    set_whatsapp = State()
+    confirm_set_whatsapp = State()
+
+    change_login = State()
+    change_password = State()
+    change_group = State()
+    change_whatsapp = State()
+    confirm_change_whatsapp = State()

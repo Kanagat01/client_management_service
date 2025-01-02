@@ -25,8 +25,9 @@ export const studentRecordColumns: Partial<Record<TColumn, string>> = {
   teacher: "Лектор",
   note: "Заметка",
   date: "Дата",
-  time_start: "Время начала",
-  time_end: "Время конца",
+  start_time: "Время начала",
+  end_time: "Время конца",
+  marked_as_proctoring: "Установлено как прокторинг",
   actions: "Действия",
 };
 
