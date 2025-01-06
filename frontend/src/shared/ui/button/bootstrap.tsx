@@ -204,6 +204,7 @@ export function ImportBtn({ onSubmit }: { onSubmit: () => void }) {
                 <input
                   className="form-control"
                   type="file"
+                  accept=".xlsx,.xls,.csv"
                   onChange={handleFileChange}
                 />
               </div>

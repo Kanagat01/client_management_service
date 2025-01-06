@@ -7,6 +7,9 @@ class CodeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Code
         fields = '__all__'
+        extra_kwargs = {
+            "created_at": {"format": "%d-%m-%Y %H:%M"}
+        }
 
     def to_representation(self, instance: Code):
         representation = super().to_representation(instance)

@@ -1,13 +1,15 @@
 import { ReactNode } from "react";
 import { useUnit } from "effector-react";
 import { CommandBar, FilterBar } from "~/widgets";
-import { importCodes } from "~/features/import-data";
+import { importData } from "~/features/import-data";
 import { PageSizeSelector } from "~/features/PageSizeSelector";
 import {
   $codes,
   CreateCode,
   getCodesFx,
   getCodeColumns,
+  TCode,
+  setCodes,
 } from "~/entities/Code";
 import { ExportBtn, ImportBtn, MainTable, SelectInput } from "~/shared/ui";
 import { RenderPromise } from "~/shared/api";
@@ -15,7 +17,18 @@ import { API_URL } from "~/shared/config";
 
 const menuList = [
   <CreateCode />,
-  <ImportBtn onSubmit={() => importCodes({ url: "/api/import-codes/" })} />,
+  <ImportBtn
+    onSubmit={() =>
+      importData({
+        url: "/api/import-codes/",
+        success: (response) => {
+          const data = response.message as TCode[];
+          setCodes([...$codes.getState(), ...data]);
+          return `Успешно импортировано ${data.length} кодов для системы прокторинга`;
+        },
+      })
+    }
+  />,
   <ExportBtn
     link={`${API_URL}/api/export-codes/?token=${localStorage.getItem("token")}`}
   />,

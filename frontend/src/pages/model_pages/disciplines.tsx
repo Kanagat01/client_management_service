@@ -2,12 +2,14 @@ import { ReactNode } from "react";
 import { useUnit } from "effector-react";
 import { CommandBar, FilterBar } from "~/widgets";
 import { PageSizeSelector } from "~/features/PageSizeSelector";
-import { importCodes } from "~/features/import-data";
+import { importData } from "~/features/import-data";
 import {
   $disciplines,
   getDisciplinesFx,
   getDisciplineColumns,
   CreateOrEditDiscipline,
+  setDisciplines,
+  TDiscipline,
 } from "~/entities/Discipline";
 import { RenderPromise } from "~/shared/api";
 import { ImportBtn, MainTable } from "~/shared/ui";
@@ -15,7 +17,16 @@ import { ImportBtn, MainTable } from "~/shared/ui";
 const menuList = [
   <CreateOrEditDiscipline />,
   <ImportBtn
-    onSubmit={() => importCodes({ url: "/api/import-disciplines/" })}
+    onSubmit={() =>
+      importData({
+        url: "/api/import-disciplines/",
+        success: (response) => {
+          const data = response.message as TDiscipline[];
+          setDisciplines([...$disciplines.getState(), ...data]);
+          return `Успешно импортировано ${data.length} дисциплин`;
+        },
+      })
+    }
   />,
 ];
 

@@ -56,7 +56,7 @@ def import_disciplines_view(request):
             disciplines.append(Discipline(name=name, fa_id=fa_id))
 
         Discipline.objects.bulk_create(disciplines)
-        return success_with_text(f'Успешно импортировано {len(disciplines)} дисциплин')
+        return success_with_text(DisciplineSerializer(disciplines, many=True).data)
 
     except Exception as e:
         return error_with_text(f'Ошибка при обработке файла: {str(e)}')

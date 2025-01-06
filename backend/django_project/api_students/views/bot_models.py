@@ -28,14 +28,15 @@ def export_codes_view(request):
     data = CodeSerializer(codes, many=True).data
     columns = {
         "id": "ID",
-        "code": "Код",
-        "recipient": "Получатель",
-        "activity": "Активность"
+        "value": "Значение",
+        "status": "Статус",
+        "telegram_link": "Телеграмм",
+        "student": "Кем использован",
+        "created_at": "Дата получения",
     }
     return export_to_excel(request, data, columns, filename="Коды для прокторинга")
 
 
-# -------------------------  НАДО ПОФИКСИТЬ  -------------------------
 @api_view(['POST'])
 def import_codes_view(request):
     if 'file' not in request.FILES:
@@ -44,21 +45,24 @@ def import_codes_view(request):
     file = request.FILES['file']
     try:
         df = pd.read_excel(file)
-        if 'Название дисциплины' not in df.columns or 'FA ID' not in df.columns:
-            return error_with_text('Файл должен содержать колонки "Название дисциплины" и "FA ID"')
+        columns = ["Значение"]
+        if not all(col in df.columns for col in columns):
+            return error_with_text('Файл должен содержать колонку "Значение"')
 
         codes = []
+        existing_values = set(Code.objects.values_list('value', flat=True))
+        new_values = set()
+
         for _, row in df.iterrows():
-            name = row['Название дисциплины']
-            fa_id = row['FA ID']
+            value = row['Значение']
 
-            if Code.objects.filter(fa_id=fa_id).exists():
+            if value in existing_values or value in new_values:
                 continue
-
-            codes.append(Code(name=name, fa_id=fa_id))
+            new_values.add(value)
+            codes.append(Code(value=value))
 
         Code.objects.bulk_create(codes)
-        return success_with_text(f'Успешно импортировано {len(codes)} дисциплин')
+        return success_with_text(CodeSerializer(codes, many=True).data)
 
     except Exception as e:
         return error_with_text(f'Ошибка при обработке файла: {str(e)}')

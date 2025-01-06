@@ -5,7 +5,6 @@ import {
   DeleteBtn,
   useActionsColumn,
 } from "~/shared/ui";
-import { dateTimeToString } from "~/shared/lib";
 import { deleteCode } from "./model";
 import { TCode } from "./types";
 
@@ -35,10 +34,7 @@ export const getCodeColumns = () => {
         : columnHelper.accessor(fieldName, {
             id: `column_${index}`,
             cell: (info) => {
-              let fieldValue = info.row.original[fieldName];
-              if (fieldName === "created_at") {
-                fieldValue = dateTimeToString(fieldValue as string);
-              }
+              const fieldValue = info.row.original[fieldName];
               return <DefaultCell>{fieldValue}</DefaultCell>;
             },
             header: () => <DefaultHeader>{header}</DefaultHeader>,
