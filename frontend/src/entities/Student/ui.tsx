@@ -45,7 +45,13 @@ export function CreateOrEditStudent(props: {
     if (props.data) {
       updateStudent({ ...(student as TStudent), changeShow });
     } else {
-      createStudent({ ...(student as TCreateStudent), changeShow });
+      createStudent({
+        ...(student as TCreateStudent),
+        changeShow: () => {
+          changeShow();
+          handleReset();
+        },
+      });
     }
   };
 

@@ -3,3 +3,5 @@ export type TDiscipline = {
   name: string;
   fa_id: number;
 };
+
+export type TCreateDiscipline = Omit<TDiscipline, "id">;

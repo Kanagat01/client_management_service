@@ -17,6 +17,6 @@ class ActivitySerializer(serializers.ModelSerializer):
         model = Activity
         fields = '__all__'
         extra_kwargs = {
-            'time_start': {'format': '%H:%M'},
-            'time_end': {'format': '%H:%M'},
+            'start_time': {'format': '%H:%M'},
+            'end_time': {'format': '%H:%M'},
         }

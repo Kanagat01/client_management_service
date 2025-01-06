@@ -5,7 +5,7 @@ import {
 } from "@tanstack/react-table";
 import { DefaultCell, DefaultHeader, useActionsColumn } from "~/shared/ui";
 import { TDiscipline } from "./types";
-import { EditDiscipline } from "./ui";
+import { CreateOrEditDiscipline } from "./ui";
 
 type TColumn = keyof TDiscipline | "actions";
 
@@ -23,7 +23,7 @@ export const useDisciplineTable = (data: TDiscipline[]) => {
   ).map(([fieldName, header], index) =>
     fieldName === "actions"
       ? useActionsColumn(columnHelper, header, (row: TDiscipline) => [
-          <EditDiscipline {...row} />,
+          <CreateOrEditDiscipline initialState={row} />,
         ])
       : columnHelper.accessor(fieldName, {
           id: `column_${index}`,

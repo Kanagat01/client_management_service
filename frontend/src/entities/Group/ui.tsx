@@ -4,6 +4,16 @@ import { createGroup } from "./model";
 
 export function CreateGroup() {
   const [code, setCode] = useState("");
+
+  const onReset = () => setCode("");
+  const onSubmit = (changeShow: () => void) =>
+    createGroup({
+      code,
+      changeShow: () => {
+        changeShow();
+        onReset();
+      },
+    });
   return (
     <CreateOrEditBtn
       variant="add"
@@ -20,8 +30,8 @@ export function CreateGroup() {
           />
         </div>
       }
-      onSubmit={() => createGroup({ code })}
-      onReset={() => setCode("")}
+      onSubmit={onSubmit}
+      onReset={onReset}
     />
   );
 }

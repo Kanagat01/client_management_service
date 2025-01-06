@@ -25,10 +25,6 @@ class StudentRecordSerializer(serializers.ModelSerializer):
     class Meta:
         model = StudentRecord
         fields = '__all__'
-        extra_kwargs = {
-            'time_start': {'format': '%H:%M'},
-            'time_end': {'format': '%H:%M'},
-        }
 
     def to_representation(self, instance: StudentRecord) -> dict:
         representation = super().to_representation(instance)

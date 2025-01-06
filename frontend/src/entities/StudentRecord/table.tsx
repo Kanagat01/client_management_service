@@ -61,8 +61,6 @@ export const useStudentRecordTable = (data: TStudentRecord[]) => {
                   info.row.original.activity[fieldName as keyof TActivity];
                 if (fieldName === "date") {
                   fieldValue = dateToString(fieldValue as string);
-                } else if (["start_time", "end_time"].includes(fieldName)) {
-                  fieldValue = (fieldValue as string).slice(0, 5);
                 }
               } else {
                 fieldValue =

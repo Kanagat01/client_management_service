@@ -6,9 +6,9 @@ import { dateToString } from "~/shared/lib";
 import { TActivity } from "./types";
 
 export const getActivityText = (activity: TActivity) =>
-  `${activity.group} ${activity.discipline} ${dateToString(
-    activity.date
-  )} ${activity.start_time.slice(0, 5)} ${activity.end_time.slice(0, 5)}`;
+  `${activity.group} ${activity.discipline} ${dateToString(activity.date)} ${
+    activity.start_time
+  } ${activity.end_time}`;
 
 export const getActivitiesFx: Effect<void, TActivity[]> = attach({
   effect: apiRequestFx,

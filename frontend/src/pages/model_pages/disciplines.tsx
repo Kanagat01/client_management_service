@@ -5,15 +5,15 @@ import { PageSizeSelector } from "~/features/PageSizeSelector";
 import { importCodes } from "~/features/import-data";
 import {
   $disciplines,
-  CreateDiscipline,
   getDisciplinesFx,
   useDisciplineTable,
+  CreateOrEditDiscipline,
 } from "~/entities/Discipline";
 import { RenderPromise } from "~/shared/api";
 import { ImportBtn, MainTable } from "~/shared/ui";
 
 const menuList = [
-  <CreateDiscipline />,
+  <CreateOrEditDiscipline />,
   <ImportBtn
     onSubmit={() => importCodes({ url: "/api/import-disciplines/" })}
   />,

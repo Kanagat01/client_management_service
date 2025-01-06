@@ -25,12 +25,16 @@ const createGroupFx: Effect<{ code: string }, { message: TGroup }> = attach({
   }),
 });
 
-export const createGroup = createEvent<{ code: string }>();
-createGroup.watch((data) => {
+export const createGroup = createEvent<{
+  code: string;
+  changeShow: () => void;
+}>();
+createGroup.watch(({ changeShow, ...data }) => {
   toast.promise(createGroupFx(data), {
     loading: "Добавляем группу...",
     success: (response) => {
       setGroups([...$groups.getState(), response.message]);
+      changeShow();
       return "Группа успешно добавлена";
     },
     error: (err) => `Произошла ошибка: ${err}`,
