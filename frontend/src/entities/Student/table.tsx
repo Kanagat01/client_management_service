@@ -14,7 +14,7 @@ import {
   VerificationBtn,
 } from "~/shared/ui";
 import { dateTimeToString } from "~/shared/lib";
-import { deleteStudent, editStudent } from "./model";
+import { deleteStudent, updateStudentField } from "./model";
 import { CreateOrEditStudent } from "./ui";
 import { TStudent } from "./types";
 
@@ -41,7 +41,7 @@ export const useStudentTable = (data: TStudent[]) => {
         ? useActionsColumn(columnHelper, header, (row: TStudent) => [
             <CreateOrEditStudent data={row} />,
             <DeleteBtn
-              content="Вы уверены, что хотите очистить данные этого студента?"
+              content={`Вы уверены, что хотите очистить данные студента "${row.full_name}"?`}
               onConfirm={() =>
                 deleteStudent({ id: row.id, full_name: row.full_name })
               }
@@ -52,8 +52,7 @@ export const useStudentTable = (data: TStudent[]) => {
                 row.is_verified ? "отменить верификацию" : "верифицировать"
               } студента "${row.full_name}"?`}
               onConfirm={() =>
-                editStudent({
-                  ...row,
+                updateStudentField({
                   is_verified: !row.is_verified,
                   loading: `${
                     row.is_verified ? "Отменяем верификацию у" : "Верифицируем"
@@ -70,8 +69,7 @@ export const useStudentTable = (data: TStudent[]) => {
                 row.is_blocked ? "разблокировать" : "заблокировать"
               } студента "${row.full_name}"?`}
               onConfirm={() =>
-                editStudent({
-                  ...row,
+                updateStudentField({
                   is_blocked: !row.is_blocked,
                   loading: `Блокируем студента "${row.full_name}"...`,
                   success: `Студент "${row.full_name}" заблокирован`,

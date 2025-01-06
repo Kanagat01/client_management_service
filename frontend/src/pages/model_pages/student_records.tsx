@@ -1,20 +1,22 @@
-import { ReactNode } from "react";
+import { ReactNode, useEffect } from "react";
 import { useUnit } from "effector-react";
 
 import { CommandBar, FilterBar } from "~/widgets";
 import { PageSizeSelector } from "~/features/PageSizeSelector";
 import {
   $studentRecords,
-  CreateStudentRecord,
+  CreateOrEditStudentRecord,
   getStudentRecordsFx,
   useStudentRecordTable,
 } from "~/entities/StudentRecord";
 import { ExportBtn, MainTable, BsInput, SelectInput } from "~/shared/ui";
 import { RenderPromise } from "~/shared/api";
 import { API_URL } from "~/shared/config";
+import { $students, getStudentsFx } from "~/entities/Student";
+import { $activities, getActivitiesFx } from "~/entities/Activity";
 
 const menuList = [
-  <CreateStudentRecord />,
+  <CreateOrEditStudentRecord />,
   <ExportBtn
     link={`${API_URL}/api/export-student-records/?token=${localStorage.getItem(
       "token"
@@ -87,6 +89,10 @@ export function StudentRecordsPage() {
   const data = useUnit($studentRecords);
   const table = useStudentRecordTable(data);
 
+  useEffect(() => {
+    if ($students.getState().length === 0) getStudentsFx();
+    if ($activities.getState().length === 0) getActivitiesFx();
+  }, []);
   return (
     <>
       <CommandBar title="Записи студентов" menuList={menuList} />

@@ -2,7 +2,7 @@ import { useUnit } from "effector-react";
 import { ChangeEvent, useEffect, useState } from "react";
 import { $groups } from "~/entities/Group";
 import { BsInput, CreateOrEditBtn, SelectInput } from "~/shared/ui";
-import { createStudent, editStudent } from "./model";
+import { createStudent, updateStudent } from "./model";
 import { TCreateStudent, TStudent } from "./types";
 
 const initialData: TCreateStudent = {
@@ -43,7 +43,7 @@ export function CreateOrEditStudent(props: {
   const handleReset = () => setStudent(data);
   const handleSubmit = (changeShow: () => void) => {
     if (props.data) {
-      editStudent({ ...(student as TStudent), changeShow });
+      updateStudent({ ...(student as TStudent), changeShow });
     } else {
       createStudent({ ...(student as TCreateStudent), changeShow });
     }

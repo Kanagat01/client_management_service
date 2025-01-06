@@ -28,14 +28,14 @@ const createDisciplineFx: Effect<Omit<TDiscipline, "id">, TDiscipline> = attach(
 );
 
 export const createDiscipline = createEvent<
-  Omit<TDiscipline, "id"> & { onReset: () => void }
+  Omit<TDiscipline, "id"> & { changeShow: () => void }
 >();
-createDiscipline.watch(({ onReset, ...data }) => {
+createDiscipline.watch(({ changeShow, ...data }) => {
   toast.promise(createDisciplineFx(data), {
     loading: "Добавляем дисциплину...",
     success: (discipline) => {
       setDisciplines([...$disciplines.getState(), discipline]);
-      onReset();
+      changeShow();
       return "Дисциплина успешно добавлена";
     },
     error: (err) => `Произошла ошибка: ${err}`,

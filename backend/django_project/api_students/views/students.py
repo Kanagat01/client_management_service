@@ -70,9 +70,9 @@ def export_student_records_view(request):
             "discipline": str(record.activity.discipline) if record.activity else "",
             "teacher": record.activity.teacher if record.activity else "",
             "note": record.activity.note if record.activity else "",
-            "date": record.date,
-            "time_start": str(record.time_start)[:5],
-            "time_end": str(record.time_end)[:5],
+            "date": record.activity.date,
+            "start_time": str(record.activity.start_time)[:5],
+            "end_time": str(record.activity.end_time)[:5],
         })
     columns = {
         "student": "Студент",
@@ -83,8 +83,8 @@ def export_student_records_view(request):
         "teacher": "Лектор",
         "note": "Заметка",
         "date": "Дата",
-        "time_start": "Время начала",
-        "time_end": "Время конца",
+        "start_time": "Время начала",
+        "end_time": "Время конца",
     }
     return export_to_excel(request, data, columns, filename="Записи студентов")
 

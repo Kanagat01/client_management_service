@@ -11,7 +11,7 @@ export function CreateDiscipline() {
   const [data, setData] = useState<Omit<TDiscipline, "id">>(initialData);
 
   const onReset = () => setData(initialData);
-  const onSubmit = () => createDiscipline({ ...data, onReset });
+  const onSubmit = () => createDiscipline({ ...data, changeShow: onReset });
   return (
     <CreateOrEditBtn
       variant="add"

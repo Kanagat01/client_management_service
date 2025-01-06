@@ -8,15 +8,17 @@ import {
   DefaultCell,
   DefaultHeader,
   DeleteBtn,
-  CreateOrEditBtn,
   useActionsColumn,
 } from "~/shared/ui";
 import { dateToString } from "~/shared/lib";
 import { TStudentRecord } from "./types";
+import { deleteStudentRecord } from "./model";
+import { CreateOrEditStudentRecord } from "./ui";
 
 type TColumn = keyof TStudentRecord | keyof TActivity | "actions";
 
 export const studentRecordColumns: Partial<Record<TColumn, string>> = {
+  id: "ID",
   student: "Студент",
   telegram_link: "Ссылка",
   group: "Группа",
@@ -37,29 +39,34 @@ export const useStudentRecordTable = (data: TStudentRecord[]) => {
     ([fieldName, header], index) =>
       fieldName === "actions"
         ? useActionsColumn(columnHelper, header, (row: TStudentRecord) => [
-            <CreateOrEditBtn
-              variant="edit"
-              title={""}
-              inputs={undefined}
-              onSubmit={() => {}}
-              onReset={() => {}}
+            <CreateOrEditStudentRecord
+              data={{
+                id: row.id,
+                activity: row.activity.id,
+                student: row.student_id,
+                marked_as_proctoring: row.marked_as_proctoring,
+              }}
             />,
-            <DeleteBtn content={""} onConfirm={() => {}} />,
+            <DeleteBtn
+              content={`Вы уверены, что хотите очистить запись #${row.id}?`}
+              onConfirm={() => deleteStudentRecord(row.id)}
+            />,
           ])
         : columnHelper.accessor(fieldName as keyof TStudentRecord, {
             id: `column_${index}`,
             cell: (info) => {
+              let fieldValue;
               if (!Object.keys(info.row.original).includes(fieldName)) {
-                return (
-                  <DefaultCell>
-                    {info.row.original.activity[fieldName as keyof TActivity]}
-                  </DefaultCell>
-                );
-              }
-              let fieldValue =
-                info.row.original[fieldName as keyof TStudentRecord];
-              if (fieldName === "date") {
-                fieldValue = dateToString(fieldValue as string);
+                fieldValue =
+                  info.row.original.activity[fieldName as keyof TActivity];
+                if (fieldName === "date") {
+                  fieldValue = dateToString(fieldValue as string);
+                } else if (["start_time", "end_time"].includes(fieldName)) {
+                  fieldValue = (fieldValue as string).slice(0, 5);
+                }
+              } else {
+                fieldValue =
+                  info.row.original[fieldName as keyof TStudentRecord];
               }
               return <DefaultCell>{fieldValue as string}</DefaultCell>;
             },

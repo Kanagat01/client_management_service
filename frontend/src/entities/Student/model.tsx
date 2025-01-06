@@ -50,8 +50,8 @@ createStudent.watch(({ changeShow, ...data }) => {
   });
 });
 
-// --------------------- EDIT STUDENT --------------------------
-const editStudentFx: Effect<TStudent, TStudent> = attach({
+// --------------------- UPDATE STUDENT --------------------------
+const updateStudentFx: Effect<TStudent, TStudent> = attach({
   effect: apiRequestFx,
   mapParams: (data: TStudent): RequestParams => ({
     method: "put",
@@ -60,14 +60,14 @@ const editStudentFx: Effect<TStudent, TStudent> = attach({
   }),
 });
 
-export const editStudent = createEvent<
+export const updateStudent = createEvent<
   TStudent & {
     loading?: string;
     success?: string;
     changeShow?: () => void;
   }
 >();
-editStudent.watch(({ loading, success, changeShow, ...data }) => {
+updateStudent.watch(({ loading, success, changeShow, ...data }) => {
   if (data.phone) {
     const validation = validateWhatsappNumber(data.phone);
     if (validation !== "") {
@@ -81,7 +81,7 @@ editStudent.watch(({ loading, success, changeShow, ...data }) => {
       .find((group) => group.code === data.group);
     data.group = matchedGroup?.id || null;
   }
-  toast.promise(editStudentFx(data), {
+  toast.promise(updateStudentFx(data), {
     loading: loading
       ? loading
       : `Обновляем данные о студенте "${data.full_name}"...`,
@@ -90,6 +90,50 @@ editStudent.watch(({ loading, success, changeShow, ...data }) => {
       setStudents(state.map((s) => (s.id === student.id ? student : s)));
       if (changeShow) changeShow();
       return success ? success : "Данные о студенте обновлены";
+    },
+    error: (err) => `Произошла ошибка: ${err}`,
+  });
+});
+
+// --------------------- UPDATE FIELD IN STUDENT --------------------------
+const updateStudentFieldFx: Effect<Partial<TStudent>, TStudent> = attach({
+  effect: apiRequestFx,
+  mapParams: (data: Partial<TStudent>): RequestParams => ({
+    method: "patch",
+    url: `/api/students/${data.id}/`,
+    data,
+  }),
+});
+
+export const updateStudentField = createEvent<
+  Partial<TStudent> & {
+    loading: string;
+    success: string;
+    changeShow?: () => void;
+  }
+>();
+
+updateStudentField.watch(({ loading, success, changeShow, ...data }) => {
+  if (data.phone) {
+    const validation = validateWhatsappNumber(data.phone);
+    if (validation !== "") {
+      toast.error(validation);
+      return;
+    }
+  }
+  if (typeof data.group === "string") {
+    const matchedGroup = $groups
+      .getState()
+      .find((group) => group.code === data.group);
+    data.group = matchedGroup?.id || null;
+  }
+  toast.promise(updateStudentFieldFx(data), {
+    loading,
+    success: (student) => {
+      const state = $students.getState();
+      setStudents(state.map((s) => (s.id === student.id ? student : s)));
+      if (changeShow) changeShow();
+      return success;
     },
     error: (err) => `Произошла ошибка: ${err}`,
   });
