@@ -3,7 +3,12 @@ import { useUnit } from "effector-react";
 import { CommandBar, FilterBar } from "~/widgets";
 import { importCodes } from "~/features/import-data";
 import { PageSizeSelector } from "~/features/PageSizeSelector";
-import { $codes, CreateCode, getCodesFx, useCodeTable } from "~/entities/Code";
+import {
+  $codes,
+  CreateCode,
+  getCodesFx,
+  getCodeColumns,
+} from "~/entities/Code";
 import { ExportBtn, ImportBtn, MainTable, SelectInput } from "~/shared/ui";
 import { RenderPromise } from "~/shared/api";
 import { API_URL } from "~/shared/config";
@@ -44,8 +49,7 @@ const filters: ReactNode[] = [
 
 export function CodesPage() {
   const data = useUnit($codes);
-  const table = useCodeTable(data);
-
+  const columns = getCodeColumns();
   return (
     <>
       <CommandBar title="Редактор кодов" menuList={menuList} />
@@ -53,7 +57,7 @@ export function CodesPage() {
         <FilterBar filters={filters} />
         <div className="bg-white rounded shadow-sm mb-3">
           {RenderPromise(getCodesFx, {
-            success: <MainTable table={table} />,
+            success: <MainTable data={data} columns={columns} />,
           })}
         </div>
       </div>

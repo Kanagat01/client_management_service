@@ -1,15 +1,38 @@
-import { flexRender, Table } from "@tanstack/react-table";
+import {
+  ColumnDef,
+  flexRender,
+  getCoreRowModel,
+  useReactTable,
+} from "@tanstack/react-table";
+import { Fragment, useState } from "react";
 import { BsJournalX } from "react-icons/bs";
-import { ColumnSelector } from "./helpers";
 import { Pagination, TPagination } from "./Pagination";
-import { Fragment } from "react";
 
 type MainTableProps = {
-  table: Table<any>;
+  data: any[];
+  columns: ColumnDef<any>[];
   pagination?: TPagination;
   recordsRange?: string;
 };
-export function MainTable({ table, pagination, recordsRange }: MainTableProps) {
+
+export function MainTable({
+  data,
+  columns,
+  pagination,
+  recordsRange,
+}: MainTableProps) {
+  const [columnVisibility, setColumnVisibility] = useState({});
+
+  const table = useReactTable({
+    data,
+    columns,
+    state: {
+      columnVisibility,
+    },
+    onColumnVisibilityChange: setColumnVisibility,
+    getCoreRowModel: getCoreRowModel(),
+  });
+
   const headerGroups = table.getHeaderGroups();
   const rows = table.getRowModel().rows;
   return rows.length !== 0 ? (
@@ -46,10 +69,10 @@ export function MainTable({ table, pagination, recordsRange }: MainTableProps) {
       </div>
       <footer className="pb-3 w-100 v-md-center px-4 d-flex flex-wrap">
         <div className="col-auto me-auto">
-          <ColumnSelector table={table} />
+          {/* <ColumnSelector table={table} /> */}
 
           <small className="text-muted d-block">
-            {recordsRange && `Отображено записей: {recordsRange}`}
+            {recordsRange && `Отображено записей: ${recordsRange}`}
           </small>
         </div>
         <div className="col-auto overflow-auto flex-shrink-1 mt-3 mt-sm-0">

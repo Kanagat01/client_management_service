@@ -5,7 +5,7 @@ import { PageSizeSelector } from "~/features/PageSizeSelector";
 import {
   $activityTypes,
   getActivityTypesFx,
-  useActivityTypeTable,
+  getActivityTypeColumns,
 } from "~/entities/ActivityType";
 import { MainTable } from "~/shared/ui";
 import { RenderPromise } from "~/shared/api";
@@ -14,7 +14,7 @@ const filters: ReactNode[] = [<PageSizeSelector />];
 
 export function ActivityTypesPage() {
   const data = useUnit($activityTypes);
-  const table = useActivityTypeTable(data);
+  const columns = getActivityTypeColumns();
   return (
     <>
       <CommandBar title="Типы активностей" menuList={[]} />
@@ -22,7 +22,7 @@ export function ActivityTypesPage() {
         <FilterBar filters={filters} />
         <div className="bg-white rounded shadow-sm mb-3">
           {RenderPromise(getActivityTypesFx, {
-            success: <MainTable table={table} />,
+            success: <MainTable data={data} columns={columns} />,
           })}
         </div>
       </div>

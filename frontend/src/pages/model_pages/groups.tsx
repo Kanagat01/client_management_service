@@ -6,7 +6,7 @@ import {
   $groups,
   CreateGroup,
   getGroupsFx,
-  useGroupTable,
+  getGroupColumns,
 } from "~/entities/Group";
 import { MainTable } from "~/shared/ui";
 import { RenderPromise } from "~/shared/api";
@@ -16,8 +16,7 @@ const filters: ReactNode[] = [<PageSizeSelector />];
 
 export function GroupsPage() {
   const data = useUnit($groups);
-  const table = useGroupTable(data);
-
+  const columns = getGroupColumns();
   return (
     <>
       <CommandBar title="Группы" menuList={menuList} />
@@ -25,7 +24,7 @@ export function GroupsPage() {
         <FilterBar filters={filters} />
         <div className="bg-white rounded shadow-sm mb-3">
           {RenderPromise(getGroupsFx, {
-            success: <MainTable table={table} />,
+            success: <MainTable data={data} columns={columns} />,
           })}
         </div>
       </div>

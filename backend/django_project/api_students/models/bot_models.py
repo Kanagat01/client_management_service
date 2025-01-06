@@ -2,22 +2,35 @@ from django.db import models
 from rest_framework.exceptions import ValidationError
 from django.core.validators import FileExtensionValidator
 from .students import Student
-from .university import Activity, Group
+from .university import Group
 
 
 class Code(models.Model):
-    code = models.CharField(verbose_name="Код", max_length=250)
-    recipient = models.ForeignKey(
-        Student, models.CASCADE, verbose_name="Получатель")
-    activity = models.ForeignKey(
-        Activity, models.CASCADE, verbose_name="Активность")
+    value = models.CharField(verbose_name="Значение",
+                             max_length=250, unique=True)
+    status = models.CharField(
+        max_length=10,
+        choices=[
+            ('used', 'Использован'),
+            ('active', 'Активный'),
+        ],
+        default='active',
+        verbose_name="Статус"
+    )
+    student = models.ForeignKey(Student, on_delete=models.SET_NULL, null=True)
+    created_at = models.DateTimeField(
+        verbose_name="Дата получения", auto_now_add=True)
+
+    def save(self, *args, **kwargs):
+        self.status = "used" if self.student else "active"
+        return super().save(*args, **kwargs)
 
     def __str__(self):
-        return f"Код #{self.pk}"
+        return f"Код - {self.value}"
 
 
 class Message(models.Model):
-    group = models.ForeignKey(Group, models.CASCADE, verbose_name="Группа")
+    receiver = models.CharField(verbose_name="Получатель", max_length=250)
     text = models.TextField(verbose_name="Текст сообщения")
     schedule_datetime = models.DateTimeField(
         verbose_name="Дата и время рассылки")
@@ -27,8 +40,17 @@ class Message(models.Model):
         verbose_name = "Сообщение"
         verbose_name_plural = "Сообщения"
 
+    def save(self, *args, **kwargs):
+        if self.receiver.isdigit():
+            if not Student.objects.filter(id=int(self.receiver)).exists():
+                raise ValidationError("Студента с таким id не существует")
+        else:
+            if not Group.objects.filter(code=self.receiver).exists():
+                raise ValidationError("Группы с таким кодом не существует")
+        return super().save(*args, **kwargs)
+
     def __str__(self):
-        return f"Рассылка #{self.pk} - Группа {self.group}"
+        return f"Рассылка #{self.pk}"
 
 
 class InstructionForProctoring(models.Model):

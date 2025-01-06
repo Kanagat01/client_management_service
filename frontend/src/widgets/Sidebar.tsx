@@ -1,4 +1,5 @@
 import { ReactNode } from "react";
+import { useUnit } from "effector-react";
 import { NavLink, useLocation } from "react-router-dom";
 import {
   BsBell,
@@ -10,8 +11,8 @@ import {
 } from "react-icons/bs";
 import { SlBookOpen, SlOptions } from "react-icons/sl";
 import { PiCodeSimpleBold } from "react-icons/pi";
-// import { CiSettings } from "react-icons/ci";
 import { ImUsers } from "react-icons/im";
+import { $userProfile } from "~/entities/User";
 import Routes from "~/shared/routes";
 
 const navItems: [ReactNode, string, string][] = [
@@ -24,10 +25,11 @@ const navItems: [ReactNode, string, string][] = [
   [<PiCodeSimpleBold />, "Коды", Routes.CODES],
   [<SlOptions />, "Логи", Routes.LOGS],
   [<BsEnvelope />, "Сообщения", Routes.MESSAGES],
-  // [<CiSettings />, "Настройки", Routes.SETTINGS],
 ];
 
 export function Sidebar() {
+  const userProfile = useUnit($userProfile);
+
   const currentUrl = useLocation().pathname;
   const currentSection = navItems.find((el) => el[2] === currentUrl);
 
@@ -101,12 +103,14 @@ export function Sidebar() {
               >
                 <img
                   src="assets/images/avatar.png"
-                  alt="admin"
+                  alt="profile-img"
                   className="thumb-sm avatar b me-3"
                 />
 
                 <small className="d-flex flex-column lh-1 col-9">
-                  <span className="text-ellipsis text-white">admin</span>
+                  <span className="text-ellipsis text-white">
+                    {userProfile?.username}
+                  </span>
                   <span className="text-ellipsis text-muted">Пользователь</span>
                 </small>
               </NavLink>

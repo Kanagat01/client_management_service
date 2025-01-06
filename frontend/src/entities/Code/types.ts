@@ -1,6 +1,12 @@
 export type TCode = {
   id: number;
-  code: string;
-  recipient: string;
-  activity: string;
+  value: string;
+  status: string;
+  student?: string;
+  telegram_link?: string;
+  created_at: string;
+};
+
+export type TCreateCode = {
+  value: string;
 };

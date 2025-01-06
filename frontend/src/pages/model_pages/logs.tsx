@@ -2,9 +2,9 @@ import { ReactNode } from "react";
 import { useUnit } from "effector-react";
 import { CommandBar, FilterBar } from "~/widgets";
 import { PageSizeSelector } from "~/features/PageSizeSelector";
-import { $logs, getLogsFx, useLogTable } from "~/entities/LogModel";
-import { RenderPromise } from "~/shared/api";
+import { $logs, getLogsFx, getLogColumns } from "~/entities/LogModel";
 import { MainTable, BsInput, SelectInput } from "~/shared/ui";
+import { RenderPromise } from "~/shared/api";
 
 const filters: ReactNode[] = [
   <PageSizeSelector />,
@@ -25,8 +25,7 @@ const filters: ReactNode[] = [
 
 export function LogsPage() {
   const data = useUnit($logs);
-  const table = useLogTable(data);
-
+  const columns = getLogColumns();
   return (
     <>
       <CommandBar title="Логи" menuList={[]} />
@@ -35,7 +34,7 @@ export function LogsPage() {
 
         <div className="bg-white rounded shadow-sm mb-3">
           {RenderPromise(getLogsFx, {
-            success: <MainTable table={table} />,
+            success: <MainTable data={data} columns={columns} />,
           })}
         </div>
       </div>

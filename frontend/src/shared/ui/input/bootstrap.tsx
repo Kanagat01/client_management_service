@@ -1,8 +1,11 @@
-import { InputHTMLAttributes } from "react";
+import { InputHTMLAttributes, ReactNode } from "react";
+import { BsEye, BsEyeSlash } from "react-icons/bs";
+import { useModalState } from "~/shared/lib";
 
 type BsInputProps = {
-  variant: "checkbox" | "input" | "textarea";
-  label: string;
+  variant: "checkbox" | "input" | "textarea" | "password-input";
+  label: ReactNode;
+  hint?: string;
 } & InputHTMLAttributes<HTMLInputElement>;
 
 export function BsInput({ variant, label, ...props }: BsInputProps) {
@@ -25,6 +28,34 @@ export function BsInput({ variant, label, ...props }: BsInputProps) {
     case "textarea":
       input = (
         <textarea className={`form-control ${props.className}`}></textarea>
+      );
+      break;
+    case "password-input":
+      const [show, changeShow] = useModalState(false);
+      input = (
+        <>
+          <div className="input-icon">
+            <input
+              {...props}
+              className={`form-control ${props.className}`}
+              type={show ? "text" : "password"}
+              autoComplete="off"
+            />
+            <div className="input-icon-addon cursor" onClick={changeShow}>
+              <span className={show ? "none" : ""}>
+                <BsEye />
+              </span>
+
+              <span className={!show ? "none" : ""}>
+                <BsEyeSlash />
+              </span>
+            </div>
+          </div>
+
+          {props.hint && (
+            <small className="form-text text-muted">{props.hint}</small>
+          )}
+        </>
       );
       break;
   }

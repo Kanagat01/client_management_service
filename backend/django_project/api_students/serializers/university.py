@@ -9,10 +9,6 @@ ActivityTypeSerializer = create_model_serializer(ActivityType)
 
 
 class ActivitySerializer(serializers.ModelSerializer):
-    activity_type = serializers.StringRelatedField()
-    group = serializers.StringRelatedField()
-    discipline = serializers.StringRelatedField()
-
     class Meta:
         model = Activity
         fields = '__all__'
@@ -20,3 +16,13 @@ class ActivitySerializer(serializers.ModelSerializer):
             'start_time': {'format': '%H:%M'},
             'end_time': {'format': '%H:%M'},
         }
+
+    def to_representation(self, instance: Activity) -> dict:
+        representation = super().to_representation(instance)
+        representation['activity_type_id'] = instance.activity_type.pk
+        representation['activity_type'] = str(instance.activity_type)
+        representation['group_id'] = instance.group.pk
+        representation['group'] = str(instance.group)
+        representation['discipline_id'] = instance.discipline.pk
+        representation['discipline'] = str(instance.discipline)
+        return representation

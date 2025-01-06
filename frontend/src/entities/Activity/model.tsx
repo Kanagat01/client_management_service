@@ -1,9 +1,8 @@
 import toast from "react-hot-toast";
-import { FormEvent } from "react";
 import { attach, createEvent, createStore, Effect } from "effector";
 import { apiRequestFx, RequestParams } from "~/shared/api";
 import { dateToString } from "~/shared/lib";
-import { TActivity } from "./types";
+import { TActivity, TEditActivity } from "./types";
 
 export const getActivityText = (activity: TActivity) =>
   `${activity.group} ${activity.discipline} ${dateToString(activity.date)} ${
@@ -18,36 +17,36 @@ export const getActivitiesFx: Effect<void, TActivity[]> = attach({
   }),
 });
 
-export const $activities = createStore<TActivity[]>([]).on(
-  getActivitiesFx.doneData,
-  (_, state) => state
-);
+export const setActivities = createEvent<TActivity[]>();
+export const $activities = createStore<TActivity[]>([])
+  .on(getActivitiesFx.doneData, (_, state) => state)
+  .on(setActivities, (_, state) => state);
 
-export const setEditActivity = createEvent<TActivity | null>();
-export const $editActivity = createStore<TActivity | null>(null).on(
-  setEditActivity,
-  (_, state) => state
-);
-
-const editActivityFx: Effect<TActivity, TActivity> = attach({
+// --------------------- UPDATE ACTIVITY --------------------------
+const updateActivityFx: Effect<TEditActivity, TActivity> = attach({
   effect: apiRequestFx,
-  mapParams: (data: TActivity): RequestParams => ({
-    method: "post",
-    url: "/api/activities/",
+  mapParams: (data: TEditActivity): RequestParams => ({
+    method: "put",
+    url: `/api/activities/${data.id}/`,
     data,
   }),
 });
 
-export const editActivitySubmitted = createEvent<FormEvent>();
-editActivitySubmitted.watch((e) => {
-  e.preventDefault();
-  const data = $editActivity.getState();
-  if (!data) {
-    return;
-  }
-  toast.promise(editActivityFx(data), {
+export const updateActivity = createEvent<
+  TEditActivity & { changeShow: () => void }
+>();
+updateActivity.watch(({ changeShow, ...data }) => {
+  toast.promise(updateActivityFx(data), {
     loading: `Обновляем активность #${data.id}...`,
-    success: `Активность #${data.id} обновлена`,
+    success: (activity) => {
+      setActivities(
+        $activities
+          .getState()
+          .map((el) => (el.id === activity.id ? activity : el))
+      );
+      changeShow();
+      return `Активность #${data.id} обновлена`;
+    },
     error: (err) => `Произошла ошибка: ${err}`,
   });
 });

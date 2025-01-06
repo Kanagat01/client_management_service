@@ -1,18 +1,25 @@
-import { Navigate, Outlet, useLocation } from "react-router-dom";
 import { useUnit } from "effector-react";
+import { Navigate, Outlet, useLocation } from "react-router-dom";
 import { Sidebar } from "~/widgets";
+import { $userProfile, getUserProfileFx } from "~/entities/User";
 import { $isAuthenticated } from "~/features/authorization";
 import Routes from "~/shared/routes";
+import { useEffect } from "react";
 
 export default function PrivateRoute() {
   const isAuthenticated = useUnit($isAuthenticated);
   const location = useLocation();
-  // const mainData = useUnit($mainData);
+
+  const userProfile = useUnit($userProfile);
+  useEffect(() => {
+    if (!userProfile) {
+      getUserProfileFx();
+    }
+  }, [userProfile]);
 
   if (!isAuthenticated)
     return <Navigate to={Routes.LOGIN} state={{ from: location }} replace />;
 
-  // return mainData ? (
   return (
     <div className="container-fluid">
       <div className="row justify-content-center d-md-flex h-100">
@@ -28,7 +35,4 @@ export default function PrivateRoute() {
       </div>
     </div>
   );
-  // ) : (
-  //   <Preloader full_screen_mode />
-  // );
 }

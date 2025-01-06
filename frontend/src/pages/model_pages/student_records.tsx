@@ -1,19 +1,18 @@
 import { ReactNode, useEffect } from "react";
 import { useUnit } from "effector-react";
-
 import { CommandBar, FilterBar } from "~/widgets";
 import { PageSizeSelector } from "~/features/PageSizeSelector";
 import {
   $studentRecords,
   CreateOrEditStudentRecord,
   getStudentRecordsFx,
-  useStudentRecordTable,
+  getStudentRecordColumns,
 } from "~/entities/StudentRecord";
+import { $students, getStudentsFx } from "~/entities/Student";
+import { $activities, getActivitiesFx } from "~/entities/Activity";
 import { ExportBtn, MainTable, BsInput, SelectInput } from "~/shared/ui";
 import { RenderPromise } from "~/shared/api";
 import { API_URL } from "~/shared/config";
-import { $students, getStudentsFx } from "~/entities/Student";
-import { $activities, getActivitiesFx } from "~/entities/Activity";
 
 const menuList = [
   <CreateOrEditStudentRecord />,
@@ -87,7 +86,7 @@ const filters: ReactNode[] = [
 
 export function StudentRecordsPage() {
   const data = useUnit($studentRecords);
-  const table = useStudentRecordTable(data);
+  const columns = getStudentRecordColumns();
 
   useEffect(() => {
     if ($students.getState().length === 0) getStudentsFx();
@@ -100,7 +99,7 @@ export function StudentRecordsPage() {
         <FilterBar filters={filters} />
         <div className="bg-white rounded shadow-sm mb-3">
           {RenderPromise(getStudentRecordsFx, {
-            success: <MainTable table={table} />,
+            success: <MainTable data={data} columns={columns} />,
           })}
         </div>
       </div>

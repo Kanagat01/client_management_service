@@ -6,8 +6,8 @@ import {
   $students,
   CreateOrEditStudent,
   deleteAllStudents,
+  getStudentColumns,
   getStudentsFx,
-  useStudentTable,
 } from "~/entities/Student";
 import { $groups, getGroupsFx } from "~/entities/Group";
 import { MainTable, DeleteAllBtn, BsInput, SelectInput } from "~/shared/ui";
@@ -44,7 +44,7 @@ const filters: ReactNode[] = [
 
 export function StudentsPage() {
   const data = useUnit($students);
-  const table = useStudentTable(data);
+  const columns = getStudentColumns();
 
   useEffect(() => {
     if ($groups.getState().length === 0) getGroupsFx();
@@ -57,7 +57,7 @@ export function StudentsPage() {
         <FilterBar filters={filters} />
         <div className="bg-white rounded shadow-sm mb-3">
           {RenderPromise(getStudentsFx, {
-            success: <MainTable table={table} />,
+            success: <MainTable data={data} columns={columns} />,
           })}
         </div>
       </div>

@@ -19,3 +19,14 @@ class PasswordResetConfirmSerializer(serializers.Serializer):
             raise serializers.ValidationError("passwords_do_not_match")
 
         return attrs
+
+
+class UserUpdateSerializer(serializers.Serializer):
+    username = serializers.CharField(max_length=150, required=False)
+    email = serializers.EmailField(required=False)
+
+
+class ChangePasswordSerializer(serializers.Serializer):
+    current_password = serializers.CharField(required=True)
+    new_password = serializers.CharField(required=True)
+    confirm_password = serializers.CharField(required=True)

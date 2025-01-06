@@ -1,8 +1,4 @@
-import {
-  createColumnHelper,
-  getCoreRowModel,
-  useReactTable,
-} from "@tanstack/react-table";
+import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
 import { TActivity } from "~/entities/Activity";
 import {
   DefaultCell,
@@ -32,8 +28,7 @@ export const studentRecordColumns: Partial<Record<TColumn, string>> = {
   marked_as_proctoring: "Установлено как прокторинг",
   actions: "Действия",
 };
-
-export const useStudentRecordTable = (data: TStudentRecord[]) => {
+export const getStudentRecordColumns = () => {
   const columnHelper = createColumnHelper<TStudentRecord>();
   const columns = Object.entries(studentRecordColumns).map(
     ([fieldName, header], index) =>
@@ -72,12 +67,5 @@ export const useStudentRecordTable = (data: TStudentRecord[]) => {
             meta: { label: header },
           })
   );
-
-  const table = useReactTable({
-    data,
-    columns,
-    getCoreRowModel: getCoreRowModel(),
-  });
-
-  return table;
+  return columns as ColumnDef<TStudentRecord>[];
 };

@@ -11,8 +11,8 @@ from rest_framework.request import Request
 from rest_framework.authtoken.models import Token
 from backend.settings import EMAIL_HOST_USER, REACT_RESET_PASSWORD_URL
 from backend.global_functions import success_with_text, error_with_text
-from .serializers import LoginSerializer, PasswordResetSerializer, PasswordResetConfirmSerializer
-from .models import PasswordReset
+from .serializers import *
+from .models import *
 
 
 class Login(APIView):
@@ -103,6 +103,54 @@ class PasswordResetConfirmView(APIView):
         user.set_password(serializer.validated_data['new_password'])
         user.save()
         reset_obj.delete()
+
+        Token.objects.filter(user=user).delete()
+        token = Token.objects.create(user=user)
+        return success_with_text({'token': token.key})
+
+
+class UserProfileView(APIView):
+    def get(self, request: Request):
+        user: User = request.user
+        return success_with_text({"username": user.username, "email": user.email})
+
+    def put(self, request: Request):
+        user: User = request.user
+        data = request.data
+
+        serializer = UserUpdateSerializer(data=data)
+        if not serializer.is_valid():
+            return error_with_text(serializer.errors)
+
+        if 'username' in serializer.validated_data:
+            user.username = serializer.validated_data['username']
+        if 'email' in serializer.validated_data:
+            user.email = serializer.validated_data['email']
+
+        user.save()
+        return success_with_text({"username": user.username, "email": user.email})
+
+
+class ChangePasswordView(APIView):
+    def post(self, request: Request):
+        user: User = request.user
+        serializer = ChangePasswordSerializer(data=request.data)
+
+        if not serializer.is_valid():
+            return error_with_text(serializer.errors)
+
+        current_password = serializer.validated_data['current_password']
+        new_password = serializer.validated_data['new_password']
+        confirm_password = serializer.validated_data['confirm_password']
+
+        if not user.check_password(current_password):
+            return error_with_text('Неправильный текущий пароль')
+
+        if new_password != confirm_password:
+            return error_with_text('Пароли не совпадают')
+
+        user.set_password(new_password)
+        user.save()
 
         Token.objects.filter(user=user).delete()
         token = Token.objects.create(user=user)

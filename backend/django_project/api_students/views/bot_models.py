@@ -10,7 +10,7 @@ from api_students.serializers import *
 from backend.global_functions import error_with_text, export_to_excel, success_with_text
 
 
-class CodeViewSet(viewsets.ModelViewSet):
+class CodeViewSet(viewsets.GenericViewSet, mixins.CreateModelMixin, mixins.DestroyModelMixin, mixins.ListModelMixin):
     queryset = Code.objects.all()
     serializer_class = CodeSerializer
 

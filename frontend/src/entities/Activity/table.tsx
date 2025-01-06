@@ -1,18 +1,9 @@
-import {
-  useReactTable,
-  getCoreRowModel,
-  createColumnHelper,
-} from "@tanstack/react-table";
+import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
 import { ReactNode } from "react";
 import { dateTimeWithWeekday, dateToString } from "~/shared/lib";
-import {
-  DefaultCell,
-  DefaultHeader,
-  CreateOrEditBtn,
-  useActionsColumn,
-} from "~/shared/ui";
+import { DefaultCell, DefaultHeader, useActionsColumn } from "~/shared/ui";
+import { EditActivity } from "./ui";
 import { TActivity } from "./types";
-import { editActivitySubmitted, setEditActivity } from "./model";
 
 type TColumn = keyof TActivity | "actions";
 
@@ -30,39 +21,47 @@ export const activityColumns: Partial<Record<TColumn, string>> = {
   actions: "Действия",
 };
 
-export const useActivityTable = (data: TActivity[]) => {
+export const getActivityColumns = () => {
   const columnHelper = createColumnHelper<TActivity>();
   let columns = (Object.entries(activityColumns) as [TColumn, string][]).map(
-    ([fieldName, header], index) =>
-      fieldName === "actions"
-        ? useActionsColumn(columnHelper, header, (row: TActivity) => [
-            <CreateOrEditBtn
-              variant="edit"
-              title={"Редактировать активность"}
-              inputs={undefined}
-              onSubmit={editActivitySubmitted}
-              onReset={() => setEditActivity(null)}
-            />,
-          ])
-        : columnHelper.accessor(fieldName, {
-            id: `column_${index}`,
-            cell: (info) => {
-              let fieldValue: ReactNode = info.row.original[fieldName];
-              if (fieldName === "updated_at") {
-                fieldValue = dateTimeWithWeekday(fieldValue as string);
-              } else if (fieldName === "date") {
-                fieldValue = dateToString(fieldValue as string);
-              }
-              return <DefaultCell>{fieldValue}</DefaultCell>;
-            },
-            header: () => <DefaultHeader>{header}</DefaultHeader>,
-            meta: { label: header },
-          })
+    ([fieldName, header], index) => {
+      if (fieldName === "actions") {
+        return useActionsColumn(columnHelper, header, (row: TActivity) => [
+          <EditActivity
+            initialState={{
+              ...row,
+              activity_type: row.activity_type_id,
+              discipline: row.discipline_id,
+              group: row.group_id,
+            }}
+          />,
+        ]);
+      } else {
+        return columnHelper.accessor(fieldName, {
+          id: `column_${index}`,
+          cell: (info) => {
+            let fieldValue: ReactNode;
+            switch (fieldName) {
+              case "updated_at":
+                fieldValue = dateTimeWithWeekday(
+                  info.row.original[fieldName] as string
+                );
+                break;
+              case "date":
+                fieldValue = dateToString(
+                  info.row.original[fieldName] as string
+                );
+                break;
+              default:
+                fieldValue = info.row.original[fieldName];
+            }
+            return <DefaultCell>{fieldValue}</DefaultCell>;
+          },
+          header: () => <DefaultHeader>{header}</DefaultHeader>,
+          meta: { label: header },
+        });
+      }
+    }
   );
-  const table = useReactTable({
-    data,
-    columns,
-    getCoreRowModel: getCoreRowModel(),
-  });
-  return table;
+  return columns as ColumnDef<TActivity>[];
 };

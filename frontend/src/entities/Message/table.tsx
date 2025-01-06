@@ -1,8 +1,4 @@
-import {
-  createColumnHelper,
-  getCoreRowModel,
-  useReactTable,
-} from "@tanstack/react-table";
+import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
 import {
   DefaultHeader,
   DefaultCell,
@@ -24,7 +20,7 @@ const columnsRecord: Record<TColumn, string> = {
   actions: "Действия",
 };
 
-export const useMessageTable = (data: TMessage[]) => {
+export const getMessageColumns = () => {
   const columnHelper = createColumnHelper<TMessage>();
   const columns = (Object.entries(columnsRecord) as [TColumn, string][]).map(
     ([fieldName, header], index) =>
@@ -52,10 +48,5 @@ export const useMessageTable = (data: TMessage[]) => {
             meta: { label: header },
           })
   );
-  const table = useReactTable({
-    data,
-    columns,
-    getCoreRowModel: getCoreRowModel(),
-  });
-  return table;
+  return columns as ColumnDef<TMessage>[];
 };

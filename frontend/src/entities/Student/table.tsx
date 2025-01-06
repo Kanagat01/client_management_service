@@ -1,9 +1,5 @@
-import {
-  createColumnHelper,
-  getCoreRowModel,
-  useReactTable,
-} from "@tanstack/react-table";
 import { ReactNode } from "react";
+import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
 import { BsStar } from "react-icons/bs";
 import {
   DefaultHeader,
@@ -33,7 +29,7 @@ export const studentColumns: Partial<Record<TColumn, string>> = {
   actions: "Действия",
 };
 
-export const useStudentTable = (data: TStudent[]) => {
+export const getStudentColumns = () => {
   const columnHelper = createColumnHelper<TStudent>();
   let columns = (Object.entries(studentColumns) as [TColumn, string][]).map(
     ([fieldName, header], index) =>
@@ -97,10 +93,5 @@ export const useStudentTable = (data: TStudent[]) => {
             meta: { label: header },
           })
   );
-  const table = useReactTable({
-    data,
-    columns,
-    getCoreRowModel: getCoreRowModel(),
-  });
-  return table;
+  return columns as ColumnDef<TStudent>[];
 };

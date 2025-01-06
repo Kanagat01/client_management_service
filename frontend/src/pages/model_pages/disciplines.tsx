@@ -6,7 +6,7 @@ import { importCodes } from "~/features/import-data";
 import {
   $disciplines,
   getDisciplinesFx,
-  useDisciplineTable,
+  getDisciplineColumns,
   CreateOrEditDiscipline,
 } from "~/entities/Discipline";
 import { RenderPromise } from "~/shared/api";
@@ -23,7 +23,7 @@ const filters: ReactNode[] = [<PageSizeSelector />];
 
 export function DisciplinesPage() {
   const data = useUnit($disciplines);
-  const table = useDisciplineTable(data);
+  const columns = getDisciplineColumns();
 
   return (
     <>
@@ -33,7 +33,7 @@ export function DisciplinesPage() {
 
         <div className="bg-white rounded shadow-sm mb-3">
           {RenderPromise(getDisciplinesFx, {
-            success: <MainTable table={table} />,
+            success: <MainTable data={data} columns={columns} />,
           })}
         </div>
       </div>
