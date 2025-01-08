@@ -25,7 +25,7 @@ export const getCodeColumns = () => {
   const columns = (Object.entries(columnsRecord) as [TColumn, string][]).map(
     ([fieldName, header], index) =>
       fieldName === "actions"
-        ? useActionsColumn(columnHelper, header, ({ id, value }: TCode) => [
+        ? useActionsColumn<TCode>(columnHelper, header, ({ id, value }) => [
             <DeleteBtn
               content={`Вы уверены, что хотите удалить код "${value}"?`}
               onConfirm={() => deleteCode({ id, value })}

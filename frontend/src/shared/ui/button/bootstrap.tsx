@@ -4,6 +4,7 @@ import { createEvent, createStore } from "effector";
 import { SlActionRedo, SlActionUndo } from "react-icons/sl";
 import { IoBanOutline } from "react-icons/io5";
 import {
+  BsArrowCounterclockwise,
   BsArrowDown,
   BsArrowUp,
   BsCheckCircle,
@@ -21,6 +22,7 @@ export function CreateOrEditBtn({ variant, ...props }: CreateOrEditBtnProps) {
     create: { icon: <BsCheckCircle />, text: "Создать" },
     add: { icon: <BsPlusCircle />, text: "Добавить" },
     edit: { icon: <BsPencil />, text: "Редактировать" },
+    reuse: { icon: <BsArrowCounterclockwise />, text: "Переиспользовать" },
   };
 
   const [show, changeShow] = useModalState(false);
@@ -28,7 +30,7 @@ export function CreateOrEditBtn({ variant, ...props }: CreateOrEditBtnProps) {
     <>
       <Button variant="link" className="icon-link" onClick={changeShow}>
         {variantData[variant].icon}
-        <span>{variantData[variant].text}</span>
+        <span>{props.variantText ?? variantData[variant].text}</span>
       </Button>
       <Modal show={show} onHide={changeShow}>
         <Modal.Header closeButton>

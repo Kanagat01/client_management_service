@@ -68,6 +68,6 @@ def import_codes_view(request):
         return error_with_text(f'Ошибка при обработке файла: {str(e)}')
 
 
-class MessageViewSet(viewsets.GenericViewSet, mixins.CreateModelMixin, mixins.ListModelMixin):
+class MessageViewSet(viewsets.GenericViewSet, mixins.CreateModelMixin, mixins.DestroyModelMixin, mixins.ListModelMixin):
     queryset = Message.objects.all()
     serializer_class = MessageSerializer

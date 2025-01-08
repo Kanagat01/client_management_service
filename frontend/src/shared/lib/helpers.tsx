@@ -73,3 +73,24 @@ export function dateTimeWithWeekday(datetime: string | Date) {
     </time>
   );
 }
+
+export const getLocalISOTime = () => {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, "0");
+  const day = String(now.getDate()).padStart(2, "0");
+  const hours = String(now.getHours()).padStart(2, "0");
+  const minutes = String(now.getMinutes()).padStart(2, "0");
+  return `${year}-${month}-${day}T${hours}:${minutes}`;
+};
+
+export const dateStringToIso = (input: string) => {
+  // const input = "09-01-2025 18:00";
+  const [day, month, yearAndTime] = input.split("-");
+  const [year, time] = yearAndTime.split(" ");
+  const [hour, minute] = time.split(":");
+  const isoDate = new Date(
+    `${year}-${month}-${day}T${hour}:${minute}`
+  ).toISOString();
+  return isoDate.slice(0, 16);
+};

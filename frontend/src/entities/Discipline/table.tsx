@@ -18,7 +18,7 @@ export const getDisciplineColumns = () => {
     Object.entries(disciplineColumns) as [TColumn, string][]
   ).map(([fieldName, header], index) =>
     fieldName === "actions"
-      ? useActionsColumn(columnHelper, header, (row: TDiscipline) => [
+      ? useActionsColumn<TDiscipline>(columnHelper, header, (row) => [
           <CreateOrEditDiscipline initialState={row} />,
         ])
       : columnHelper.accessor(fieldName, {

@@ -1,5 +1,5 @@
-import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
 import { ReactNode } from "react";
+import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
 import { dateTimeWithWeekday, dateToString } from "~/shared/lib";
 import { DefaultCell, DefaultHeader, useActionsColumn } from "~/shared/ui";
 import { EditActivity } from "./ui";
@@ -26,7 +26,7 @@ export const getActivityColumns = () => {
   let columns = (Object.entries(activityColumns) as [TColumn, string][]).map(
     ([fieldName, header], index) => {
       if (fieldName === "actions") {
-        return useActionsColumn(columnHelper, header, (row: TActivity) => [
+        return useActionsColumn<TActivity>(columnHelper, header, (row) => [
           <EditActivity
             initialState={{
               ...row,

@@ -24,7 +24,7 @@ const navItems: [ReactNode, string, string][] = [
   [<ImUsers />, "Группы", Routes.GROUPS],
   [<PiCodeSimpleBold />, "Коды", Routes.CODES],
   [<SlOptions />, "Логи", Routes.LOGS],
-  [<BsEnvelope />, "Сообщения", Routes.MESSAGES],
+  [<BsEnvelope />, "Рассылки", Routes.MESSAGES],
 ];
 
 export function Sidebar() {

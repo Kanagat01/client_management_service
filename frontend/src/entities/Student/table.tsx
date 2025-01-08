@@ -34,7 +34,7 @@ export const getStudentColumns = () => {
   let columns = (Object.entries(studentColumns) as [TColumn, string][]).map(
     ([fieldName, header], index) =>
       fieldName === "actions"
-        ? useActionsColumn(columnHelper, header, (row: TStudent) => [
+        ? useActionsColumn<TStudent>(columnHelper, header, (row) => [
             <CreateOrEditStudent data={row} />,
             <DeleteBtn
               content={`Вы уверены, что хотите очистить данные студента "${row.full_name}"?`}

@@ -11,7 +11,8 @@ export type BtnWithConfirmation = {
 export type CreateOrEditBtnProps = {
   title: string;
   inputs: ReactNode;
-  variant: "add" | "create" | "edit";
-  onSubmit: (func: () => void) => void;
+  variant: "add" | "create" | "edit" | "reuse";
+  variantText?: string;
+  onSubmit: (changeShow: () => void) => void;
   onReset: () => void;
 };

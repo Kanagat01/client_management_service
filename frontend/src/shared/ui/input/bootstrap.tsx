@@ -2,14 +2,24 @@ import { InputHTMLAttributes, ReactNode } from "react";
 import { BsEye, BsEyeSlash } from "react-icons/bs";
 import { useModalState } from "~/shared/lib";
 
-type BsInputProps = {
-  variant: "checkbox" | "input" | "textarea" | "password-input";
+type TextAreaProps = {
+  variant: "textarea";
+  label: ReactNode;
+} & InputHTMLAttributes<HTMLTextAreaElement>;
+
+type InputProps = {
+  variant: "checkbox" | "input" | "password-input";
   label: ReactNode;
   hint?: string;
 } & InputHTMLAttributes<HTMLInputElement>;
 
-export function BsInput({ variant, label, ...props }: BsInputProps) {
+export function BsInput({
+  variant,
+  label,
+  ...props
+}: InputProps | TextAreaProps) {
   let input;
+  props = props as InputHTMLAttributes<HTMLInputElement>;
   switch (variant) {
     case "checkbox":
       input = (
@@ -27,7 +37,10 @@ export function BsInput({ variant, label, ...props }: BsInputProps) {
       break;
     case "textarea":
       input = (
-        <textarea className={`form-control ${props.className}`}></textarea>
+        <textarea
+          {...(props as InputHTMLAttributes<HTMLTextAreaElement>)}
+          className={`form-control ${props.className}`}
+        ></textarea>
       );
       break;
     case "password-input":

@@ -7,9 +7,9 @@ import {
   useActionsColumn,
 } from "~/shared/ui";
 import { dateToString } from "~/shared/lib";
-import { TStudentRecord } from "./types";
-import { deleteStudentRecord } from "./model";
 import { CreateOrEditStudentRecord } from "./ui";
+import { deleteStudentRecord } from "./model";
+import { TStudentRecord } from "./types";
 
 type TColumn = keyof TStudentRecord | keyof TActivity | "actions";
 
@@ -33,7 +33,7 @@ export const getStudentRecordColumns = () => {
   const columns = Object.entries(studentRecordColumns).map(
     ([fieldName, header], index) =>
       fieldName === "actions"
-        ? useActionsColumn(columnHelper, header, (row: TStudentRecord) => [
+        ? useActionsColumn<TStudentRecord>(columnHelper, header, (row) => [
             <CreateOrEditStudentRecord
               data={{
                 id: row.id,

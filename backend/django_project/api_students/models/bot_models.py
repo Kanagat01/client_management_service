@@ -1,6 +1,6 @@
 from django.db import models
-from rest_framework.exceptions import ValidationError
 from django.core.validators import FileExtensionValidator
+from rest_framework.exceptions import ValidationError
 from .students import Student
 from .university import Group
 
@@ -31,7 +31,12 @@ class Code(models.Model):
 
 
 class Message(models.Model):
-    receiver = models.CharField(verbose_name="Получатель", max_length=250)
+    student = models.ForeignKey(
+        Student, on_delete=models.CASCADE, null=True, blank=True, verbose_name="Студент"
+    )
+    group = models.ForeignKey(
+        Group, on_delete=models.CASCADE, null=True, blank=True, verbose_name="Группа"
+    )
     text = models.TextField(verbose_name="Текст сообщения")
     schedule_datetime = models.DateTimeField(
         verbose_name="Дата и время рассылки")
@@ -42,12 +47,9 @@ class Message(models.Model):
         verbose_name_plural = "Сообщения"
 
     def save(self, *args, **kwargs):
-        if self.receiver.isdigit():
-            if not Student.objects.filter(id=int(self.receiver)).exists():
-                raise ValidationError("Студента с таким id не существует")
-        else:
-            if not Group.objects.filter(code=self.receiver).exists():
-                raise ValidationError("Группы с таким кодом не существует")
+        if bool(self.student) == bool(self.group):
+            raise ValidationError(
+                'Необходимо заполнить одно из двух полей: "Студент" или "Группа"')
         return super().save(*args, **kwargs)
 
     def __str__(self):

@@ -43,10 +43,10 @@ export const DefaultCell = ({ children }: PropsWithChildren) => {
   );
 };
 
-export const useActionsColumn = (
-  columnHelper: ColumnHelper<any>,
+export const useActionsColumn = <T,>(
+  columnHelper: ColumnHelper<T>,
   header: ReactNode,
-  actions: (row: any) => ReactNode[]
+  actions: (row: T) => ReactNode[]
 ) => {
   return columnHelper.display({
     id: "column_actions",

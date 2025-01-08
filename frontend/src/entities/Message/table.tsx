@@ -3,15 +3,16 @@ import {
   DefaultHeader,
   DefaultCell,
   useActionsColumn,
-  CreateOrEditBtn,
   DeleteBtn,
 } from "~/shared/ui";
-import { dateTimeToString } from "~/shared/lib";
-import { TMessage } from "./types";
+import { deleteMessage } from "./model";
+import { CreateMessage } from "./ui";
+import { TCreateMessage, TMessage } from "./types";
+import { dateStringToIso } from "~/shared/lib";
 
-type TColumn = keyof TMessage | "actions";
+type TColumn = keyof TMessage | "receiver" | "actions";
 
-const columnsRecord: Record<TColumn, string> = {
+const columnsRecord: Partial<Record<TColumn, string>> = {
   id: "Номер рассылки",
   receiver: "Получатель",
   text: "Содержание",
@@ -25,23 +26,37 @@ export const getMessageColumns = () => {
   const columns = (Object.entries(columnsRecord) as [TColumn, string][]).map(
     ([fieldName, header], index) =>
       fieldName === "actions"
-        ? useActionsColumn(columnHelper, header, () => [
-            <CreateOrEditBtn
-              variant="edit"
-              title={""}
-              inputs={undefined}
-              onSubmit={() => {}}
-              onReset={() => {}}
+        ? useActionsColumn<TMessage>(columnHelper, header, (row) => [
+            <CreateMessage
+              data={
+                {
+                  ...row,
+                  student: row.student_id,
+                  group: row.group_id,
+                  schedule_datetime: dateStringToIso(row.schedule_datetime),
+                } as TCreateMessage
+              }
             />,
-            <DeleteBtn content={""} onConfirm={() => {}} />,
+            <DeleteBtn
+              content={`Вы уверены, что хотите удалить сообщение #${row.id}`}
+              onConfirm={() => deleteMessage(row.id)}
+            />,
           ])
-        : columnHelper.accessor(fieldName, {
+        : fieldName === "receiver"
+        ? columnHelper.display({
             id: `column_${index}`,
             cell: (info) => {
-              let value = info.row.original[fieldName];
-              if (fieldName === "schedule_datetime") {
-                value = dateTimeToString(value as string);
-              }
+              const value =
+                info.row.original.student ?? info.row.original.group;
+              return <DefaultCell>{value}</DefaultCell>;
+            },
+            header: () => <DefaultHeader>{header}</DefaultHeader>,
+            meta: { label: header },
+          })
+        : columnHelper.accessor(fieldName as keyof TMessage, {
+            id: `column_${index}`,
+            cell: (info) => {
+              const value = info.row.original[fieldName];
               return <DefaultCell>{value}</DefaultCell>;
             },
             header: () => <DefaultHeader>{header}</DefaultHeader>,
