@@ -1,6 +1,6 @@
 import toast from "react-hot-toast";
 import { attach, createEvent, createStore, Effect } from "effector";
-import { apiRequestFx, RequestParams } from "~/shared/api";
+import { apiRequestFx } from "~/shared/api";
 import { dateToString } from "~/shared/lib";
 import { TActivity, TEditActivity } from "./types";
 
@@ -11,7 +11,7 @@ export const getActivityText = (activity: TActivity) =>
 
 export const getActivitiesFx: Effect<void, TActivity[]> = attach({
   effect: apiRequestFx,
-  mapParams: (): RequestParams => ({
+  mapParams: () => ({
     method: "get",
     url: "/api/activities/",
   }),
@@ -25,7 +25,7 @@ export const $activities = createStore<TActivity[]>([])
 // --------------------- UPDATE ACTIVITY --------------------------
 const updateActivityFx: Effect<TEditActivity, TActivity> = attach({
   effect: apiRequestFx,
-  mapParams: (data: TEditActivity): RequestParams => ({
+  mapParams: (data: TEditActivity) => ({
     method: "put",
     url: `/api/activities/${data.id}/`,
     data,

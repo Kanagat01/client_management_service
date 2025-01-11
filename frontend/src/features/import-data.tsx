@@ -1,6 +1,6 @@
 import toast from "react-hot-toast";
 import { attach, createEvent, Effect } from "effector";
-import { apiRequestFx, RequestParams } from "~/shared/api";
+import { apiRequestFx } from "~/shared/api";
 import { $fileForImport } from "~/shared/ui";
 
 type TImportData = { url: string; data: FormData };
@@ -8,7 +8,7 @@ type TImportDataResponse = { message: unknown[] };
 
 const importDataFx: Effect<TImportData, TImportDataResponse> = attach({
   effect: apiRequestFx,
-  mapParams: ({ url, data }: TImportData): RequestParams => ({
+  mapParams: ({ url, data }: TImportData) => ({
     method: "post",
     url,
     data,

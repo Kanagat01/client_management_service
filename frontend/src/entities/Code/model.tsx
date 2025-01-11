@@ -1,15 +1,18 @@
 import toast from "react-hot-toast";
 import { attach, createEvent, createStore, Effect } from "effector";
 import { TInstructionForProctoring } from "~/entities/InstructionForProctoring";
-import { apiRequestFx, RequestParams } from "~/shared/api";
+import { apiRequestFx } from "~/shared/api";
 import { TCode, TCreateCode } from "./types";
 
 export const getCodesAndInstructionFx: Effect<
   void,
-  { codes: TCode[]; instruction_for_proctoring: TInstructionForProctoring }
+  {
+    codes: TCode[];
+    instruction_for_proctoring: TInstructionForProctoring | null;
+  }
 > = attach({
   effect: apiRequestFx,
-  mapParams: (): RequestParams => ({
+  mapParams: () => ({
     method: "get",
     url: "/api/codes/",
   }),
@@ -23,7 +26,7 @@ export const $codes = createStore<TCode[]>([])
 // --------------------- CREATE CODE --------------------------
 const createCodeFx: Effect<TCreateCode, TCode> = attach({
   effect: apiRequestFx,
-  mapParams: (data): RequestParams => ({
+  mapParams: (data) => ({
     method: "post",
     url: "/api/codes/",
     data,
@@ -48,7 +51,7 @@ createCode.watch(({ changeShow, ...data }) => {
 // --------------------- DELETE CODE --------------------------
 const deleteCodeFx: Effect<number, void> = attach({
   effect: apiRequestFx,
-  mapParams: (id: number): RequestParams => ({
+  mapParams: (id: number) => ({
     method: "delete",
     url: `/api/codes/${id}/`,
   }),

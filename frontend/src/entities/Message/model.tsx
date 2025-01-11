@@ -1,11 +1,11 @@
 import toast from "react-hot-toast";
 import { attach, createEvent, createStore, Effect } from "effector";
-import { apiRequestFx, RequestParams } from "~/shared/api";
+import { apiRequestFx } from "~/shared/api";
 import { TCreateMessage, TMessage } from "./types";
 
 export const getMessagesFx: Effect<void, TMessage[]> = attach({
   effect: apiRequestFx,
-  mapParams: (): RequestParams => ({
+  mapParams: () => ({
     method: "get",
     url: "/api/messages/",
   }),
@@ -19,7 +19,7 @@ export const $messages = createStore<TMessage[]>([])
 // --------------------- CREATE MESSAGE --------------------------
 const createMessageFx: Effect<TCreateMessage, TMessage> = attach({
   effect: apiRequestFx,
-  mapParams: (data): RequestParams => ({
+  mapParams: (data) => ({
     method: "post",
     url: "/api/messages/",
     data,
@@ -44,7 +44,7 @@ createMessage.watch(({ changeShow, ...data }) => {
 // --------------------- DELETE MESSAGE --------------------------
 const deleteMessageFx: Effect<number, void> = attach({
   effect: apiRequestFx,
-  mapParams: (id): RequestParams => ({
+  mapParams: (id) => ({
     method: "delete",
     url: `/api/messages/${id}/`,
   }),

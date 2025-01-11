@@ -1,11 +1,11 @@
 import toast from "react-hot-toast";
 import { attach, createEvent, createStore, Effect } from "effector";
-import { apiRequestFx, RequestParams } from "~/shared/api";
+import { apiRequestFx } from "~/shared/api";
 import { TDiscipline } from "./types";
 
 export const getDisciplinesFx: Effect<void, TDiscipline[]> = attach({
   effect: apiRequestFx,
-  mapParams: (): RequestParams => ({
+  mapParams: () => ({
     method: "get",
     url: "/api/disciplines/",
   }),
@@ -20,7 +20,7 @@ export const $disciplines = createStore<TDiscipline[]>([])
 const createDisciplineFx: Effect<Omit<TDiscipline, "id">, TDiscipline> = attach(
   {
     effect: apiRequestFx,
-    mapParams: (data): RequestParams => ({
+    mapParams: (data) => ({
       method: "post",
       url: "/api/disciplines/",
       data,
@@ -46,7 +46,7 @@ createDiscipline.watch(({ changeShow, ...data }) => {
 // --------------------- UPDATE DISCIPLINE --------------------------
 const updateDisciplineFx: Effect<TDiscipline, TDiscipline> = attach({
   effect: apiRequestFx,
-  mapParams: (data): RequestParams => ({
+  mapParams: (data) => ({
     method: "put",
     url: `/api/disciplines/${data.id}/`,
     data,

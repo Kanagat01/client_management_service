@@ -1,11 +1,11 @@
 import toast from "react-hot-toast";
 import { attach, createEvent, createStore, Effect } from "effector";
-import { apiRequestFx, RequestParams } from "~/shared/api";
+import { apiRequestFx } from "~/shared/api";
 import { TGroup } from "./types";
 
 export const getGroupsFx: Effect<void, TGroup[]> = attach({
   effect: apiRequestFx,
-  mapParams: (): RequestParams => ({
+  mapParams: () => ({
     method: "get",
     url: "/api/groups/",
   }),
@@ -18,7 +18,7 @@ export const $groups = createStore<TGroup[]>([])
 
 const createGroupFx: Effect<{ code: string }, { message: TGroup }> = attach({
   effect: apiRequestFx,
-  mapParams: (data): RequestParams => ({
+  mapParams: (data) => ({
     method: "post",
     url: "/api/groups/",
     data,

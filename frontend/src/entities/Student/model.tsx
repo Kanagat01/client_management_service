@@ -1,13 +1,13 @@
 import toast from "react-hot-toast";
 import { attach, createEvent, createStore, Effect } from "effector";
-import { apiRequestFx, RequestParams } from "~/shared/api";
+import { apiRequestFx } from "~/shared/api";
 import { TCreateStudent, TStudent } from "./types";
 import { $groups } from "../Group";
 import { validateWhatsappNumber } from "~/shared/lib";
 
 export const getStudentsFx: Effect<void, TStudent[]> = attach({
   effect: apiRequestFx,
-  mapParams: (): RequestParams => ({
+  mapParams: () => ({
     method: "get",
     url: "/api/students/",
   }),
@@ -21,7 +21,7 @@ export const $students = createStore<TStudent[]>([])
 // --------------------- CREATE STUDENT --------------------------
 const createStudentFx: Effect<TCreateStudent, TStudent> = attach({
   effect: apiRequestFx,
-  mapParams: (data: TCreateStudent): RequestParams => ({
+  mapParams: (data: TCreateStudent) => ({
     method: "post",
     url: "/api/students/",
     data,
@@ -53,7 +53,7 @@ createStudent.watch(({ changeShow, ...data }) => {
 // --------------------- UPDATE STUDENT --------------------------
 const updateStudentFx: Effect<TStudent, TStudent> = attach({
   effect: apiRequestFx,
-  mapParams: (data: TStudent): RequestParams => ({
+  mapParams: (data: TStudent) => ({
     method: "put",
     url: `/api/students/${data.id}/`,
     data,
@@ -98,7 +98,7 @@ updateStudent.watch(({ loading, success, changeShow, ...data }) => {
 // --------------------- UPDATE FIELD IN STUDENT --------------------------
 const updateStudentFieldFx: Effect<Partial<TStudent>, TStudent> = attach({
   effect: apiRequestFx,
-  mapParams: (data: Partial<TStudent>): RequestParams => ({
+  mapParams: (data: Partial<TStudent>) => ({
     method: "patch",
     url: `/api/students/${data.id}/`,
     data,
@@ -142,7 +142,7 @@ updateStudentField.watch(({ loading, success, changeShow, ...data }) => {
 // --------------------- DELETE STUDENT --------------------------
 const deleteStudentFx: Effect<number, void> = attach({
   effect: apiRequestFx,
-  mapParams: (id: number): RequestParams => ({
+  mapParams: (id: number) => ({
     method: "delete",
     url: `/api/students/${id}/`,
   }),
@@ -163,7 +163,7 @@ deleteStudent.watch(({ id, full_name }) => {
 // --------------------- DELETE ALL STUDENTS --------------------------
 const deleteAllStudentsFx: Effect<void, string> = attach({
   effect: apiRequestFx,
-  mapParams: (): RequestParams => ({
+  mapParams: () => ({
     method: "get",
     url: "/api/delete_all_students/",
   }),

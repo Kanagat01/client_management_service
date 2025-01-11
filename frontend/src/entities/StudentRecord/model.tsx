@@ -1,6 +1,6 @@
 import toast from "react-hot-toast";
 import { attach, createEvent, createStore, Effect } from "effector";
-import { apiRequestFx, RequestParams } from "~/shared/api";
+import { apiRequestFx } from "~/shared/api";
 import {
   TCreateStudentRecord,
   TStudentRecord,
@@ -9,7 +9,7 @@ import {
 
 export const getStudentRecordsFx: Effect<void, TStudentRecord[]> = attach({
   effect: apiRequestFx,
-  mapParams: (): RequestParams => ({
+  mapParams: () => ({
     method: "get",
     url: "/api/student-records/",
   }),
@@ -24,7 +24,7 @@ export const $studentRecords = createStore<TStudentRecord[]>([])
 const createStudentRecordFx: Effect<TCreateStudentRecord, TStudentRecord> =
   attach({
     effect: apiRequestFx,
-    mapParams: (data): RequestParams => ({
+    mapParams: (data) => ({
       method: "post",
       url: "/api/student-records/",
       data,
@@ -50,7 +50,7 @@ createStudentRecord.watch(({ changeShow, ...data }) => {
 const updateStudentRecordFx: Effect<TUpdateStudentRecord, TStudentRecord> =
   attach({
     effect: apiRequestFx,
-    mapParams: (data): RequestParams => ({
+    mapParams: (data) => ({
       method: "put",
       url: `/api/student-records/${data.id}/`,
       data,
@@ -76,7 +76,7 @@ updateStudentRecord.watch(({ changeShow, ...data }) => {
 // --------------------- DELETE STUDENT RECORD --------------------------
 const deleteStudentRecordFx: Effect<number, void> = attach({
   effect: apiRequestFx,
-  mapParams: (id: number): RequestParams => ({
+  mapParams: (id: number) => ({
     method: "delete",
     url: `/api/student-records/${id}/`,
   }),

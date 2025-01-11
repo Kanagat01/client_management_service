@@ -1,44 +1,65 @@
-import { InputHTMLAttributes, ReactNode } from "react";
+import { InputHTMLAttributes, MutableRefObject, ReactNode } from "react";
 import { BsEye, BsEyeSlash } from "react-icons/bs";
 import { useModalState } from "~/shared/lib";
 
 type TextAreaProps = {
   variant: "textarea";
   label: ReactNode;
+  place_horisontal?: boolean;
+  textAreaRef?: MutableRefObject<HTMLTextAreaElement | null>;
 } & InputHTMLAttributes<HTMLTextAreaElement>;
 
 type InputProps = {
   variant: "checkbox" | "input" | "password-input";
   label?: ReactNode;
   hint?: string;
+  place_horisontal?: boolean;
+  inputRef?: MutableRefObject<HTMLInputElement | null>;
 } & InputHTMLAttributes<HTMLInputElement>;
 
 export function BsInput({
   variant,
   label,
+  place_horisontal,
   ...props
 }: InputProps | TextAreaProps) {
   let input;
-  props = props as InputHTMLAttributes<HTMLInputElement>;
+  props = props as InputProps;
+  const { inputRef } = props;
+  delete props.inputRef;
+
   switch (variant) {
     case "checkbox":
       input = (
-        <div className="form-check">
-          <input {...props} type="checkbox" className="form-check-input" />
-        </div>
+        <input
+          {...props}
+          ref={inputRef}
+          type="checkbox"
+          className={`form-check-input mt-0 ms-2 ${props.className}`}
+        />
       );
+      if (!place_horisontal) input = <div className="form-check">{input}</div>;
       break;
     case "input":
       input = (
         <div>
-          <input {...props} className="form-control" />
+          <input
+            {...props}
+            ref={inputRef}
+            className={`form-control ${props.className}`}
+          />
         </div>
       );
       break;
     case "textarea":
+      props = props as InputHTMLAttributes<HTMLTextAreaElement>;
+      const { textAreaRef } = props;
+      delete props.textAreaRef;
+
       input = (
         <textarea
-          {...(props as InputHTMLAttributes<HTMLTextAreaElement>)}
+          {...props}
+          ref={textAreaRef}
           className={`form-control ${props.className}`}
         ></textarea>
       );
@@ -73,9 +94,16 @@ export function BsInput({
       break;
   }
   return (
-    <div className="form-group">
+    <div
+      className={`form-group ${
+        place_horisontal && "d-flex align-items-center"
+      }`}
+    >
       {label && (
-        <label className="form-label" htmlFor={props.id}>
+        <label
+          htmlFor={props.id}
+          className={`form-label ${place_horisontal && "d-inline mb-0"}`}
+        >
           {label}
         </label>
       )}

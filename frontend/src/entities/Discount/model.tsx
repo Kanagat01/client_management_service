@@ -1,11 +1,11 @@
 import toast from "react-hot-toast";
 import { attach, createEvent, createStore, Effect } from "effector";
-import { apiRequestFx, RequestParams } from "~/shared/api";
+import { apiRequestFx } from "~/shared/api";
 import { TDiscount } from "./types";
 
 export const getDiscountsFx: Effect<void, TDiscount[]> = attach({
   effect: apiRequestFx,
-  mapParams: (): RequestParams => ({
+  mapParams: () => ({
     method: "get",
     url: "/api/discounts/",
   }),
@@ -20,7 +20,7 @@ export const $discounts = createStore<TDiscount[]>([]).on(
 // --------------------- CREATE DISCOUNT --------------------------
 const createDiscountFx: Effect<Omit<TDiscount, "id">, TDiscount> = attach({
   effect: apiRequestFx,
-  mapParams: (data): RequestParams => ({
+  mapParams: (data) => ({
     method: "post",
     url: "/api/discounts/",
     data,
@@ -45,7 +45,7 @@ createDiscount.watch(({ changeShow, ...data }) => {
 // --------------------- UPDATE DISCOUNT --------------------------
 const updateDiscountFx: Effect<TDiscount, TDiscount> = attach({
   effect: apiRequestFx,
-  mapParams: (data): RequestParams => ({
+  mapParams: (data) => ({
     method: "put",
     url: `/api/discounts/${data.id}/`,
     data,
@@ -72,7 +72,7 @@ updateDiscount.watch(({ changeShow, ...data }) => {
 // --------------------- DELETE DISCOUNT --------------------------
 const deleteDiscountFx: Effect<number, void> = attach({
   effect: apiRequestFx,
-  mapParams: (id: number): RequestParams => ({
+  mapParams: (id: number) => ({
     method: "delete",
     url: `/api/discounts/${id}/`,
   }),

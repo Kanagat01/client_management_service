@@ -1,11 +1,11 @@
 import toast from "react-hot-toast";
 import { attach, createEvent, createStore, Effect } from "effector";
-import { apiRequestFx, RequestParams } from "~/shared/api";
+import { apiRequestFx } from "~/shared/api";
 import { TChangePassword, TUser } from "./types";
 
 export const getUserProfileFx: Effect<void, { message: TUser }> = attach({
   effect: apiRequestFx,
-  mapParams: (): RequestParams => ({
+  mapParams: () => ({
     method: "get",
     url: "/api/user_profile/",
   }),
@@ -19,7 +19,7 @@ export const $userProfile = createStore<TUser | null>(null)
 // --------------------- UPDATE USER PROFILE --------------------------
 const updateUserProfileFx: Effect<TUser, { message: TUser }> = attach({
   effect: apiRequestFx,
-  mapParams: (data: TUser): RequestParams => ({
+  mapParams: (data: TUser) => ({
     method: "put",
     url: "/api/user_profile/",
     data,
@@ -44,7 +44,7 @@ const changePasswordFx: Effect<
   { message: { token: string } }
 > = attach({
   effect: apiRequestFx,
-  mapParams: (data: TChangePassword): RequestParams => ({
+  mapParams: (data: TChangePassword) => ({
     method: "post",
     url: "/api/change_password/",
     data,
