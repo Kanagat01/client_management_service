@@ -7,6 +7,7 @@ import {
   BsEnvelope,
   BsGrid,
   BsList,
+  BsPercent,
   BsThreeDotsVertical,
 } from "react-icons/bs";
 import { SlBookOpen, SlOptions } from "react-icons/sl";
@@ -25,6 +26,7 @@ const navItems: [ReactNode, string, string][] = [
   [<PiCodeSimpleBold />, "Коды", Routes.CODES],
   [<SlOptions />, "Логи", Routes.LOGS],
   [<BsEnvelope />, "Рассылки", Routes.MESSAGES],
+  [<BsPercent />, "Акции", Routes.DISCOUNTS],
 ];
 
 export function Sidebar() {

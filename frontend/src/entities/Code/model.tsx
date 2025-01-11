@@ -1,9 +1,13 @@
+import toast from "react-hot-toast";
 import { attach, createEvent, createStore, Effect } from "effector";
+import { TInstructionForProctoring } from "~/entities/InstructionForProctoring";
 import { apiRequestFx, RequestParams } from "~/shared/api";
 import { TCode, TCreateCode } from "./types";
-import toast from "react-hot-toast";
 
-export const getCodesFx: Effect<void, TCode[]> = attach({
+export const getCodesAndInstructionFx: Effect<
+  void,
+  { codes: TCode[]; instruction_for_proctoring: TInstructionForProctoring }
+> = attach({
   effect: apiRequestFx,
   mapParams: (): RequestParams => ({
     method: "get",
@@ -13,7 +17,7 @@ export const getCodesFx: Effect<void, TCode[]> = attach({
 
 export const setCodes = createEvent<TCode[]>();
 export const $codes = createStore<TCode[]>([])
-  .on(getCodesFx.doneData, (_, state) => state)
+  .on(getCodesAndInstructionFx.doneData, (_, payload) => payload.codes)
   .on(setCodes, (_, state) => state);
 
 // --------------------- CREATE CODE --------------------------

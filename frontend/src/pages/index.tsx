@@ -10,6 +10,7 @@ import {
   GroupsPage,
   LogsPage,
   MessagesPage,
+  DiscountsPage,
   StudentRecordsPage,
   StudentsPage,
 } from "./model_pages";
@@ -28,6 +29,7 @@ export const Routing = () => {
     [urls.CODES, <CodesPage />],
     [urls.LOGS, <LogsPage />],
     [urls.MESSAGES, <MessagesPage />],
+    [urls.DISCOUNTS, <DiscountsPage />],
     [urls.PROFILE, <ProfilePage />],
   ];
 

@@ -9,7 +9,7 @@ type TextAreaProps = {
 
 type InputProps = {
   variant: "checkbox" | "input" | "password-input";
-  label: ReactNode;
+  label?: ReactNode;
   hint?: string;
 } & InputHTMLAttributes<HTMLInputElement>;
 
@@ -74,9 +74,11 @@ export function BsInput({
   }
   return (
     <div className="form-group">
-      <label className="form-label" htmlFor={props.id}>
-        {label}
-      </label>
+      {label && (
+        <label className="form-label" htmlFor={props.id}>
+          {label}
+        </label>
+      )}
       {input}
     </div>
   );

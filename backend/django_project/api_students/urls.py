@@ -10,8 +10,10 @@ router.register(r'activities', ActivityViewSet)
 router.register(r'disciplines', DisciplineViewSet)
 router.register(r'groups', GroupViewSet)
 router.register(r'codes', CodeViewSet)
+router.register(r'instruction-for-proctoring', InstructionForProctoringViewSet)
 router.register(r'logs', LogViewSet)
 router.register(r'messages', MessageViewSet)
+router.register(r'discounts', DiscountViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),

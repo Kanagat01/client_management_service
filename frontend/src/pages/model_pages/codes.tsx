@@ -3,10 +3,11 @@ import { useUnit } from "effector-react";
 import { CommandBar, FilterBar } from "~/widgets";
 import { importData } from "~/features/import-data";
 import { PageSizeSelector } from "~/features/PageSizeSelector";
+import { CreateOrEditInstructionForProctoring } from "~/entities/InstructionForProctoring";
 import {
   $codes,
   CreateCode,
-  getCodesFx,
+  getCodesAndInstructionFx,
   getCodeColumns,
   TCode,
   setCodes,
@@ -32,6 +33,7 @@ const menuList = [
   <ExportBtn
     link={`${API_URL}/api/export-codes/?token=${localStorage.getItem("token")}`}
   />,
+  <CreateOrEditInstructionForProctoring />,
 ];
 
 const filters: ReactNode[] = [
@@ -69,7 +71,7 @@ export function CodesPage() {
       <div className="mb-md-4 h-100">
         <FilterBar filters={filters} />
         <div className="bg-white rounded shadow-sm mb-3">
-          {RenderPromise(getCodesFx, {
+          {RenderPromise(getCodesAndInstructionFx, {
             success: <MainTable data={data} columns={columns} />,
           })}
         </div>

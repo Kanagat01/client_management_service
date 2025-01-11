@@ -1,6 +1,11 @@
+import base64
 from rest_framework import serializers
+from django.core.files.storage import default_storage
 from api_students.models import *
 from .base import create_model_serializer
+
+
+DiscountSerializer = create_model_serializer(Discount)
 
 
 class CodeSerializer(serializers.ModelSerializer):
@@ -39,3 +44,9 @@ class MessageSerializer(serializers.ModelSerializer):
             representation["group"] = str(instance.group)
             representation["group_id"] = instance.group.pk
         return representation
+
+
+class InstructionForProctoringSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = InstructionForProctoring
+        fields = '__all__'

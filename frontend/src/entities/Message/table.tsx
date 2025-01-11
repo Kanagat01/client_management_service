@@ -5,10 +5,10 @@ import {
   useActionsColumn,
   DeleteBtn,
 } from "~/shared/ui";
+import { dateStringToIso } from "~/shared/lib";
+import { TCreateMessage, TMessage } from "./types";
 import { deleteMessage } from "./model";
 import { CreateMessage } from "./ui";
-import { TCreateMessage, TMessage } from "./types";
-import { dateStringToIso } from "~/shared/lib";
 
 type TColumn = keyof TMessage | "receiver" | "actions";
 

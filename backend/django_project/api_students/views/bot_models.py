@@ -14,6 +14,17 @@ class CodeViewSet(viewsets.GenericViewSet, mixins.CreateModelMixin, mixins.Destr
     queryset = Code.objects.all()
     serializer_class = CodeSerializer
 
+    def list(self, request, *args, **kwargs):
+        response = super().list(request, *args, **kwargs)
+        instruction = InstructionForProctoring.objects.first()
+        instruction_data = InstructionForProctoringSerializer(
+            instruction).data if instruction else None
+        response.data = {
+            "codes": response.data,
+            "instruction_for_proctoring": instruction_data
+        }
+        return response
+
 
 @api_view(['GET'])
 @permission_classes([AllowAny])
@@ -71,3 +82,26 @@ def import_codes_view(request):
 class MessageViewSet(viewsets.GenericViewSet, mixins.CreateModelMixin, mixins.DestroyModelMixin, mixins.ListModelMixin):
     queryset = Message.objects.all()
     serializer_class = MessageSerializer
+
+
+class DiscountViewSet(viewsets.ModelViewSet):
+    queryset = Discount.objects.all()
+    serializer_class = DiscountSerializer
+
+
+class InstructionForProctoringViewSet(viewsets.GenericViewSet, mixins.CreateModelMixin, mixins.UpdateModelMixin):
+    queryset = InstructionForProctoring.objects.all()
+    serializer_class = InstructionForProctoringSerializer
+
+    def create(self, request, *args, **kwargs):
+        if InstructionForProctoring.objects.exists():
+            return self.update(request, *args, **kwargs)
+        return super().create(request, *args, **kwargs)
+
+    def update(self, request, *args, **kwargs):
+        instance = InstructionForProctoring.objects.first()
+        serializer = self.get_serializer(
+            instance, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+        return Response(serializer.data)

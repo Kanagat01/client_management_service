@@ -13,7 +13,7 @@ import {
   BsTrash,
   BsTrash3,
 } from "react-icons/bs";
-import { ConfirmModal } from "~/shared/ui";
+import { ConfirmModal, BsInput } from "~/shared/ui";
 import { useModalState } from "~/shared/lib";
 import { BtnWithConfirmation, CreateOrEditBtnProps } from "./types";
 
@@ -201,16 +201,12 @@ export function ImportBtn({ onSubmit }: { onSubmit: () => void }) {
         </Modal.Header>
         <Modal.Body>
           <form className="p-4">
-            <div className="form-group">
-              <div data-controller="input" data-input-mask="">
-                <input
-                  className="form-control"
-                  type="file"
-                  accept=".xlsx,.xls,.csv"
-                  onChange={handleFileChange}
-                />
-              </div>
-            </div>
+            <BsInput
+              variant="input"
+              type="file"
+              accept=".xlsx,.xls,.csv"
+              onChange={handleFileChange}
+            />
           </form>
         </Modal.Body>
         <Modal.Footer>
