@@ -1,7 +1,12 @@
-import { ReactNode, useEffect } from "react";
 import { useUnit } from "effector-react";
+import { ReactNode, useEffect } from "react";
 import { CommandBar, FilterBar } from "~/widgets";
-import { PageSizeSelector } from "~/features/PageSizeSelector";
+import {
+  $filters,
+  changeFilter,
+  handleFilterChange,
+  PageSizeSelector,
+} from "~/features/filters";
 import {
   $students,
   CreateOrEditStudent,
@@ -22,25 +27,55 @@ const menuList = [
   <CreateOrEditStudent />,
 ];
 
-const filters: ReactNode[] = [
-  <PageSizeSelector />,
-  <BsInput variant="input" label="TG ID" name="tg_id" />,
-  <SelectInput
-    name="group_id"
-    label="Группа"
-    options={[
-      ...["Не выбрано", "ДЭФР22-1", "ДЦПУП23-1", "ДММ20-1", "ДМФ22-1"].map(
-        (el) => ({
-          value: el,
-          label: el,
-        })
-      ),
-    ]}
-  />,
-  <BsInput variant="input" label="Логин" name="login" />,
-  <BsInput variant="input" label="Телефон" name="phone" />,
-  <BsInput variant="checkbox" label="Верифицирован" name="is_verified" />,
-];
+const getFilters = (): ReactNode[] => {
+  const filters = useUnit($filters);
+  const groups = useUnit($groups);
+
+  return [
+    <PageSizeSelector />,
+    <BsInput
+      variant="input"
+      label="TG ID"
+      name="telegram_id"
+      value={filters.telegram_id}
+      onChange={handleFilterChange}
+    />,
+    <SelectInput
+      label="Группа"
+      name="group"
+      value={filters.group}
+      onChange={(value: string) => changeFilter({ key: "group", value })}
+      options={[
+        { label: "Не выбрано", value: "" },
+        ...groups.map(({ id, code }) => ({
+          value: id.toString(),
+          label: code,
+        })),
+      ]}
+    />,
+    <BsInput
+      variant="input"
+      label="Логин"
+      name="fa_login"
+      value={filters.fa_login}
+      onChange={handleFilterChange}
+    />,
+    <BsInput
+      variant="input"
+      label="Телефон"
+      name="phone"
+      value={filters.phone}
+      onChange={handleFilterChange}
+    />,
+    <BsInput
+      variant="checkbox"
+      label="Верифицирован"
+      name="is_verified"
+      value={filters.is_verified}
+      onChange={handleFilterChange}
+    />,
+  ];
+};
 
 export function StudentsPage() {
   const data = useUnit($students);
@@ -54,7 +89,7 @@ export function StudentsPage() {
     <>
       <CommandBar title="Данные студентов" menuList={menuList} />
       <div className="mb-md-4 h-100">
-        <FilterBar filters={filters} />
+        <FilterBar getFilters={getFilters} />
         <div className="bg-white rounded shadow-sm mb-3">
           {RenderPromise(getStudentsFx, {
             success: <MainTable data={data} columns={columns} />,

@@ -24,7 +24,7 @@ export const SelectInput: FC<SelectInputProps> = ({
   const [selectedValue, setSelectedValue] = useState<TOption | null>(null);
 
   useEffect(() => {
-    if (value) {
+    if (value !== undefined) {
       const option = options.find((option) => option.value === value);
       setSelectedValue(option || null);
     }

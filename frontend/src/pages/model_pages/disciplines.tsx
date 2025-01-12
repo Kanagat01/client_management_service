@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
 import { useUnit } from "effector-react";
 import { CommandBar, FilterBar } from "~/widgets";
-import { PageSizeSelector } from "~/features/PageSizeSelector";
+import { PageSizeSelector } from "~/features/filters";
 import { importData } from "~/features/import-data";
 import {
   $disciplines,
@@ -30,7 +30,7 @@ const menuList = [
   />,
 ];
 
-const filters: ReactNode[] = [<PageSizeSelector />];
+const getFilters = (): ReactNode[] => [<PageSizeSelector />];
 
 export function DisciplinesPage() {
   const data = useUnit($disciplines);
@@ -40,7 +40,7 @@ export function DisciplinesPage() {
     <>
       <CommandBar title="Дисциплины" menuList={menuList} />
       <div className="mb-md-4 h-100">
-        <FilterBar filters={filters} />
+        <FilterBar getFilters={getFilters} />
 
         <div className="bg-white rounded shadow-sm mb-3">
           {RenderPromise(getDisciplinesFx, {

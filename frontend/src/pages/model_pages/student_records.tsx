@@ -1,18 +1,23 @@
-import { ReactNode, useEffect } from "react";
+import { ru } from "date-fns/locale";
 import { useUnit } from "effector-react";
+import DatePicker from "react-datepicker";
+import { ReactNode, useEffect } from "react";
 import { CommandBar, FilterBar } from "~/widgets";
-import { PageSizeSelector } from "~/features/PageSizeSelector";
+import { $filters, changeFilter, PageSizeSelector } from "~/features/filters";
 import {
   $studentRecords,
   CreateOrEditStudentRecord,
   getStudentRecordsFx,
   getStudentRecordColumns,
 } from "~/entities/StudentRecord";
-import { $students, getStudentsFx } from "~/entities/Student";
 import { $activities, getActivitiesFx } from "~/entities/Activity";
-import { ExportBtn, MainTable, BsInput, SelectInput } from "~/shared/ui";
-import { RenderPromise } from "~/shared/api";
+import { $students, getStudentsFx } from "~/entities/Student";
+import { $activityTypes } from "~/entities/ActivityType";
+import { $disciplines } from "~/entities/Discipline";
+import { $groups } from "~/entities/Group";
 import { API_URL } from "~/shared/config";
+import { RenderPromise } from "~/shared/api";
+import { ExportBtn, MainTable, SelectInput } from "~/shared/ui";
 
 const menuList = [
   <CreateOrEditStudentRecord />,
@@ -23,66 +28,100 @@ const menuList = [
   />,
 ];
 
-const filters: ReactNode[] = [
-  <PageSizeSelector />,
-  <SelectInput
-    name="full_name"
-    label="Студент"
-    placeholder="Не выбрано"
-    options={[
-      ...["Не выбрано", "Иван Иванов", "Алексей Сергеевич"].map((el) => ({
-        value: el,
-        label: el,
-      })),
-    ]}
-  />,
-  <SelectInput
-    name="activity_type"
-    label="Тип активности"
-    placeholder="Не выбрано"
-    options={[
-      ...["Не выбрано", "Активность 1"].map((el) => ({
-        value: el,
-        label: el,
-      })),
-    ]}
-  />,
-  <SelectInput
-    name="group"
-    label="Группа"
-    placeholder="Не выбрано"
-    options={[
-      ...["Не выбрано", "ДЭФР22-1", "ДЦПУП23-1", "ДММ20-1", "ДМФ22-1"].map(
-        (el) => ({
-          value: el,
-          label: el,
-        })
-      ),
-    ]}
-  />,
-  <SelectInput
-    name="discipline"
-    label="Дисциплина"
-    placeholder="Не выбрано"
-    options={[
-      ...["Не выбрано", "ДЭФР22-1", "ДЦПУП23-1", "ДММ20-1", "ДМФ22-1"].map(
-        (el) => ({
-          value: el,
-          label: el,
-        })
-      ),
-    ]}
-  />,
-  <div className="row">
-    <label className="form-label">Выберите диапазон дат</label>
-    <div className="col-md-6">
-      <BsInput label="" variant="input" type="date" />
-    </div>
-    <div className="col-md-6">
-      <BsInput label="" variant="input" type="date" />
-    </div>
-  </div>,
-];
+const getFilters = (): ReactNode[] => {
+  const filters = useUnit($filters);
+  const students = useUnit($students);
+  const activityTypes = useUnit($activityTypes);
+  const groups = useUnit($groups);
+  const disciplines = useUnit($disciplines);
+  const studentRecords = useUnit($studentRecords);
+  const allowedDates = [
+    ...studentRecords.map((el) => new Date(el.activity.date)),
+  ];
+  console.log("aaa", filters.date, new Date(filters.date));
+  return [
+    <PageSizeSelector />,
+    <SelectInput
+      label="Студент"
+      name="student"
+      value={filters.student || ""}
+      onChange={(value: string) => changeFilter({ key: "student", value })}
+      options={[
+        { label: "Не выбрано", value: "" },
+        ...students.map(({ id, full_name }) => ({
+          value: id.toString(),
+          label: full_name,
+        })),
+      ]}
+    />,
+    <SelectInput
+      label="Тип активности"
+      name="activity_type"
+      value={filters.activity_type || ""}
+      onChange={(value: string) =>
+        changeFilter({ key: "activity_type", value })
+      }
+      options={[
+        { label: "Не выбрано", value: "" },
+        ...activityTypes.map(({ id, name }) => ({
+          value: id.toString(),
+          label: name,
+        })),
+      ]}
+    />,
+    <SelectInput
+      label="Группа"
+      name="group"
+      value={filters.group || ""}
+      onChange={(value: string) => changeFilter({ key: "group", value })}
+      options={[
+        { label: "Не выбрано", value: "" },
+        ...groups.map(({ id, code }) => ({
+          value: id.toString(),
+          label: code,
+        })),
+      ]}
+    />,
+    <SelectInput
+      label="Дисциплина"
+      name="discipline"
+      value={filters.discipline || ""}
+      onChange={(value: string) => changeFilter({ key: "discipline", value })}
+      options={[
+        { label: "Не выбрано", value: "" },
+        ...disciplines.map(({ id, name }) => ({
+          value: id.toString(),
+          label: name,
+        })),
+      ]}
+    />,
+    <div className="form-group">
+      <div className="form-label">Дата записи</div>
+      <DatePicker
+        selected={filters.date ? new Date(filters.date) : null}
+        onChange={(date: Date | null) =>
+          date
+            ? changeFilter({
+                key: "date",
+                value: date.toISOString().split("T")[0],
+              })
+            : {}
+        }
+        filterDate={(date: Date) =>
+          allowedDates.some(
+            (allowedDate) =>
+              date.getFullYear() === allowedDate.getFullYear() &&
+              date.getMonth() === allowedDate.getMonth() &&
+              date.getDate() === allowedDate.getDate()
+          )
+        }
+        placeholderText="Выберите дату"
+        className="form-control"
+        locale={ru}
+      />
+    </div>,
+  ];
+};
 
 export function StudentRecordsPage() {
   const data = useUnit($studentRecords);
@@ -96,7 +135,7 @@ export function StudentRecordsPage() {
     <>
       <CommandBar title="Записи студентов" menuList={menuList} />
       <div className="mb-md-4 h-100">
-        <FilterBar filters={filters} />
+        <FilterBar getFilters={getFilters} />
         <div className="bg-white rounded shadow-sm mb-3">
           {RenderPromise(getStudentRecordsFx, {
             success: <MainTable data={data} columns={columns} />,

@@ -35,7 +35,9 @@ export function BsInput({
           {...props}
           ref={inputRef}
           type="checkbox"
-          className={`form-check-input mt-0 ms-2 ${props.className}`}
+          className={`form-check-input ${place_horisontal && "mt-0 ms-2"} ${
+            props.className
+          }`}
         />
       );
       if (!place_horisontal) input = <div className="form-check">{input}</div>;

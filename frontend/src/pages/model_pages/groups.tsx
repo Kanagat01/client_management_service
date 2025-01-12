@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
 import { useUnit } from "effector-react";
 import { CommandBar, FilterBar } from "~/widgets";
-import { PageSizeSelector } from "~/features/PageSizeSelector";
+import { PageSizeSelector } from "~/features/filters";
 import {
   $groups,
   CreateGroup,
@@ -12,7 +12,7 @@ import { MainTable } from "~/shared/ui";
 import { RenderPromise } from "~/shared/api";
 
 const menuList = [<CreateGroup />];
-const filters: ReactNode[] = [<PageSizeSelector />];
+const getFilters = (): ReactNode[] => [<PageSizeSelector />];
 
 export function GroupsPage() {
   const data = useUnit($groups);
@@ -21,7 +21,7 @@ export function GroupsPage() {
     <>
       <CommandBar title="Группы" menuList={menuList} />
       <div className="mb-md-4 h-100">
-        <FilterBar filters={filters} />
+        <FilterBar getFilters={getFilters} />
         <div className="bg-white rounded shadow-sm mb-3">
           {RenderPromise(getGroupsFx, {
             success: <MainTable data={data} columns={columns} />,

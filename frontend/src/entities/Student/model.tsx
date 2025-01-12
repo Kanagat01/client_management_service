@@ -18,6 +18,12 @@ export const $students = createStore<TStudent[]>([])
   .on(setStudents, (_, state) => state)
   .on(getStudentsFx.doneData, (_, state) => state);
 
+export const setStudentNicknames =
+  createEvent<{ id: number; telegram_link: string }[]>();
+export const $studentNicknames = createStore<
+  { id: number; telegram_link: string }[]
+>([]).on(setStudentNicknames, (_, state) => state);
+
 // --------------------- CREATE STUDENT --------------------------
 const createStudentFx: Effect<TCreateStudent, TStudent> = attach({
   effect: apiRequestFx,
