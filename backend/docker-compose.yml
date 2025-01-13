@@ -40,21 +40,21 @@ services:
       - db
       - redis
 
+  tgbot:
+    working_dir: /usr/src/app/tgbot
+    command: python bot.py
+    networks:
+      - back
+    env_file:
+      - .env
+    volumes:
+      - ./app:/usr/src/app
+    depends_on:
+      - django_project
+
   django-qcluster:
     build: ./django_project
     command: python manage.py qcluster
-    networks:
-      - back
-    volumes:
-      - ./django_project/:/usr/src/app/
-    env_file:
-      - .env
-    depends_on:
-      - db
-
-  tgbot:
-    build: ./django_project
-    command: cd tgbot && python bot.py
     networks:
       - back
     volumes:
