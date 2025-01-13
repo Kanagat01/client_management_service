@@ -4,9 +4,12 @@ import { createEvent, createStore } from "effector";
 import { SelectInput } from "~/shared/ui";
 
 export const resetFilters = createEvent();
-export const changeFilter = createEvent<{ key: string; value: string }>();
+export const changeFilter = createEvent<{
+  key: string;
+  value: string | number;
+}>();
 
-export const $filters = createStore<Record<string, string>>({})
+export const $filters = createStore<Record<string, string | number>>({})
   .on(resetFilters, () => ({}))
   .on(changeFilter, (state, { key, value }) => ({ ...state, [key]: value }));
 

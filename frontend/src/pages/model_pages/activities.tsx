@@ -9,6 +9,7 @@ import {
   $activities,
   getActivitiesFx,
   getActivityColumns,
+  TActivity,
 } from "~/entities/Activity";
 import { MainTable, SelectInput } from "~/shared/ui";
 import { RenderPromise } from "~/shared/api";
@@ -23,39 +24,36 @@ const getFilters = (): ReactNode[] => {
     <PageSizeSelector />,
     <SelectInput
       label="Тип активности"
-      name="activity_type"
-      value={filters.activity_type || ""}
-      onChange={(value) => changeFilter({ key: "activity_type", value })}
+      value={filters.activity_type_id || ""}
+      onChange={(value) => changeFilter({ key: "activity_type_id", value })}
       options={[
         { label: "Не выбрано", value: "" },
         ...activityTypes.map(({ id, name }) => ({
-          value: id.toString(),
+          value: id,
           label: name,
         })),
       ]}
     />,
     <SelectInput
       label="Дисциплина"
-      name="discipline"
-      value={filters.discipline || ""}
-      onChange={(value) => changeFilter({ key: "discipline", value })}
+      value={filters.discipline_id || ""}
+      onChange={(value) => changeFilter({ key: "discipline_id", value })}
       options={[
         { label: "Не выбрано", value: "" },
         ...disciplines.map(({ id, name }) => ({
-          value: id.toString(),
+          value: id,
           label: name,
         })),
       ]}
     />,
     <SelectInput
       label="Группа"
-      name="group"
-      value={filters.group || ""}
-      onChange={(value) => changeFilter({ key: "group", value })}
+      value={filters.group_id || ""}
+      onChange={(value) => changeFilter({ key: "group_id", value })}
       options={[
         { label: "Не выбрано", value: "" },
         ...groups.map(({ id, code }) => ({
-          value: id.toString(),
+          value: id,
           label: code,
         })),
       ]}
@@ -63,8 +61,24 @@ const getFilters = (): ReactNode[] => {
   ];
 };
 
+export const filterActivities = (
+  activities: TActivity[],
+  filters: Record<string, string | number>
+) => {
+  return activities.filter((activity) => {
+    return Object.keys(filters).every((key) => {
+      console.log(key, activity[key as keyof TActivity], filters[key]);
+
+      if (!filters[key]) return true;
+      return activity[key as keyof TActivity]?.toString() === filters[key];
+    });
+  });
+};
+
 export function ActivitiesPage() {
-  const data = useUnit($activities);
+  const activities = useUnit($activities);
+  const filters = useUnit($filters);
+  const data = filterActivities(activities, filters);
   const columns = getActivityColumns();
 
   useEffect(() => {

@@ -1,15 +1,15 @@
 import { useEffect, useState, FC } from "react";
 import Select from "react-select";
 
-type TOption = { value: string; label: string };
+type TOption = { value: string | number; label: string };
 
 type SelectInputProps = {
   label: string;
   name?: string;
   placeholder?: string;
-  value?: string;
+  value?: string | number;
   options: TOption[];
-  onChange?: (value: string) => void;
+  onChange?: (value: string | number) => void;
   required?: boolean;
 };
 

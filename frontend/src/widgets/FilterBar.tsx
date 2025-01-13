@@ -1,8 +1,8 @@
 import { ReactNode } from "react";
 import { Button } from "react-bootstrap";
 import { useLocation, useNavigate } from "react-router";
-import { BsArrowRepeat, BsFunnel } from "react-icons/bs";
-import { $filters, resetFilters } from "~/features/filters";
+import { BsArrowRepeat } from "react-icons/bs";
+import { resetFilters } from "~/features/filters";
 
 type FilterBarProps = {
   getFilters: () => ReactNode[];
@@ -16,13 +16,13 @@ export function FilterBar(props: FilterBarProps) {
     resetFilters();
     navigate(location.pathname);
   };
-  const applyFilters = () => {
-    const searchParams = new URLSearchParams(location.search);
-    Object.entries($filters.getState()).map(([key, value]) =>
-      searchParams.set(key, value)
-    );
-    navigate(`${location.pathname}?${searchParams.toString()}`);
-  };
+  // const applyFilters = () => {
+  //   const searchParams = new URLSearchParams(location.search);
+  //   Object.entries($filters.getState()).map(([key, value]) =>
+  //     searchParams.set(key, value)
+  //   );
+  //   navigate(`${location.pathname}?${searchParams.toString()}`);
+  // };
 
   return (
     <div className="g-0 bg-white rounded mb-3">
@@ -46,14 +46,14 @@ export function FilterBar(props: FilterBarProps) {
               <BsArrowRepeat className="me-1" />
               Сбросить
             </Button>
-            <Button
+            {/* <Button
               variant="default"
               onClick={applyFilters}
               style={{ height: "fit-content" }}
             >
               <BsFunnel className="me-1" />
               Применить
-            </Button>
+            </Button> */}
           </div>
         </div>
       </div>
