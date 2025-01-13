@@ -19,8 +19,13 @@ services:
     ports:
       - "6379:6379"
 
+  django-base:
+    build:
+      context: ./django_project
+    image: django_project_base
+
   django_project:
-    build: ./django_project
+    image: django_project_base 
     command: daphne -b 0.0.0.0 -p 8000 backend.asgi:application
     networks:
       - back
@@ -40,21 +45,21 @@ services:
       - db
       - redis
 
-  tgbot:
-    working_dir: /usr/src/app/tgbot
-    command: python bot.py
+  django-qcluster:
+    image: django_project_base 
+    command: python manage.py qcluster
     networks:
       - back
+    volumes:
+      - ./django_project/:/usr/src/app/
     env_file:
       - .env
-    volumes:
-      - ./app:/usr/src/app
     depends_on:
-      - django_project
+      - db
 
-  django-qcluster:
-    build: ./django_project
-    command: python manage.py qcluster
+  tgbot:
+    image: django_project_base 
+    command: python tgbot/bot.py
     networks:
       - back
     volumes:
