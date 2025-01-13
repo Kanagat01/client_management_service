@@ -1,13 +1,21 @@
-import { ReactNode } from "react";
 import { useUnit } from "effector-react";
+import { ReactNode, useEffect } from "react";
 import { CommandBar, FilterBar } from "~/widgets";
 import {
+  $filters,
+  changeFilter,
+  handleFilterChange,
+  PageSizeSelector,
+} from "~/features/filters";
+import {
   $students,
+  CreateOrEditStudent,
   deleteAllStudents,
+  getStudentColumns,
   getStudentsFx,
-  useStudentTable,
 } from "~/entities/Student";
-import { MainTable, DeleteAllBtn, CreateBtn } from "~/shared/ui";
+import { $groups, getGroupsFx } from "~/entities/Group";
+import { MainTable, DeleteAllBtn, BsInput, SelectInput } from "~/shared/ui";
 import { RenderPromise } from "~/shared/api";
 
 const menuList = [
@@ -16,85 +24,75 @@ const menuList = [
     content="Вы уверены, что хотите очистить все данные студентов?"
     onConfirm={deleteAllStudents}
   />,
-  <CreateBtn
-    title="Создать студента"
-    inputs={<h1>Тут будет форма</h1>}
-    onReset={() => {}}
-    onSubmit={() => {}}
-  />,
+  <CreateOrEditStudent />,
 ];
 
-const filters: [string, ReactNode][] = [
-  [
-    "Записи на странице",
-    <div
-      data-controller="select"
-      data-select-message-notfound="Результаты не найдены"
-    >
-      <select className="form-control" title="Записи на странице">
-        <option value="">Не выбрано</option>
-        {[15, 30, 100, "Все"].map((cnt) => (
-          <option key={cnt} value={cnt} selected={cnt === 15}>
-            {cnt}
-          </option>
-        ))}
-      </select>
-    </div>,
-  ],
-  [
-    "TG ID",
-    <div data-controller="input" data-input-mask="">
-      <input
-        className="form-control"
-        name="telegram_id"
-        type="text"
-        title="TG ID"
-      />
-    </div>,
-  ],
-  [
-    "Группа",
-    <div
-      data-controller="select"
-      data-select-message-notfound="Результаты не найдены"
-    >
-      <select className="form-control" name="group_id" title="Группа">
-        <option value="">Не выбрано</option>
-        {["ДЭФР22-1", "ДЦПУП23-1", "ДММ20-1", "ДМФ22-1"].map((group) => (
-          <option key={group} value={group}>
-            {group}
-          </option>
-        ))}
-      </select>
-    </div>,
-  ],
-  ["Логин", <input className="form-control" type="text" />],
-  ["Телефон", <input className="form-control" type="text" />],
-  [
-    "Верифицирован",
-    <div className="form-check">
-      <input
-        value="1"
-        type="checkbox"
-        className="form-check-input"
-        name="is_verified"
-      />
-    </div>,
-  ],
-];
+const getFilters = (): ReactNode[] => {
+  const filters = useUnit($filters);
+  const groups = useUnit($groups);
+
+  return [
+    <PageSizeSelector />,
+    <BsInput
+      variant="input"
+      label="TG ID"
+      name="telegram_id"
+      value={filters.telegram_id}
+      onChange={handleFilterChange}
+    />,
+    <SelectInput
+      label="Группа"
+      name="group"
+      value={filters.group}
+      onChange={(value: string) => changeFilter({ key: "group", value })}
+      options={[
+        { label: "Не выбрано", value: "" },
+        ...groups.map(({ id, code }) => ({
+          value: id.toString(),
+          label: code,
+        })),
+      ]}
+    />,
+    <BsInput
+      variant="input"
+      label="Логин"
+      name="fa_login"
+      value={filters.fa_login}
+      onChange={handleFilterChange}
+    />,
+    <BsInput
+      variant="input"
+      label="Телефон"
+      name="phone"
+      value={filters.phone}
+      onChange={handleFilterChange}
+    />,
+    <BsInput
+      variant="checkbox"
+      label="Верифицирован"
+      name="is_verified"
+      value={filters.is_verified}
+      onChange={handleFilterChange}
+    />,
+  ];
+};
 
 export function StudentsPage() {
   const data = useUnit($students);
-  const table = useStudentTable(data);
+  const columns = getStudentColumns();
+
+  useEffect(() => {
+    if ($groups.getState().length === 0) getGroupsFx();
+  }, []);
 
   return (
     <>
       <CommandBar title="Данные студентов" menuList={menuList} />
       <div className="mb-md-4 h-100">
-        <FilterBar filters={filters} />
+        <FilterBar getFilters={getFilters} />
         <div className="bg-white rounded shadow-sm mb-3">
           {RenderPromise(getStudentsFx, {
-            success: <MainTable table={table} />,
+            success: <MainTable data={data} columns={columns} />,
           })}
         </div>
       </div>

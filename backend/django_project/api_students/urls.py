@@ -10,13 +10,17 @@ router.register(r'activities', ActivityViewSet)
 router.register(r'disciplines', DisciplineViewSet)
 router.register(r'groups', GroupViewSet)
 router.register(r'codes', CodeViewSet)
+router.register(r'instruction-for-proctoring', InstructionForProctoringViewSet)
 router.register(r'logs', LogViewSet)
 router.register(r'messages', MessageViewSet)
+router.register(r'discounts', DiscountViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
-    path('delete_all_students/', delete_all_students_view),
-    # path('export_students/', export_students_view),
-    path('export_student_records/', export_student_records_view),
-    path('export_codes/', export_codes_view),
+    path('delete-all-students/', delete_all_students_view),
+    # path('export-students/', export_students_view),
+    path('export-student-records/', export_student_records_view),
+    path('export-codes/', export_codes_view),
+    path('import-disciplines/', import_disciplines_view),
+    path('import-codes/', import_codes_view),
 ]

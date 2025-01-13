@@ -14,6 +14,7 @@ enum Routes {
   CODES = "/codes",
   LOGS = "/logs",
   MESSAGES = "/messages",
+  DISCOUNTS = "/discounts",
   SETTINGS = "/settings",
 }
 

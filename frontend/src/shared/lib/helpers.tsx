@@ -1,16 +1,9 @@
-import { ChangeEvent } from "react";
-
-export const formatPhoneInput = (event: ChangeEvent<HTMLInputElement>) => {
-  const input = event.target;
-  const value = input.value.replace(/\D/g, "");
-  let formattedValue = "+7 ";
-
-  if (value.length > 1) formattedValue += "(" + value.slice(1, 4);
-  if (value.length > 4) formattedValue += ") " + value.slice(4, 7);
-  if (value.length > 7) formattedValue += "-" + value.slice(7, 9);
-  if (value.length > 9) formattedValue += "-" + value.slice(9, 11);
-
-  input.value = formattedValue;
+export const validateWhatsappNumber = (value: string): string => {
+  const pattern = /^\+\d{10,15}$/;
+  if (!pattern.test(value)) {
+    return "Введите корректный номер WhatsApp (формат: +1234567890)";
+  }
+  return "";
 };
 
 export const validatePassword = (password: string): string => {
@@ -80,3 +73,24 @@ export function dateTimeWithWeekday(datetime: string | Date) {
     </time>
   );
 }
+
+export const getLocalISOTime = () => {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, "0");
+  const day = String(now.getDate()).padStart(2, "0");
+  const hours = String(now.getHours()).padStart(2, "0");
+  const minutes = String(now.getMinutes()).padStart(2, "0");
+  return `${year}-${month}-${day}T${hours}:${minutes}`;
+};
+
+export const dateStringToIso = (input: string) => {
+  // const input = "09-01-2025 18:00";
+  const [day, month, yearAndTime] = input.split("-");
+  const [year, time] = yearAndTime.split(" ");
+  const [hour, minute] = time.split(":");
+  const isoDate = new Date(
+    `${year}-${month}-${day}T${hour}:${minute}`
+  ).toISOString();
+  return isoDate.slice(0, 16);
+};

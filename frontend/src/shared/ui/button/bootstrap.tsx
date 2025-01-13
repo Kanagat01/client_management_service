@@ -1,7 +1,11 @@
+import { ChangeEvent } from "react";
 import { Button, Modal } from "react-bootstrap";
-import { SlActionRedo } from "react-icons/sl";
+import { createEvent, createStore } from "effector";
+import { SlActionRedo, SlActionUndo } from "react-icons/sl";
 import { IoBanOutline } from "react-icons/io5";
 import {
+  BsArrowCounterclockwise,
+  BsArrowDown,
   BsArrowUp,
   BsCheckCircle,
   BsPencil,
@@ -9,97 +13,51 @@ import {
   BsTrash,
   BsTrash3,
 } from "react-icons/bs";
-import { ConfirmModal } from "~/shared/ui";
+import { ConfirmModal, BsInput } from "~/shared/ui";
 import { useModalState } from "~/shared/lib";
-import { BtnWithConfirmation, BtnWithFormModal } from "./types";
+import { BtnWithConfirmation, CreateOrEditBtnProps } from "./types";
 
-export function CreateBtn({
-  checkCircleVariant = false,
-  ...props
-}: BtnWithFormModal & { checkCircleVariant?: boolean }) {
+export function CreateOrEditBtn({ variant, ...props }: CreateOrEditBtnProps) {
+  const variantData = {
+    create: { icon: <BsCheckCircle />, text: "Создать" },
+    add: { icon: <BsPlusCircle />, text: "Добавить" },
+    edit: { icon: <BsPencil />, text: "Редактировать" },
+    reuse: { icon: <BsArrowCounterclockwise />, text: "Переиспользовать" },
+  };
+
   const [show, changeShow] = useModalState(false);
   return (
     <>
       <Button variant="link" className="icon-link" onClick={changeShow}>
-        {checkCircleVariant ? (
-          <>
-            <BsCheckCircle />
-            <span>Создать</span>
-          </>
-        ) : (
-          <>
-            <BsPlusCircle />
-            <span>Добавить</span>
-          </>
-        )}
+        {variantData[variant].icon}
+        <span>{props.variantText ?? variantData[variant].text}</span>
       </Button>
       <Modal show={show} onHide={changeShow}>
         <Modal.Header closeButton>
           <h4 className="modal-title text-black fw-light">{props.title}</h4>
         </Modal.Header>
         <Modal.Body>
-          <form className="p-4">{props.inputs}</form>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button
-            variant="link"
-            onClick={() => {
+          <form
+            id="create-or-edit-form"
+            className="p-4"
+            onReset={() => {
               props.onReset();
               changeShow();
             }}
-          >
-            Отмена
-          </Button>
-          <div data-confirm-target="button">
-            <Button
-              variant="danger"
-              onClick={() => {
-                props.onSubmit();
-                changeShow();
-              }}
-            >
-              Подтвердить
-            </Button>
-          </div>
-        </Modal.Footer>
-      </Modal>
-    </>
-  );
-}
-
-export function EditBtn(props: BtnWithFormModal) {
-  const [show, changeShow] = useModalState(false);
-  return (
-    <>
-      <Button variant="link" className="icon-link" onClick={changeShow}>
-        <BsPencil />
-        <span>Редактировать</span>
-      </Button>
-      <Modal show={show} onHide={changeShow}>
-        <Modal.Header closeButton>
-          <h4 className="modal-title text-black fw-light">{props.title}</h4>
-        </Modal.Header>
-        <Modal.Body>
-          <form className="p-4">{props.inputs}</form>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button
-            variant="link"
-            onClick={() => {
-              props.onReset();
-              changeShow();
+            onSubmit={(e) => {
+              e.preventDefault();
+              props.onSubmit(changeShow);
             }}
           >
+            {props.inputs}
+          </form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button form="create-or-edit-form" variant="link" type="reset">
             Отмена
           </Button>
-          <div data-confirm-target="button">
-            <Button
-              variant="danger"
-              onClick={() => {
-                props.onSubmit();
-                changeShow();
-              }}
-            >
+          <div>
+            <Button form="create-or-edit-form" variant="danger" type="submit">
               Подтвердить
             </Button>
           </div>
@@ -152,13 +110,24 @@ export function DeleteBtn(props: Omit<BtnWithConfirmation, "title">) {
   );
 }
 
-export function VerificationBtn(props: Omit<BtnWithConfirmation, "title">) {
+export function VerificationBtn(
+  props: Omit<BtnWithConfirmation, "title"> & { is_verified: boolean }
+) {
   const [show, changeShow] = useModalState(false);
   return (
     <>
       <Button variant="link" className="icon-link" onClick={changeShow}>
-        <BsArrowUp />
-        Верифицировать
+        {props.is_verified ? (
+          <>
+            <BsArrowDown />
+            Отменить верификацию
+          </>
+        ) : (
+          <>
+            <BsArrowUp />
+            Верифицировать
+          </>
+        )}
       </Button>
       <ConfirmModal
         show={show}
@@ -170,13 +139,24 @@ export function VerificationBtn(props: Omit<BtnWithConfirmation, "title">) {
   );
 }
 
-export function BanBtn(props: Omit<BtnWithConfirmation, "title">) {
+export function BanBtn(
+  props: Omit<BtnWithConfirmation, "title"> & { is_blocked: boolean }
+) {
   const [show, changeShow] = useModalState(false);
   return (
     <>
       <Button variant="link" className="icon-link" onClick={changeShow}>
-        <IoBanOutline />
-        Заблокировать
+        {props.is_blocked ? (
+          <>
+            <BsCheckCircle />
+            Разблокировать
+          </>
+        ) : (
+          <>
+            <IoBanOutline />
+            Заблокировать
+          </>
+        )}
       </Button>
       <ConfirmModal
         show={show}
@@ -194,3 +174,64 @@ export const ExportBtn = ({ link }: { link: string }) => (
     <span>Экспорт</span>
   </a>
 );
+
+export const setFileForImport = createEvent<File | null>();
+export const $fileForImport = createStore<File | null>(null).on(
+  setFileForImport,
+  (_, state) => state
+);
+
+export function ImportBtn({ onSubmit }: { onSubmit: () => void }) {
+  const [show, changeShow] = useModalState(false);
+  const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0] || null;
+    setFileForImport(file);
+  };
+  return (
+    <>
+      <Button variant="link" className="icon-link" onClick={changeShow}>
+        <SlActionUndo />
+        <span>Импорт из Excel</span>
+      </Button>
+      <Modal show={show} onHide={changeShow}>
+        <Modal.Header closeButton>
+          <h4 className="modal-title text-black fw-light">
+            Импортировать данные
+          </h4>
+        </Modal.Header>
+        <Modal.Body>
+          <form className="p-4">
+            <BsInput
+              variant="input"
+              type="file"
+              accept=".xlsx,.xls,.csv"
+              onChange={handleFileChange}
+            />
+          </form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button
+            variant="link"
+            onClick={() => {
+              setFileForImport(null);
+              changeShow();
+            }}
+          >
+            Отмена
+          </Button>
+          <div>
+            <Button
+              variant="danger"
+              onClick={() => {
+                onSubmit();
+                changeShow();
+              }}
+            >
+              Подтвердить
+            </Button>
+          </div>
+        </Modal.Footer>
+      </Modal>
+    </>
+  );
+}

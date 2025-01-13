@@ -1,14 +1,24 @@
-export type TActivity = {
+type TBase = {
   id: number;
-  activity_type: string;
-  discipline: string;
-  group: string;
   note?: string;
   teacher: string;
   date: string;
-  time_start: string;
-  time_end: string;
+  start_time: string;
+  end_time: string;
   updated_at: string;
-  marked_as_proctoring: boolean;
-  marked_by_students_as_proctoring: boolean;
+};
+
+export type TActivity = TBase & {
+  activity_type_id: number;
+  activity_type: string;
+  discipline_id: number;
+  discipline: string;
+  group_id: number;
+  group: string;
+};
+
+export type TEditActivity = TBase & {
+  activity_type: number;
+  discipline: number;
+  group: number;
 };

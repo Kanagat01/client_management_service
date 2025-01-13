@@ -1,8 +1,4 @@
-import {
-  useReactTable,
-  getCoreRowModel,
-  createColumnHelper,
-} from "@tanstack/react-table";
+import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
 import { DefaultCell, DefaultHeader } from "~/shared/ui";
 import { TActivityType } from "./types";
 
@@ -14,7 +10,7 @@ export const activityTypeColumns: Partial<Record<TColumn, string>> = {
   fa_id: "FA ID",
 };
 
-export const useActivityTypeTable = (data: TActivityType[]) => {
+export const getActivityTypeColumns = () => {
   const columnHelper = createColumnHelper<TActivityType>();
   let columns = (
     Object.entries(activityTypeColumns) as [TColumn, string][]
@@ -26,10 +22,5 @@ export const useActivityTypeTable = (data: TActivityType[]) => {
       meta: { label: header },
     })
   );
-  const table = useReactTable({
-    data,
-    columns,
-    getCoreRowModel: getCoreRowModel(),
-  });
-  return table;
+  return columns as ColumnDef<TActivityType>[];
 };

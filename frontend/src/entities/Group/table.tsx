@@ -1,9 +1,5 @@
-import {
-  createColumnHelper,
-  getCoreRowModel,
-  useReactTable,
-} from "@tanstack/react-table";
 import { ReactNode } from "react";
+import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
 import { DefaultHeader, DefaultCell } from "~/shared/ui";
 import { dateTimeWithWeekday } from "~/shared/lib";
 import { TGroup } from "./types";
@@ -17,7 +13,7 @@ const groupColumns: Record<keyof TGroup, string> = {
   updated_at: "Последнее изменение",
 };
 
-export const useGroupTable = (data: TGroup[]) => {
+export const getGroupColumns = () => {
   const columnHelper = createColumnHelper<TGroup>();
   const columns = (
     Object.entries(groupColumns) as [keyof TGroup, string][]
@@ -35,10 +31,5 @@ export const useGroupTable = (data: TGroup[]) => {
       meta: { label: header },
     })
   );
-  const table = useReactTable({
-    data,
-    columns,
-    getCoreRowModel: getCoreRowModel(),
-  });
-  return table;
+  return columns as ColumnDef<TGroup>[];
 };

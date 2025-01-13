@@ -1,52 +1,67 @@
-import {
-  createColumnHelper,
-  getCoreRowModel,
-  useReactTable,
-} from "@tanstack/react-table";
+import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
 import {
   DefaultHeader,
   DefaultCell,
   useActionsColumn,
-  EditBtn,
   DeleteBtn,
 } from "~/shared/ui";
-import { TMessage } from "./types";
-import { dateTimeToString } from "~/shared/lib";
+import { dateStringToIso } from "~/shared/lib";
+import { TCreateMessage, TMessage } from "./types";
+import { deleteMessage } from "./model";
+import { CreateMessage } from "./ui";
 
-type TColumn = keyof TMessage | "actions";
+type TColumn = keyof TMessage | "receiver" | "actions";
 
-const columnsRecord: Record<TColumn, string> = {
+const columnsRecord: Partial<Record<TColumn, string>> = {
   id: "Номер рассылки",
-  group: "Группа",
+  receiver: "Получатель",
   text: "Содержание",
   schedule_datetime: "Запланированное время рассылки",
   is_sent: "Отправлено",
   actions: "Действия",
 };
 
-export const useMessageTable = (data: TMessage[]) => {
+export const getMessageColumns = () => {
   const columnHelper = createColumnHelper<TMessage>();
   const columns = (Object.entries(columnsRecord) as [TColumn, string][]).map(
     ([fieldName, header], index) =>
       fieldName === "actions"
-        ? useActionsColumn(columnHelper, header, [<EditBtn />, <DeleteBtn />])
-        : columnHelper.accessor(fieldName, {
+        ? useActionsColumn<TMessage>(columnHelper, header, (row) => [
+            <CreateMessage
+              data={
+                {
+                  ...row,
+                  student: row.student_id,
+                  group: row.group_id,
+                  schedule_datetime: dateStringToIso(row.schedule_datetime),
+                } as TCreateMessage
+              }
+            />,
+            <DeleteBtn
+              content={`Вы уверены, что хотите удалить сообщение #${row.id}`}
+              onConfirm={() => deleteMessage(row.id)}
+            />,
+          ])
+        : fieldName === "receiver"
+        ? columnHelper.display({
             id: `column_${index}`,
             cell: (info) => {
-              let value = info.row.original[fieldName];
-              if (fieldName === "schedule_datetime") {
-                value = dateTimeToString(value as string);
-              }
+              const value =
+                info.row.original.student ?? info.row.original.group;
+              return <DefaultCell>{value}</DefaultCell>;
+            },
+            header: () => <DefaultHeader>{header}</DefaultHeader>,
+            meta: { label: header },
+          })
+        : columnHelper.accessor(fieldName as keyof TMessage, {
+            id: `column_${index}`,
+            cell: (info) => {
+              const value = info.row.original[fieldName];
               return <DefaultCell>{value}</DefaultCell>;
             },
             header: () => <DefaultHeader>{header}</DefaultHeader>,
             meta: { label: header },
           })
   );
-  const table = useReactTable({
-    data,
-    columns,
-    getCoreRowModel: getCoreRowModel(),
-  });
-  return table;
+  return columns as ColumnDef<TMessage>[];
 };

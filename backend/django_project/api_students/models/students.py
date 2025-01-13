@@ -1,6 +1,11 @@
 import re
+import requests
+from bs4 import BeautifulSoup
 from django.db import models
-from django.core.exceptions import ValidationError
+from rest_framework.exceptions import ValidationError
+from asgiref.sync import async_to_sync
+
+from tgbot.create_bot import bot
 from .university import Group, Activity
 
 
@@ -11,24 +16,28 @@ def validate_whatsapp_number(value):
 
 
 class Student(models.Model):
-    full_name = models.CharField(max_length=255, verbose_name="Полное имя")
+    full_name = models.CharField(
+        max_length=255, verbose_name="Полное имя", null=True)
     telegram_id = models.IntegerField(
-        verbose_name="Telegram ID", blank=True, null=True)
+        verbose_name="Telegram ID")
     telegram_link = models.CharField(
         max_length=255, verbose_name="Ссылка на Telegram", blank=True, null=True)
-    username = models.CharField(
+    fa_login = models.CharField(
         max_length=50, verbose_name="Логин", unique=True)
     # Пароль хранится в текстовом виде
-    password = models.CharField(max_length=100, verbose_name="Пароль")
+    fa_password = models.CharField(max_length=100, verbose_name="Пароль")
     group = models.ForeignKey(
-        Group, on_delete=models.SET_NULL, verbose_name="Группа", blank=True, null=True)
+        Group, on_delete=models.SET_NULL, null=True, verbose_name="Группа")
     phone = models.CharField(
         max_length=16,
         verbose_name="Телефон (WhatsApp)",
-        validators=[validate_whatsapp_number]
+        validators=[validate_whatsapp_number],
+        blank=True, null=True
     )
     is_verified = models.BooleanField(
         default=False, verbose_name="Верифицирован")
+    is_blocked = models.BooleanField(
+        default=False, verbose_name="Заблокирован")
     registration_date = models.DateTimeField(
         auto_now_add=True, verbose_name="Дата/время регистрации")
 
@@ -42,6 +51,10 @@ class Student(models.Model):
     def save(self, *args, **kwargs):
         if self.pk:
             old_instance = Student.objects.get(pk=self.pk)
+
+            if old_instance.fa_login != self.fa_login or old_instance.fa_password != self.fa_password:
+                self.update_full_name()
+
             for field in self._meta.fields:
                 field_name = field.name
                 old_value = getattr(old_instance, field_name)
@@ -49,11 +62,38 @@ class Student(models.Model):
                 if old_value != new_value:
                     Log.objects.create(
                         student=self,
-                        field_name=field_name,
+                        field_name=field.verbose_name,
                         old_value=old_value,
                         new_value=new_value
                     )
+        else:
+            self.update_full_name()
+
+        if not self.telegram_link:
+            self.update_telegram_link()
+
         super().save(*args, **kwargs)
+
+    def update_full_name(self):
+        response = requests.post(
+            "https://campus.fa.ru/login/index.php",
+            data={"username": self.fa_login, "password": self.fa_password}
+        )
+        soup = BeautifulSoup(response.text, 'html.parser')
+        title = soup.title.string if soup.title else ""
+
+        if "Личный кабинет" not in title:
+            raise ValidationError(
+                "Неправильный логин или пароль, проверьте введенные данные", code='invalid_credentials'
+            )
+
+        selector = "#inst110 > div > div > div.w-100.no-overflow > div.myprofileitem.fullname"
+        self.full_name = soup.select_one(selector).text.strip()
+
+    def update_telegram_link(self):
+        user = async_to_sync(bot.get_chat)(self.telegram_id)
+        if user.username:
+            self.telegram_link = f"https://t.me/{user.username}"
 
 
 class StudentRecord(models.Model):
@@ -61,12 +101,8 @@ class StudentRecord(models.Model):
         Student, on_delete=models.CASCADE, related_name='records', verbose_name="Студент")
     activity = models.ForeignKey(
         Activity, on_delete=models.SET_NULL, null=True, verbose_name="Активность")
-    date = models.DateField(verbose_name='Дата')
-    time_start = models.TimeField(verbose_name='Время начала')
-    time_end = models.TimeField(verbose_name='Время конца')
-
-    def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
+    marked_as_proctoring = models.BooleanField(
+        default=False, verbose_name="Установлена как прокторинг")
 
     class Meta:
         verbose_name = "Записи студента"
@@ -85,7 +121,7 @@ class StudentRecord(models.Model):
                 if old_value != new_value:
                     Log.objects.create(
                         student=self.student,
-                        field_name=field_name,
+                        field_name=field.verbose_name,
                         old_value=old_value,
                         new_value=new_value
                     )

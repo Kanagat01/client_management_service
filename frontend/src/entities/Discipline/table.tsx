@@ -1,14 +1,6 @@
-import {
-  createColumnHelper,
-  getCoreRowModel,
-  useReactTable,
-} from "@tanstack/react-table";
-import {
-  DefaultCell,
-  DefaultHeader,
-  EditBtn,
-  useActionsColumn,
-} from "~/shared/ui";
+import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
+import { DefaultCell, DefaultHeader, useActionsColumn } from "~/shared/ui";
+import { CreateOrEditDiscipline } from "./ui";
 import { TDiscipline } from "./types";
 
 type TColumn = keyof TDiscipline | "actions";
@@ -20,13 +12,15 @@ const disciplineColumns: Record<TColumn, string> = {
   actions: "Действия",
 };
 
-export const useDisciplineTable = (data: TDiscipline[]) => {
+export const getDisciplineColumns = () => {
   const columnHelper = createColumnHelper<TDiscipline>();
   const columns = (
     Object.entries(disciplineColumns) as [TColumn, string][]
   ).map(([fieldName, header], index) =>
     fieldName === "actions"
-      ? useActionsColumn(columnHelper, header, [<EditBtn />])
+      ? useActionsColumn<TDiscipline>(columnHelper, header, (row) => [
+          <CreateOrEditDiscipline initialState={row} />,
+        ])
       : columnHelper.accessor(fieldName, {
           id: `column_${index}`,
           cell: (info) => (
@@ -36,11 +30,5 @@ export const useDisciplineTable = (data: TDiscipline[]) => {
           meta: { label: header },
         })
   );
-
-  const table = useReactTable({
-    data,
-    columns,
-    getCoreRowModel: getCoreRowModel(),
-  });
-  return table;
+  return columns as ColumnDef<TDiscipline>[];
 };

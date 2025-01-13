@@ -1,22 +1,20 @@
-import {
-  createColumnHelper,
-  getCoreRowModel,
-  useReactTable,
-} from "@tanstack/react-table";
+import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
 import { TActivity } from "~/entities/Activity";
 import {
   DefaultCell,
   DefaultHeader,
   DeleteBtn,
-  EditBtn,
   useActionsColumn,
 } from "~/shared/ui";
 import { dateToString } from "~/shared/lib";
+import { CreateOrEditStudentRecord } from "./ui";
+import { deleteStudentRecord } from "./model";
 import { TStudentRecord } from "./types";
 
 type TColumn = keyof TStudentRecord | keyof TActivity | "actions";
 
 export const studentRecordColumns: Partial<Record<TColumn, string>> = {
+  id: "ID",
   student: "Студент",
   telegram_link: "Ссылка",
   group: "Группа",
@@ -25,40 +23,43 @@ export const studentRecordColumns: Partial<Record<TColumn, string>> = {
   teacher: "Лектор",
   note: "Заметка",
   date: "Дата",
-  time_start: "Время начала",
-  time_end: "Время конца",
+  start_time: "Время начала",
+  end_time: "Время конца",
+  marked_as_proctoring: "Установлено как прокторинг",
   actions: "Действия",
 };
-
-export const useStudentRecordTable = (data: TStudentRecord[]) => {
+export const getStudentRecordColumns = () => {
   const columnHelper = createColumnHelper<TStudentRecord>();
   const columns = Object.entries(studentRecordColumns).map(
     ([fieldName, header], index) =>
       fieldName === "actions"
-        ? useActionsColumn(columnHelper, header, [
-            <EditBtn
-              key="edit"
-              title={""}
-              inputs={undefined}
-              onSubmit={() => {}}
-              onReset={() => {}}
+        ? useActionsColumn<TStudentRecord>(columnHelper, header, (row) => [
+            <CreateOrEditStudentRecord
+              data={{
+                id: row.id,
+                activity: row.activity.id,
+                student: row.student_id,
+                marked_as_proctoring: row.marked_as_proctoring,
+              }}
             />,
-            <DeleteBtn key="delete" content={""} onConfirm={() => {}} />,
+            <DeleteBtn
+              content={`Вы уверены, что хотите очистить запись #${row.id}?`}
+              onConfirm={() => deleteStudentRecord(row.id)}
+            />,
           ])
         : columnHelper.accessor(fieldName as keyof TStudentRecord, {
             id: `column_${index}`,
             cell: (info) => {
+              let fieldValue;
               if (!Object.keys(info.row.original).includes(fieldName)) {
-                return (
-                  <DefaultCell>
-                    {info.row.original.activity[fieldName as keyof TActivity]}
-                  </DefaultCell>
-                );
-              }
-              let fieldValue =
-                info.row.original[fieldName as keyof TStudentRecord];
-              if (fieldName === "date") {
-                fieldValue = dateToString(fieldValue as string);
+                fieldValue =
+                  info.row.original.activity[fieldName as keyof TActivity];
+                if (fieldName === "date") {
+                  fieldValue = dateToString(fieldValue as string);
+                }
+              } else {
+                fieldValue =
+                  info.row.original[fieldName as keyof TStudentRecord];
               }
               return <DefaultCell>{fieldValue as string}</DefaultCell>;
             },
@@ -66,12 +67,5 @@ export const useStudentRecordTable = (data: TStudentRecord[]) => {
             meta: { label: header },
           })
   );
-
-  const table = useReactTable({
-    data,
-    columns,
-    getCoreRowModel: getCoreRowModel(),
-  });
-
-  return table;
+  return columns as ColumnDef<TStudentRecord>[];
 };

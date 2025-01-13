@@ -10,12 +10,11 @@ import {
   GroupsPage,
   LogsPage,
   MessagesPage,
+  DiscountsPage,
   StudentRecordsPage,
   StudentsPage,
 } from "./model_pages";
 import { Login, ForgotPassword, ForgotPasswordConfirm } from "./auth_pages";
-// import { NotificationsPage } from "./notifications";
-// import { SettingsPage } from "./settings";
 import { ProfilePage } from "./profile";
 import PrivateRoute from "./private_route";
 
@@ -30,9 +29,8 @@ export const Routing = () => {
     [urls.CODES, <CodesPage />],
     [urls.LOGS, <LogsPage />],
     [urls.MESSAGES, <MessagesPage />],
-    // [urls.SETTINGS, <SettingsPage />],
+    [urls.DISCOUNTS, <DiscountsPage />],
     [urls.PROFILE, <ProfilePage />],
-    // [urls.NOTIFICATIONS, <NotificationsPage />],
   ];
 
   return (

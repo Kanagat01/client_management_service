@@ -1,12 +1,12 @@
 import { attach, createStore, Effect } from "effector";
+import { apiRequestFx } from "~/shared/api";
 import { TActivityType } from "./types";
-import { apiRequestFx, RequestParams } from "~/shared/api";
 
 export const $activityTypes = createStore<TActivityType[]>([]);
 
 export const getActivityTypesFx: Effect<void, TActivityType[]> = attach({
   effect: apiRequestFx,
-  mapParams: (): RequestParams => ({
+  mapParams: () => ({
     method: "get",
     url: "/api/activity-types/",
   }),

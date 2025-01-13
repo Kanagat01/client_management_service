@@ -8,9 +8,11 @@ export type BtnWithConfirmation = {
   onConfirm: () => void;
 };
 
-export type BtnWithFormModal = {
+export type CreateOrEditBtnProps = {
   title: string;
   inputs: ReactNode;
-  onSubmit: () => void;
+  variant: "add" | "create" | "edit" | "reuse";
+  variantText?: string;
+  onSubmit: (changeShow: () => void) => void;
   onReset: () => void;
 };

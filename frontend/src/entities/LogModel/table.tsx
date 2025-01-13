@@ -1,9 +1,5 @@
-import {
-  useReactTable,
-  getCoreRowModel,
-  createColumnHelper,
-} from "@tanstack/react-table";
 import { ReactNode } from "react";
+import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
 import { dateTimeToString } from "~/shared/lib";
 import { DefaultCell, DefaultHeader } from "~/shared/ui";
 import { TLog } from "./types";
@@ -19,7 +15,7 @@ export const logColumns: Partial<Record<TColumn, string>> = {
   created_at: "Дата изменения",
 };
 
-export const useLogTable = (data: TLog[]) => {
+export const getLogColumns = () => {
   const columnHelper = createColumnHelper<TLog>();
   let columns = (Object.entries(logColumns) as [TColumn, string][]).map(
     ([fieldName, header], index) =>
@@ -36,10 +32,5 @@ export const useLogTable = (data: TLog[]) => {
         meta: { label: header },
       })
   );
-  const table = useReactTable({
-    data,
-    columns,
-    getCoreRowModel: getCoreRowModel(),
-  });
-  return table;
+  return columns as ColumnDef<TLog>[];
 };

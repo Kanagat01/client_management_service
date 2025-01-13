@@ -5,5 +5,6 @@ export * from "./disciplines";
 export * from "./groups";
 export * from "./logs";
 export * from "./messages";
+export * from "./discounts";
 export * from "./student_records";
 export * from "./students";

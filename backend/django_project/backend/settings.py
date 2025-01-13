@@ -2,14 +2,18 @@ import os
 from pathlib import Path
 
 from django.utils import timezone
-
+from environs import Env
 
 BASE_DIR = Path(__file__).resolve().parent.parent
+env = Env()
+env.read_env("../.env")
 
 SECRET_KEY = os.environ.get(
     "SECRET_KEY", default="django-insecure-3b!7h8__f5e2frki-d&*)gb5y@--&*e&#oh=41y)cq%jwh$g5c")
-
 DEBUG = bool(os.environ.get("DEBUG", default=1))
+
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+EMAIL_HOST_USER = "example@gmail.com"
 
 ALLOWED_HOSTS = os.environ.get(
     "DJANGO_ALLOWED_HOSTS", "localhost 127.0.0.1").split(" ")
@@ -21,13 +25,8 @@ CORS_ALLOW_ALL_ORIGINS = True
 REACT_RESET_PASSWORD_URL = os.environ.get(
     "REACT_RESET_PASSWORD_URL", "http://localhost:5173/forgot-password-confirm/")
 
-SMS_LOGIN = os.environ.get(
-    "SMS_LOGIN", "")
-SMS_PASSWORD = os.environ.get(
-    "SMS_PASSWORD", "")
-
-EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
-EMAIL_HOST_USER = "example@gmail.com"
+WAPPI_PROFILE_ID = env.str("WAPPI_PROFILE_ID")
+WAPPI_TOKEN = env.str("WAPPI_TOKEN")
 
 # EMAIL_HOST = os.environ.get("EMAIL_HOST")
 # EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")
@@ -102,8 +101,8 @@ REST_FRAMEWORK = {
 }
 
 # Database
-
-if os.environ.get('RUNNING_FROM_DOCKER', False):
+RUNNING_FROM_DOCKER = int(os.environ.get('RUNNING_FROM_DOCKER', default=0))
+if RUNNING_FROM_DOCKER:
     print("USING POSTGRESQL DATABASE")
     DATABASES = {
         "default": {
@@ -115,7 +114,6 @@ if os.environ.get('RUNNING_FROM_DOCKER', False):
             "PORT": os.environ.get("POSTGRES_PORT"),
         }
     }
-
 else:
     print("USING SQLITE DATABASE")
     DATABASES = {
@@ -126,8 +124,6 @@ else:
     }
 
 # Password validation
-# https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
-
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -144,19 +140,12 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 # Internationalization
-# https://docs.djangoproject.com/en/5.0/topics/i18n/
-
 LANGUAGE_CODE = 'ru-RU'
-
 TIME_ZONE = 'UTC'
-
 USE_I18N = True
-
 USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.0/howto/static-files/
-
 STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
@@ -197,8 +186,6 @@ if os.environ.get('RUNNING_FROM_DOCKER', False):
         },
     }
 
-# Default primary key field type
-# https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Q_CLUSTER = {

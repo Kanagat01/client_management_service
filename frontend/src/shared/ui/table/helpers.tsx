@@ -1,4 +1,4 @@
-import { useState, PropsWithChildren, ReactNode, useRef } from "react";
+import { PropsWithChildren, ReactNode, useRef } from "react";
 import { ColumnHelper, Table } from "@tanstack/react-table";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { Button, Dropdown } from "react-bootstrap";
@@ -43,10 +43,10 @@ export const DefaultCell = ({ children }: PropsWithChildren) => {
   );
 };
 
-export const useActionsColumn = (
-  columnHelper: ColumnHelper<any>,
+export const useActionsColumn = <T,>(
+  columnHelper: ColumnHelper<T>,
   header: ReactNode,
-  actions: ReactNode[]
+  actions: (row: T) => ReactNode[]
 ) => {
   return columnHelper.display({
     id: "column_actions",
@@ -56,7 +56,7 @@ export const useActionsColumn = (
         <div className="d-inline-flex align-items-center">{header}</div>
       </th>
     ),
-    cell: () => {
+    cell: (info) => {
       const buttonRef = useRef<HTMLButtonElement | null>(null);
       const menuRef = useRef<HTMLDivElement | null>(null);
       const { styles, attributes } = usePopper(
@@ -83,7 +83,7 @@ export const useActionsColumn = (
                 {...attributes.popper}
                 popperConfig={{ strategy: "fixed" }}
               >
-                {actions.map((action, key) => (
+                {actions(info.row.original).map((action, key) => (
                   <div key={key} className="form-group mb-0">
                     {action}
                   </div>
@@ -98,31 +98,7 @@ export const useActionsColumn = (
 };
 
 export const ColumnSelector = ({ table }: { table: Table<any> }) => {
-  const allColumns = table.getAllColumns();
-
-  const [columnVisibility, setColumnVisibility] = useState<
-    Record<string, boolean>
-  >(
-    allColumns.reduce((acc, column) => {
-      acc[column.id] = column.getIsVisible();
-      return acc;
-    }, {} as Record<string, boolean>)
-  );
-
-  const columnLabels = allColumns.reduce((acc, column) => {
-    const label =
-      (column.columnDef.meta as { label?: string })?.label || column.id;
-    acc[column.id] = label;
-    return acc;
-  }, {} as Record<string, string>);
-
-  const toggleColumn = (columnId: string) => {
-    setColumnVisibility((prev) => {
-      const newVisibility = { ...prev, [columnId]: !prev[columnId] };
-      table.getColumn(columnId)?.toggleVisibility(newVisibility[columnId]);
-      return newVisibility;
-    });
-  };
+  const columns = table.getAllLeafColumns();
   return (
     <Dropdown drop="up" className="d-inline-block">
       <Dropdown.Toggle variant="link" className="btn-sm p-0 m-0">
@@ -130,21 +106,22 @@ export const ColumnSelector = ({ table }: { table: Table<any> }) => {
       </Dropdown.Toggle>
 
       <Dropdown.Menu className="dropdown-column-menu dropdown-scrollable">
-        {Object.entries(columnVisibility).map(([column, isVisible]) => (
-          <Dropdown.Item key={column} className="d-flex align-items-center">
+        {columns.map((column) => (
+          <Dropdown.Item key={column.id} className="d-flex align-items-center">
             <div className="form-check h-auto w-100 d-flex align-items-center ps-0">
               <input
-                id={column}
+                id={column.id}
                 className="custom-control-input"
                 type="checkbox"
-                checked={isVisible}
-                onClick={() => toggleColumn(column)}
+                checked={column.getIsVisible()}
+                onChange={column.getToggleVisibilityHandler}
               />
               <label
-                htmlFor={column}
+                htmlFor={column.id}
                 className="form-check-label d-block w-100 cursor ms-2 user-select-none"
               >
-                {columnLabels[column]}
+                {(column.columnDef.meta as { label: string }).label ||
+                  column.id}
               </label>
             </div>
           </Dropdown.Item>
