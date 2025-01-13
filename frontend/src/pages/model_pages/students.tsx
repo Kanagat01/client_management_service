@@ -44,7 +44,9 @@ const getFilters = (): ReactNode[] => {
       label="Группа"
       name="group"
       value={filters.group}
-      onChange={(value: string) => changeFilter({ key: "group", value })}
+      onChange={(value: string | number) =>
+        changeFilter({ key: "group", value })
+      }
       options={[
         { label: "Не выбрано", value: "" },
         ...groups.map(({ id, code }) => ({
