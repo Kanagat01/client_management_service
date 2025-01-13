@@ -45,11 +45,13 @@ const getFilters = (): ReactNode[] => {
       label="Студент"
       name="student"
       value={filters.student || ""}
-      onChange={(value: string) => changeFilter({ key: "student", value })}
+      onChange={(value: string | number) =>
+        changeFilter({ key: "student", value })
+      }
       options={[
         { label: "Не выбрано", value: "" },
         ...students.map(({ id, full_name }) => ({
-          value: id.toString(),
+          value: id,
           label: full_name,
         })),
       ]}
@@ -58,13 +60,13 @@ const getFilters = (): ReactNode[] => {
       label="Тип активности"
       name="activity_type"
       value={filters.activity_type || ""}
-      onChange={(value: string) =>
+      onChange={(value: string | number) =>
         changeFilter({ key: "activity_type", value })
       }
       options={[
         { label: "Не выбрано", value: "" },
         ...activityTypes.map(({ id, name }) => ({
-          value: id.toString(),
+          value: id,
           label: name,
         })),
       ]}
@@ -73,11 +75,13 @@ const getFilters = (): ReactNode[] => {
       label="Группа"
       name="group"
       value={filters.group || ""}
-      onChange={(value: string) => changeFilter({ key: "group", value })}
+      onChange={(value: string | number) =>
+        changeFilter({ key: "group", value })
+      }
       options={[
         { label: "Не выбрано", value: "" },
         ...groups.map(({ id, code }) => ({
-          value: id.toString(),
+          value: id,
           label: code,
         })),
       ]}
@@ -86,11 +90,13 @@ const getFilters = (): ReactNode[] => {
       label="Дисциплина"
       name="discipline"
       value={filters.discipline || ""}
-      onChange={(value: string) => changeFilter({ key: "discipline", value })}
+      onChange={(value: string | number) =>
+        changeFilter({ key: "discipline", value })
+      }
       options={[
         { label: "Не выбрано", value: "" },
         ...disciplines.map(({ id, name }) => ({
-          value: id.toString(),
+          value: id,
           label: name,
         })),
       ]}
