@@ -59,6 +59,9 @@ export const getActivityColumns = () => {
           },
           header: () => <DefaultHeader>{header}</DefaultHeader>,
           meta: { label: header },
+          sortDescFirst: false,
+          enableSorting: true,
+          enableMultiSort: true,
         });
       }
     }
