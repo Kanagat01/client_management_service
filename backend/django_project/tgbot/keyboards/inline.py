@@ -90,3 +90,13 @@ class UserInlineKeyboard:
             ],
         ]
         return InlineKeyboardMarkup(inline_keyboard=keyboard)
+
+    @classmethod
+    def get_code_kb(cls):
+        keyboard = [
+            [
+                InlineKeyboardButton(text="Получить код",
+                                     callback_data="get_code")
+            ],
+        ]
+        return InlineKeyboardMarkup(inline_keyboard=keyboard)

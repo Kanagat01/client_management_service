@@ -1,7 +1,12 @@
 import { useUnit } from "effector-react";
 import { ReactNode, useEffect } from "react";
 import { CommandBar, FilterBar } from "~/widgets";
-import { $filters, changeFilter, PageSizeSelector } from "~/features/filters";
+import {
+  $filters,
+  changeFilter,
+  PageSizeSelector,
+  useFilters,
+} from "~/features/filters";
 import { $activityTypes, getActivityTypesFx } from "~/entities/ActivityType";
 import { $disciplines, getDisciplinesFx } from "~/entities/Discipline";
 import { $groups, getGroupsFx } from "~/entities/Group";
@@ -61,24 +66,9 @@ const getFilters = (): ReactNode[] => {
   ];
 };
 
-export const filterActivities = (
-  activities: TActivity[],
-  filters: Record<string, string | number>
-) => {
-  return activities.filter((activity) => {
-    return Object.keys(filters).every((key) => {
-      console.log(key, activity[key as keyof TActivity], filters[key]);
-
-      if (!filters[key]) return true;
-      return activity[key as keyof TActivity]?.toString() === filters[key];
-    });
-  });
-};
-
 export function ActivitiesPage() {
   const activities = useUnit($activities);
-  const filters = useUnit($filters);
-  const data = filterActivities(activities, filters);
+  const data = useFilters<TActivity>(activities);
   const columns = getActivityColumns();
 
   useEffect(() => {

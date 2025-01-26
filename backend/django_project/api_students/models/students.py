@@ -27,7 +27,7 @@ class Student(models.Model):
     # Пароль хранится в текстовом виде
     fa_password = models.CharField(max_length=100, verbose_name="Пароль")
     group = models.ForeignKey(
-        Group, on_delete=models.SET_NULL, null=True, verbose_name="Группа")
+        Group, on_delete=models.SET_NULL, null=True, verbose_name="Группа", related_name="students")
     phone = models.CharField(
         max_length=16,
         verbose_name="Телефон (WhatsApp)",

@@ -4,27 +4,47 @@ import {
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { Fragment, useState } from "react";
+import { useUnit } from "effector-react";
 import { BsJournalX } from "react-icons/bs";
-import { Pagination, TPagination } from "./Pagination";
-
-type MainTableProps = {
-  data: any[];
-  columns: ColumnDef<any>[];
-  pagination?: TPagination;
-  recordsRange?: string;
-};
+import { Fragment, useEffect, useState } from "react";
+import { $pagination, getPages, setPagination } from "./pagination_model";
 
 export function MainTable({
   data,
   columns,
-  pagination,
-  recordsRange,
-}: MainTableProps) {
-  const [columnVisibility, setColumnVisibility] = useState({});
+}: {
+  data: any[];
+  columns: ColumnDef<any>[];
+}) {
+  const pagination = useUnit($pagination);
+  const [filteredData, setFilteredData] = useState<any[]>(data);
 
+  const { itemsPerPage, currentPage } = pagination;
+  const pagesTotal =
+    itemsPerPage !== "all" ? Math.ceil(data.length / itemsPerPage) : 1;
+  const pages = getPages(pagesTotal, currentPage);
+
+  useEffect(() => {
+    if (itemsPerPage !== "all") {
+      const start = (currentPage - 1) * itemsPerPage;
+      setFilteredData(data.slice(start, start + itemsPerPage));
+    } else setFilteredData(data);
+  }, [pagination]);
+
+  const setCurrentPage = (page: number) => {
+    setPagination({
+      ...pagination,
+      currentPage: page,
+    });
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  };
+
+  const [columnVisibility, setColumnVisibility] = useState({});
   const table = useReactTable({
-    data,
+    data: filteredData,
     columns,
     state: {
       columnVisibility,
@@ -35,6 +55,7 @@ export function MainTable({
 
   const headerGroups = table.getHeaderGroups();
   const rows = table.getRowModel().rows;
+
   return rows.length !== 0 ? (
     <>
       <div className="table-responsive">
@@ -67,17 +88,57 @@ export function MainTable({
           </tbody>
         </table>
       </div>
-      <footer className="pb-3 w-100 v-md-center px-4 d-flex flex-wrap">
+      <footer className="pb-3 w-100 v-md-center px-4 d-flex flex-wrap mt-3">
         <div className="col-auto me-auto">
           {/* <ColumnSelector table={table} /> */}
 
           <small className="text-muted d-block">
-            {recordsRange && `Отображено записей: ${recordsRange}`}
+            Отображено записей: {filteredData.length}
           </small>
         </div>
-        <div className="col-auto overflow-auto flex-shrink-1 mt-3 mt-sm-0">
-          {pagination && <Pagination {...pagination} />}
-        </div>
+        {pagesTotal !== 1 && (
+          <div className="col-auto overflow-auto flex-shrink-1">
+            <ul className="pagination">
+              {currentPage !== 1 && (
+                <li className="page-item">
+                  <button
+                    className="page-link"
+                    onClick={() => setCurrentPage(currentPage - 1)}
+                  >
+                    «
+                  </button>
+                </li>
+              )}
+              {pages.map((page) => (
+                <li
+                  key={page}
+                  className={`page-item ${page === currentPage && "active"}`}
+                >
+                  {page === currentPage ? (
+                    <span className="page-link">{page}</span>
+                  ) : (
+                    <button
+                      className="page-link"
+                      onClick={() => setCurrentPage(page)}
+                    >
+                      {page}
+                    </button>
+                  )}
+                </li>
+              ))}
+              {currentPage !== pagesTotal && (
+                <li className="page-item">
+                  <button
+                    className="page-link"
+                    onClick={() => setCurrentPage(currentPage + 1)}
+                  >
+                    »
+                  </button>
+                </li>
+              )}
+            </ul>
+          </div>
+        )}
       </footer>
     </>
   ) : (

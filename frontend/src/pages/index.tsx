@@ -46,7 +46,7 @@ export const Routing = () => {
           <Route key={path} path={path} element={element} />
         ))}
       </Route>
-      <Route path="*" element={<Navigate to={urls.LOGIN} replace />} />
+      <Route path="*" element={<Navigate to={urls.PROFILE} replace />} />
     </Routes>
   );
 };

@@ -43,7 +43,7 @@ def export_codes_view(request):
         "status": "Статус",
         "telegram_link": "Телеграмм",
         "student": "Кем использован",
-        "created_at": "Дата получения",
+        "created_at": "Дата создания",
     }
     return export_to_excel(request, data, columns, filename="Коды для прокторинга")
 

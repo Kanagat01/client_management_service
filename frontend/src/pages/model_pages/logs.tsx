@@ -1,33 +1,33 @@
-import { ReactNode } from "react";
 import { useUnit } from "effector-react";
+import { ReactNode, useEffect } from "react";
 import { CommandBar, FilterBar } from "~/widgets";
 import {
   $filters,
   changeFilter,
   handleFilterChange,
   PageSizeSelector,
+  useFilters,
 } from "~/features/filters";
-import { $logs, getLogsFx, getLogColumns } from "~/entities/LogModel";
-import { $studentNicknames } from "~/entities/Student";
-import { RenderPromise } from "~/shared/api";
+import { $logs, getLogsFx, getLogColumns, TLog } from "~/entities/LogModel";
+import { $students, getStudentsFx } from "~/entities/Student";
 import { MainTable, BsInput, SelectInput } from "~/shared/ui";
+import { RenderPromise } from "~/shared/api";
 
 const getFilters = (): ReactNode[] => {
   const filters = useUnit($filters);
-  const students = useUnit($studentNicknames);
+  const students = useUnit($students);
 
   return [
     <PageSizeSelector />,
     <SelectInput
       label="Никнейм"
-      name="student"
-      value={filters.student || ""}
-      onChange={(value) => changeFilter({ key: "student", value })}
+      value={filters.telegram_id || ""}
+      onChange={(value) => changeFilter({ key: "telegram_id", value })}
       options={[
         { label: "Не выбрано", value: "" },
-        ...students.map(({ id, telegram_link }) => ({
-          value: id.toString(),
-          label: telegram_link,
+        ...students.map(({ telegram_id, telegram_link }) => ({
+          value: telegram_id,
+          label: telegram_link?.split("/").pop() ?? "",
         })),
       ]}
     />,
@@ -49,8 +49,19 @@ const getFilters = (): ReactNode[] => {
 };
 
 export function LogsPage() {
-  const data = useUnit($logs);
+  const logs = useUnit($logs);
+  const data = useFilters<TLog>(logs, (key, el, filters) => {
+    if (["old_value", "new_value"].includes(key))
+      return el[key as "old_value" | "new_value"]
+        .toLowerCase()
+        .includes((filters[key] as string).toLowerCase());
+    return false;
+  });
   const columns = getLogColumns();
+
+  useEffect(() => {
+    if ($students.getState().length === 0) getStudentsFx();
+  }, []);
   return (
     <>
       <CommandBar title="Логи" menuList={[]} />

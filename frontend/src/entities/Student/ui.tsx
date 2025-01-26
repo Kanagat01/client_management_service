@@ -6,7 +6,7 @@ import { createStudent, updateStudent } from "./model";
 import { TCreateStudent, TStudent } from "./types";
 
 const initialData: TCreateStudent = {
-  telegram_id: "",
+  telegram_id: 0,
   fa_login: "",
   fa_password: "",
   phone: "",
@@ -65,8 +65,9 @@ export function CreateOrEditStudent(props: {
             variant="input"
             label="TG ID"
             name="telegram_id"
-            value={student.telegram_id}
+            value={student.telegram_id !== 0 ? student.telegram_id : ""}
             onChange={handleChange}
+            type="number"
             required
           />
           <BsInput
@@ -89,9 +90,9 @@ export function CreateOrEditStudent(props: {
             variant="input"
             label="Телефон"
             name="phone"
-            type="tel"
             value={student.phone}
             onChange={handleChange}
+            type="tel"
           />
           <SelectInput
             label="Группа"

@@ -1,3 +1,3 @@
 export * from "./MainTable";
-export * from "./Pagination";
+export * from "./pagination_model";
 export * from "./helpers";

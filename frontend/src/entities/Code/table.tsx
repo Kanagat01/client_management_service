@@ -10,13 +10,13 @@ import { TCode } from "./types";
 
 type TColumn = keyof TCode | "actions";
 
-const columnsRecord: Record<TColumn, string> = {
+const columnsRecord: Partial<Record<TColumn, string>> = {
   id: "ID",
   value: "Значение",
   status: "Статус",
   telegram_link: "Телеграмм",
   student: "Кем использован",
-  created_at: "Дата получения",
+  created_at: "Дата создания",
   actions: "Действия",
 };
 

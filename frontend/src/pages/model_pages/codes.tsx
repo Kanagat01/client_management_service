@@ -1,8 +1,13 @@
-import { ReactNode } from "react";
 import { useUnit } from "effector-react";
+import { ReactNode, useEffect } from "react";
 import { CommandBar, FilterBar } from "~/widgets";
 import { importData } from "~/features/import-data";
-import { $filters, changeFilter, PageSizeSelector } from "~/features/filters";
+import {
+  $filters,
+  changeFilter,
+  useFilters,
+  PageSizeSelector,
+} from "~/features/filters";
 import { CreateOrEditInstructionForProctoring } from "~/entities/InstructionForProctoring";
 import {
   $codes,
@@ -12,10 +17,10 @@ import {
   TCode,
   setCodes,
 } from "~/entities/Code";
+import { $students, getStudentsFx } from "~/entities/Student";
 import { ExportBtn, ImportBtn, MainTable, SelectInput } from "~/shared/ui";
 import { RenderPromise } from "~/shared/api";
 import { API_URL } from "~/shared/config";
-import { $students } from "~/entities/Student";
 
 const menuList = [
   <CreateCode />,
@@ -46,26 +51,24 @@ const getFilters = (): ReactNode[] => {
     <PageSizeSelector />,
     <SelectInput
       label="Код"
-      name="value"
-      value={filters.code_value || ""}
-      onChange={(value) => changeFilter({ key: "code_value", value })}
+      value={filters.id || ""}
+      onChange={(value) => changeFilter({ key: "id", value })}
       options={[
         { label: "Не выбрано", value: "" },
         ...codes.map(({ id, value }) => ({
-          value: id.toString(),
+          value: id,
           label: value,
         })),
       ]}
     />,
     <SelectInput
       label="Студент"
-      name="student"
-      value={filters.student || ""}
-      onChange={(value) => changeFilter({ key: "student", value })}
+      value={filters.student_id || ""}
+      onChange={(value) => changeFilter({ key: "student_id", value })}
       options={[
         { label: "Не выбрано", value: "" },
         ...students.map(({ id, full_name }) => ({
-          value: id.toString(),
+          value: id,
           label: full_name,
         })),
       ]}
@@ -74,8 +77,13 @@ const getFilters = (): ReactNode[] => {
 };
 
 export function CodesPage() {
-  const data = useUnit($codes);
+  const codes = useUnit($codes);
+  const data = useFilters<TCode>(codes);
   const columns = getCodeColumns();
+
+  useEffect(() => {
+    if ($students.getState().length === 0) getStudentsFx();
+  }, []);
   return (
     <>
       <CommandBar title="Редактор кодов" menuList={menuList} />

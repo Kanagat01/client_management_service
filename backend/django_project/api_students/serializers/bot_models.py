@@ -20,6 +20,7 @@ class CodeSerializer(serializers.ModelSerializer):
         representation = super().to_representation(instance)
         representation["status"] = "Использован" if instance.status == "used" else "Активный"
         if instance.student:
+            representation["student_id"] = instance.student.pk
             representation["student"] = f"{instance.student.fa_login} ({instance.student.full_name})"
             representation["telegram_link"] = instance.student.telegram_link
         return representation

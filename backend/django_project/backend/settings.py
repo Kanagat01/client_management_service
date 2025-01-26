@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'corsheaders',
+    'django_q',
     'accounts',
     'api_students',
 ]
@@ -141,7 +142,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # Internationalization
 LANGUAGE_CODE = 'ru-RU'
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Moscow'
 USE_I18N = True
 USE_TZ = True
 
@@ -188,21 +189,21 @@ if os.environ.get('RUNNING_FROM_DOCKER', False):
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# Q_CLUSTER = {
-#     'name': 'backend',
-#     'workers': 3,
-#     'recycle': 500,
-#     'timeout': 60,
-#     'compress': True,
-#     'save_limit': 250,
-#     'queue_limit': 500,
-#     'cpu_affinity': 1,
-#     'label': 'Django Q2',
-#     'orm': 'default',
-#     'ack_failures': True,
-#     'max_attempts': 1,
-#     'attempt_count': 1
-# }
+Q_CLUSTER = {
+    'name': 'backend',
+    'workers': 3,
+    'recycle': 500,
+    'timeout': 60,
+    'compress': True,
+    'save_limit': 250,
+    'queue_limit': 500,
+    'cpu_affinity': 1,
+    'label': 'Django Q2',
+    'orm': 'default',
+    'ack_failures': True,
+    'max_attempts': 1,
+    'attempt_count': 1
+}
 
 # CHANNEL_LAYERS = {
 #     "default": {

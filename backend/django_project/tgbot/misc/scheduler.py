@@ -1,8 +1,5 @@
 from datetime import datetime
-from create_bot import scheduler, bot, config
-
-
-admin_ids = config.tg_bot.admin_ids
+from create_bot import scheduler, bot
 
 
 class BaseScheduler:

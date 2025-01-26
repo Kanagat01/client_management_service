@@ -1,6 +1,8 @@
 from django.db import models
 from django.core.validators import FileExtensionValidator
 from rest_framework.exceptions import ValidationError
+from django_q.tasks import schedule, Schedule
+from tgbot.create_bot import logger
 from .students import Student
 from .university import Group
 
@@ -20,7 +22,7 @@ class Code(models.Model):
     student = models.ForeignKey(
         Student, on_delete=models.SET_NULL, null=True, blank=True)
     created_at = models.DateTimeField(
-        verbose_name="Дата получения", auto_now_add=True)
+        verbose_name="Дата создания", auto_now_add=True)
 
     def save(self, *args, **kwargs):
         self.status = "used" if self.student else "active"
@@ -50,7 +52,18 @@ class Message(models.Model):
         if bool(self.student) == bool(self.group):
             raise ValidationError(
                 'Необходимо заполнить одно из двух полей: "Студент" или "Группа"')
-        return super().save(*args, **kwargs)
+        if self.pk:
+            old_instance = Message.objects.filter(pk=self.pk).first()
+            if old_instance and old_instance.schedule_datetime != self.schedule_datetime:
+                Schedule.objects.filter(
+                    func="api_students.tasks.send_message_task", args=f'({self.pk},)').delete()
+
+        schedule(
+            "api_students.tasks.send_message_task",
+            self.pk,
+            next_run=self.schedule_datetime
+        )
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return f"Рассылка #{self.pk}"

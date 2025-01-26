@@ -6,6 +6,7 @@ import {
   changeFilter,
   handleFilterChange,
   PageSizeSelector,
+  useFilters,
 } from "~/features/filters";
 import {
   $students,
@@ -13,6 +14,7 @@ import {
   deleteAllStudents,
   getStudentColumns,
   getStudentsFx,
+  TStudent,
 } from "~/entities/Student";
 import { $groups, getGroupsFx } from "~/entities/Group";
 import { MainTable, DeleteAllBtn, BsInput, SelectInput } from "~/shared/ui";
@@ -37,20 +39,20 @@ const getFilters = (): ReactNode[] => {
       variant="input"
       label="TG ID"
       name="telegram_id"
-      value={filters.telegram_id}
+      value={filters.telegram_id || ""}
       onChange={handleFilterChange}
     />,
     <SelectInput
       label="Группа"
       name="group"
-      value={filters.group}
+      value={filters.group || ""}
       onChange={(value: string | number) =>
         changeFilter({ key: "group", value })
       }
       options={[
         { label: "Не выбрано", value: "" },
-        ...groups.map(({ id, code }) => ({
-          value: id.toString(),
+        ...groups.map(({ code }) => ({
+          value: code,
           label: code,
         })),
       ]}
@@ -59,28 +61,42 @@ const getFilters = (): ReactNode[] => {
       variant="input"
       label="Логин"
       name="fa_login"
-      value={filters.fa_login}
+      value={filters.fa_login || ""}
       onChange={handleFilterChange}
     />,
     <BsInput
       variant="input"
       label="Телефон"
       name="phone"
-      value={filters.phone}
+      value={filters.phone || ""}
       onChange={handleFilterChange}
     />,
     <BsInput
       variant="checkbox"
       label="Верифицирован"
-      name="is_verified"
-      value={filters.is_verified}
-      onChange={handleFilterChange}
+      value={filters.is_verified || ""}
+      onChange={(e) =>
+        changeFilter({ key: "is_verified", value: String(e.target.checked) })
+      }
     />,
   ];
 };
 
 export function StudentsPage() {
-  const data = useUnit($students);
+  const students = useUnit($students);
+  const data = useFilters<TStudent>(students, (key, el, filters) => {
+    if (key === "telegram_id") {
+      return el.telegram_id.toString().includes(filters[key]);
+    } else if (["fa_login", "phone"].includes(key)) {
+      return (el[key as keyof TStudent] as string)
+        .toLowerCase()
+        .includes((filters[key] as string).toLowerCase());
+    } else if (key === "is_verified") {
+      const is_verified = filters[key] === "true" ? true : false;
+      return el.is_verified === is_verified;
+    }
+    return false;
+  });
   const columns = getStudentColumns();
 
   useEffect(() => {
