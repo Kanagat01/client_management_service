@@ -68,7 +68,14 @@ async def change_password(message: Message, state: FSMContext):
         await message.answer("Логин и пароль успешно изменены")
         await render_settings(message, state, student)
     except ValidationError as e:
-        await message.answer(e.message)
+        if isinstance(e.detail, list):
+            error_message = e.detail[0]
+        elif isinstance(e.detail, dict):
+            error_message = ", ".join([str(msg) for msg in e.detail.values()])
+        else:
+            error_message = str(e.detail)
+
+        await message.answer(error_message)
         await change_login_query(message, state)
 
 

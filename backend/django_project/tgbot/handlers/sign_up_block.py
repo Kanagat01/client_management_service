@@ -108,7 +108,14 @@ async def get_password(message: Message, state: FSMContext):
         await choose_proctoring(message, state, state_data["activities"], "back_to_main_menu")
 
     except ValidationError as e:
-        await message.answer(e.detail)
+        if isinstance(e.detail, list):
+            error_message = e.detail[0]
+        elif isinstance(e.detail, dict):
+            error_message = ", ".join([str(msg) for msg in e.detail.values()])
+        else:
+            error_message = str(e.detail)
+
+        await message.answer(error_message)
         await render_login(message, state)
         return
 
