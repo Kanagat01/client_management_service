@@ -53,7 +53,7 @@ createStudent.watch(({ changeShow, ...data }) => {
 // --------------------- UPDATE STUDENT --------------------------
 const updateStudentFx: Effect<TStudent, TStudent> = attach({
   effect: apiRequestFx,
-  mapParams: (data: TStudent) => ({
+  mapParams: (data) => ({
     method: "put",
     url: `/api/students/${data.id}/`,
     data,
@@ -96,9 +96,12 @@ updateStudent.watch(({ loading, success, changeShow, ...data }) => {
 });
 
 // --------------------- UPDATE FIELD IN STUDENT --------------------------
-const updateStudentFieldFx: Effect<Partial<TStudent>, TStudent> = attach({
+const updateStudentFieldFx: Effect<
+  Partial<TStudent> & { id: number },
+  TStudent
+> = attach({
   effect: apiRequestFx,
-  mapParams: (data: Partial<TStudent>) => ({
+  mapParams: (data) => ({
     method: "patch",
     url: `/api/students/${data.id}/`,
     data,
@@ -107,6 +110,7 @@ const updateStudentFieldFx: Effect<Partial<TStudent>, TStudent> = attach({
 
 export const updateStudentField = createEvent<
   Partial<TStudent> & {
+    id: number;
     loading: string;
     success: string;
     changeShow?: () => void;

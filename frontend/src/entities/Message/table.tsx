@@ -5,7 +5,7 @@ import {
   useActionsColumn,
   DeleteBtn,
 } from "~/shared/ui";
-import { dateStringToIso } from "~/shared/lib";
+import { dateStringToIso, defaultSortingFn } from "~/shared/lib";
 import { TCreateMessage, TMessage } from "./types";
 import { deleteMessage } from "./model";
 import { CreateMessage } from "./ui";
@@ -24,9 +24,9 @@ const columnsRecord: Partial<Record<TColumn, string>> = {
 export const getMessageColumns = () => {
   const columnHelper = createColumnHelper<TMessage>();
   const columns = (Object.entries(columnsRecord) as [TColumn, string][]).map(
-    ([fieldName, header], index) =>
+    ([fieldName, headerText]) =>
       fieldName === "actions"
-        ? useActionsColumn<TMessage>(columnHelper, header, (row) => [
+        ? useActionsColumn<TMessage>(columnHelper, headerText, (row) => [
             <CreateMessage
               data={
                 {
@@ -42,25 +42,33 @@ export const getMessageColumns = () => {
               onConfirm={() => deleteMessage(row.id)}
             />,
           ])
-        : fieldName === "receiver"
-        ? columnHelper.display({
-            id: `column_${index}`,
-            cell: (info) => {
-              const value =
-                info.row.original.student ?? info.row.original.group;
-              return <DefaultCell>{value}</DefaultCell>;
-            },
-            header: () => <DefaultHeader>{header}</DefaultHeader>,
-            meta: { label: header },
-          })
         : columnHelper.accessor(fieldName as keyof TMessage, {
-            id: `column_${index}`,
+            id: fieldName,
             cell: (info) => {
-              const value = info.row.original[fieldName];
+              let value;
+              if (fieldName === "receiver") {
+                value = info.row.original.student ?? info.row.original.group;
+              } else {
+                value = info.row.original[fieldName as keyof TMessage];
+              }
               return <DefaultCell>{value}</DefaultCell>;
             },
-            header: () => <DefaultHeader>{header}</DefaultHeader>,
-            meta: { label: header },
+            header: ({ header }) => (
+              <DefaultHeader header={header} text={headerText} />
+            ),
+            meta: { label: headerText },
+            enableSorting: true,
+            sortingFn: (rowA, rowB, columnId) => {
+              const valueA =
+                columnId === "receiver"
+                  ? rowA.original.student ?? rowA.original.group
+                  : rowA.getValue(columnId);
+              const valueB =
+                columnId === "receiver"
+                  ? rowB.original.student ?? rowB.original.group
+                  : rowB.getValue(columnId);
+              return defaultSortingFn(valueA, valueB);
+            },
           })
   );
   return columns as ColumnDef<TMessage>[];

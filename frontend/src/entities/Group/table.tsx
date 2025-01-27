@@ -17,7 +17,7 @@ export const getGroupColumns = () => {
   const columnHelper = createColumnHelper<TGroup>();
   const columns = (
     Object.entries(groupColumns) as [keyof TGroup, string][]
-  ).map(([fieldName, header], index) =>
+  ).map(([fieldName, headerText], index) =>
     columnHelper.accessor(fieldName, {
       id: `column_${index}`,
       cell: (info) => {
@@ -27,8 +27,11 @@ export const getGroupColumns = () => {
         }
         return <DefaultCell>{value}</DefaultCell>;
       },
-      header: () => <DefaultHeader>{header}</DefaultHeader>,
-      meta: { label: header },
+      header: ({ header }) => (
+        <DefaultHeader header={header} text={headerText} />
+      ),
+      meta: { label: headerText },
+      enableSorting: true,
     })
   );
   return columns as ColumnDef<TGroup>[];

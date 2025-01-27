@@ -1,9 +1,10 @@
 import re
 import requests
 from bs4 import BeautifulSoup
+from asgiref.sync import async_to_sync
 from django.db import models
 from rest_framework.exceptions import ValidationError
-from asgiref.sync import async_to_sync
+from aiogram.exceptions import TelegramBadRequest
 
 from tgbot.create_bot import bot
 from .university import Group, Activity
@@ -91,9 +92,15 @@ class Student(models.Model):
         self.full_name = soup.select_one(selector).text.strip()
 
     def update_telegram_link(self):
-        user = async_to_sync(bot.get_chat)(self.telegram_id)
-        if user.username:
-            self.telegram_link = f"https://t.me/{user.username}"
+        try:
+            user = async_to_sync(bot.get_chat)(self.telegram_id)
+            if user.username:
+                self.telegram_link = f"https://t.me/{user.username}"
+        except TelegramBadRequest as e:
+            raise ValidationError(
+                f"Ошибка: чат с ID {self.telegram_id} не найден. \nДетали: {e}")
+        except Exception as e:
+            raise ValidationError(f"Произошла непредвиденная ошибка: {e}")
 
 
 class StudentRecord(models.Model):

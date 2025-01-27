@@ -1,12 +1,32 @@
 import { PropsWithChildren, ReactNode, useRef } from "react";
-import { ColumnHelper, Table } from "@tanstack/react-table";
-import { BsThreeDotsVertical } from "react-icons/bs";
+import { ColumnHelper, Header, Table } from "@tanstack/react-table";
+import { BsSortDown, BsSortUp, BsThreeDotsVertical } from "react-icons/bs";
 import { Button, Dropdown } from "react-bootstrap";
 import { usePopper } from "react-popper";
 
-export const DefaultHeader = ({ children }: PropsWithChildren) => (
-  <th className="text-start">
-    <div className="d-inline-flex align-items-center">{children}</div>
+export const DefaultHeader = ({
+  header,
+  text,
+}: {
+  header: Header<any, any>;
+  text: string;
+}) => (
+  <th
+    className="text-start"
+    key={header.id}
+    style={header.column.getCanSort() ? { cursor: "pointer" } : {}}
+    onClick={header.column.getToggleSortingHandler()}
+  >
+    <div
+      className="d-inline-flex align-items-center"
+      style={{ marginRight: "5px" }}
+    >
+      {text}
+    </div>
+    {{
+      asc: <BsSortUp />,
+      desc: <BsSortDown />,
+    }[header.column.getIsSorted() as string] ?? null}
   </th>
 );
 

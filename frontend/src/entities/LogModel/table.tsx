@@ -18,7 +18,7 @@ export const logColumns: Partial<Record<TColumn, string>> = {
 export const getLogColumns = () => {
   const columnHelper = createColumnHelper<TLog>();
   let columns = (Object.entries(logColumns) as [TColumn, string][]).map(
-    ([fieldName, header], index) =>
+    ([fieldName, headerText], index) =>
       columnHelper.accessor(fieldName, {
         id: `column_${index}`,
         cell: (info) => {
@@ -28,8 +28,11 @@ export const getLogColumns = () => {
           }
           return <DefaultCell>{value}</DefaultCell>;
         },
-        header: () => <DefaultHeader>{header}</DefaultHeader>,
-        meta: { label: header },
+        header: ({ header }) => (
+          <DefaultHeader header={header} text={headerText} />
+        ),
+        meta: { label: headerText },
+        enableSorting: true,
       })
   );
   return columns as ColumnDef<TLog>[];

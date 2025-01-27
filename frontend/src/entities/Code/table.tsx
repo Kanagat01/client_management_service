@@ -23,9 +23,9 @@ const columnsRecord: Partial<Record<TColumn, string>> = {
 export const getCodeColumns = () => {
   const columnHelper = createColumnHelper<TCode>();
   const columns = (Object.entries(columnsRecord) as [TColumn, string][]).map(
-    ([fieldName, header], index) =>
+    ([fieldName, headerText], index) =>
       fieldName === "actions"
-        ? useActionsColumn<TCode>(columnHelper, header, ({ id, value }) => [
+        ? useActionsColumn<TCode>(columnHelper, headerText, ({ id, value }) => [
             <DeleteBtn
               content={`Вы уверены, что хотите удалить код "${value}"?`}
               onConfirm={() => deleteCode({ id, value })}
@@ -37,8 +37,11 @@ export const getCodeColumns = () => {
               const fieldValue = info.row.original[fieldName];
               return <DefaultCell>{fieldValue}</DefaultCell>;
             },
-            header: () => <DefaultHeader>{header}</DefaultHeader>,
-            meta: { label: header },
+            header: ({ header }) => (
+              <DefaultHeader header={header} text={headerText} />
+            ),
+            meta: { label: headerText },
+            enableSorting: true,
           })
   );
   return columns as ColumnDef<TCode>[];

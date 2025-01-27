@@ -94,3 +94,42 @@ export const dateStringToIso = (input: string) => {
   ).toISOString();
   return isoDate.slice(0, 16);
 };
+
+export const defaultSortingFn = (valueA: unknown, valueB: unknown) => {
+  if (typeof valueA === "string" && typeof valueB === "string") {
+    return valueA.localeCompare(valueB);
+  }
+
+  if (typeof valueA === "number" && typeof valueB === "number") {
+    return valueA - valueB;
+  }
+
+  if (valueA instanceof Date && valueB instanceof Date) {
+    return valueA.getTime() - valueB.getTime();
+  }
+
+  if (
+    typeof valueA === "string" &&
+    typeof valueB === "string" &&
+    !isNaN(Date.parse(valueA)) &&
+    !isNaN(Date.parse(valueB))
+  ) {
+    return new Date(valueA).getTime() - new Date(valueB).getTime();
+  }
+
+  if (typeof valueA === "boolean" && typeof valueB === "boolean") {
+    return valueA === valueB ? 0 : valueA ? 1 : -1;
+  }
+
+  if (valueA === valueB) {
+    return 0;
+  }
+  if (valueA === null || valueA === undefined) {
+    return 1;
+  }
+  if (valueB === null || valueB === undefined) {
+    return -1;
+  }
+
+  return 0;
+};

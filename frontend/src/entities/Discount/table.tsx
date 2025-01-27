@@ -20,9 +20,9 @@ const columnsRecord: Record<TColumn, string> = {
 export const getDiscountColumns = () => {
   const columnHelper = createColumnHelper<TDiscount>();
   const columns = (Object.entries(columnsRecord) as [TColumn, string][]).map(
-    ([fieldName, header], index) =>
+    ([fieldName, headerText], index) =>
       fieldName === "actions"
-        ? useActionsColumn<TDiscount>(columnHelper, header, (row) => [
+        ? useActionsColumn<TDiscount>(columnHelper, headerText, (row) => [
             <CreateOrEditDiscount initialState={row} />,
             <DeleteBtn
               content={`Вы уверены, что хотите удалить код #${row.id}?`}
@@ -35,8 +35,11 @@ export const getDiscountColumns = () => {
               const fieldValue = info.row.original[fieldName];
               return <DefaultCell>{fieldValue}</DefaultCell>;
             },
-            header: () => <DefaultHeader>{header}</DefaultHeader>,
-            meta: { label: header },
+            header: ({ header }) => (
+              <DefaultHeader header={header} text={headerText} />
+            ),
+            meta: { label: headerText },
+            enableSorting: true,
           })
   );
   return columns as ColumnDef<TDiscount>[];

@@ -24,9 +24,9 @@ export const activityColumns: Partial<Record<TColumn, string>> = {
 export const getActivityColumns = () => {
   const columnHelper = createColumnHelper<TActivity>();
   let columns = (Object.entries(activityColumns) as [TColumn, string][]).map(
-    ([fieldName, header], index) => {
+    ([fieldName, headerText], index) => {
       if (fieldName === "actions") {
-        return useActionsColumn<TActivity>(columnHelper, header, (row) => [
+        return useActionsColumn<TActivity>(columnHelper, headerText, (row) => [
           <EditActivity
             initialState={{
               ...row,
@@ -57,11 +57,11 @@ export const getActivityColumns = () => {
             }
             return <DefaultCell>{fieldValue}</DefaultCell>;
           },
-          header: () => <DefaultHeader>{header}</DefaultHeader>,
-          meta: { label: header },
-          sortDescFirst: false,
+          header: ({ header }) => (
+            <DefaultHeader header={header} text={headerText} />
+          ),
+          meta: { label: headerText },
           enableSorting: true,
-          enableMultiSort: true,
         });
       }
     }

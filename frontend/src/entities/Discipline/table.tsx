@@ -16,9 +16,9 @@ export const getDisciplineColumns = () => {
   const columnHelper = createColumnHelper<TDiscipline>();
   const columns = (
     Object.entries(disciplineColumns) as [TColumn, string][]
-  ).map(([fieldName, header], index) =>
+  ).map(([fieldName, headerText], index) =>
     fieldName === "actions"
-      ? useActionsColumn<TDiscipline>(columnHelper, header, (row) => [
+      ? useActionsColumn<TDiscipline>(columnHelper, headerText, (row) => [
           <CreateOrEditDiscipline initialState={row} />,
         ])
       : columnHelper.accessor(fieldName, {
@@ -26,8 +26,11 @@ export const getDisciplineColumns = () => {
           cell: (info) => (
             <DefaultCell>{info.row.original[fieldName]}</DefaultCell>
           ),
-          header: () => <DefaultHeader>{header}</DefaultHeader>,
-          meta: { label: header },
+          header: ({ header }) => (
+            <DefaultHeader header={header} text={headerText} />
+          ),
+          meta: { label: headerText },
+          enableSorting: true,
         })
   );
   return columns as ColumnDef<TDiscipline>[];

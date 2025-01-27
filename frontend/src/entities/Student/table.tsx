@@ -32,9 +32,9 @@ export const studentColumns: Partial<Record<TColumn, string>> = {
 export const getStudentColumns = () => {
   const columnHelper = createColumnHelper<TStudent>();
   let columns = (Object.entries(studentColumns) as [TColumn, string][]).map(
-    ([fieldName, header], index) =>
+    ([fieldName, headerText], index) =>
       fieldName === "actions"
-        ? useActionsColumn<TStudent>(columnHelper, header, (row) => [
+        ? useActionsColumn<TStudent>(columnHelper, headerText, (row) => [
             <CreateOrEditStudent data={row} />,
             <DeleteBtn
               content={`Вы уверены, что хотите очистить данные студента "${row.full_name}"?`}
@@ -49,6 +49,7 @@ export const getStudentColumns = () => {
               } студента "${row.full_name}"?`}
               onConfirm={() =>
                 updateStudentField({
+                  id: row.id,
                   is_verified: !row.is_verified,
                   loading: `${
                     row.is_verified ? "Отменяем верификацию у" : "Верифицируем"
@@ -66,6 +67,7 @@ export const getStudentColumns = () => {
               } студента "${row.full_name}"?`}
               onConfirm={() =>
                 updateStudentField({
+                  id: row.id,
                   is_blocked: !row.is_blocked,
                   loading: `Блокируем студента "${row.full_name}"...`,
                   success: `Студент "${row.full_name}" заблокирован`,
@@ -89,8 +91,11 @@ export const getStudentColumns = () => {
               }
               return <DefaultCell>{value}</DefaultCell>;
             },
-            header: () => <DefaultHeader>{header}</DefaultHeader>,
-            meta: { label: header },
+            header: ({ header }) => (
+              <DefaultHeader header={header} text={headerText} />
+            ),
+            meta: { label: headerText },
+            enableSorting: true,
           })
   );
   return columns as ColumnDef<TStudent>[];

@@ -14,12 +14,15 @@ export const getActivityTypeColumns = () => {
   const columnHelper = createColumnHelper<TActivityType>();
   let columns = (
     Object.entries(activityTypeColumns) as [TColumn, string][]
-  ).map(([fieldName, header], index) =>
+  ).map(([fieldName, headerText], index) =>
     columnHelper.accessor(fieldName, {
       id: `column_${index}`,
       cell: (info) => <DefaultCell>{info.row.original[fieldName]}</DefaultCell>,
-      header: () => <DefaultHeader>{header}</DefaultHeader>,
-      meta: { label: header },
+      header: ({ header }) => (
+        <DefaultHeader header={header} text={headerText} />
+      ),
+      meta: { label: headerText },
+      enableSorting: true,
     })
   );
   return columns as ColumnDef<TActivityType>[];

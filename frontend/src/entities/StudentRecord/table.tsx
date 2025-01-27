@@ -6,7 +6,7 @@ import {
   DeleteBtn,
   useActionsColumn,
 } from "~/shared/ui";
-import { dateToString } from "~/shared/lib";
+import { dateToString, defaultSortingFn } from "~/shared/lib";
 import { CreateOrEditStudentRecord } from "./ui";
 import { deleteStudentRecord } from "./model";
 import { TStudentRecord } from "./types";
@@ -31,9 +31,9 @@ export const studentRecordColumns: Partial<Record<TColumn, string>> = {
 export const getStudentRecordColumns = () => {
   const columnHelper = createColumnHelper<TStudentRecord>();
   const columns = Object.entries(studentRecordColumns).map(
-    ([fieldName, header], index) =>
+    ([fieldName, headerText]) =>
       fieldName === "actions"
-        ? useActionsColumn<TStudentRecord>(columnHelper, header, (row) => [
+        ? useActionsColumn<TStudentRecord>(columnHelper, headerText, (row) => [
             <CreateOrEditStudentRecord
               data={{
                 id: row.id,
@@ -48,7 +48,7 @@ export const getStudentRecordColumns = () => {
             />,
           ])
         : columnHelper.accessor(fieldName as keyof TStudentRecord, {
-            id: `column_${index}`,
+            id: fieldName,
             cell: (info) => {
               let fieldValue;
               if (!Object.keys(info.row.original).includes(fieldName)) {
@@ -63,8 +63,30 @@ export const getStudentRecordColumns = () => {
               }
               return <DefaultCell>{fieldValue as string}</DefaultCell>;
             },
-            header: () => <DefaultHeader>{header}</DefaultHeader>,
-            meta: { label: header },
+            header: ({ header }) => (
+              <DefaultHeader header={header} text={headerText} />
+            ),
+            meta: { label: headerText },
+            enableSorting: true,
+            sortingFn: (rowA, rowB, columnId) => {
+              const hasColumnA = Object.keys(rowA.original).includes(columnId);
+              const hasColumnB = Object.keys(rowB.original).includes(columnId);
+
+              let valueA, valueB;
+              if (hasColumnA && hasColumnB) {
+                valueA = rowA.getValue(columnId);
+                valueB = rowB.getValue(columnId);
+              } else {
+                valueA = hasColumnA
+                  ? rowA.getValue(columnId)
+                  : rowA.original.activity[columnId as keyof TActivity];
+                valueB = hasColumnB
+                  ? rowB.getValue(columnId)
+                  : rowB.original.activity[columnId as keyof TActivity];
+              }
+
+              return defaultSortingFn(valueA, valueB);
+            },
           })
   );
   return columns as ColumnDef<TStudentRecord>[];

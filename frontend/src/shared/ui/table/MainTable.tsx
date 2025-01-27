@@ -2,6 +2,8 @@ import {
   ColumnDef,
   flexRender,
   getCoreRowModel,
+  getSortedRowModel,
+  SortingState,
   useReactTable,
 } from "@tanstack/react-table";
 import { useUnit } from "effector-react";
@@ -29,7 +31,7 @@ export function MainTable({
       const start = (currentPage - 1) * itemsPerPage;
       setFilteredData(data.slice(start, start + itemsPerPage));
     } else setFilteredData(data);
-  }, [pagination]);
+  }, [pagination, data]);
 
   const setCurrentPage = (page: number) => {
     setPagination({
@@ -42,15 +44,19 @@ export function MainTable({
     });
   };
 
+  const [sorting, setSorting] = useState<SortingState>([]);
   const [columnVisibility, setColumnVisibility] = useState({});
   const table = useReactTable({
     data: filteredData,
     columns,
     state: {
+      sorting,
       columnVisibility,
     },
     onColumnVisibilityChange: setColumnVisibility,
+    onSortingChange: setSorting,
     getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel(),
   });
 
   const headerGroups = table.getHeaderGroups();
