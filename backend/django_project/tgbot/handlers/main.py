@@ -44,8 +44,11 @@ async def back_to_main_menu(callback: CallbackQuery, state: FSMContext):
 
 async def render_main_menu(state: FSMContext, message: Message, group_id: int | str):
     schedule_data = get_schedule(group_id)
-    await state.update_data(schedule_data=schedule_data)
+    state_data = await state.get_data()
+    await state.clear()
+    await state.set_data({**state_data, "schedule_data": schedule_data})
 
-    for idx, schedule in enumerate(parse_schedule(schedule_data)):
-        kb = UserReplyKeyboard.main_menu_kb() if idx == len(schedule_data) - 1 else None
+    parsed_schedule = parse_schedule(schedule_data)
+    for idx, schedule in enumerate(parsed_schedule):
+        kb = UserReplyKeyboard.main_menu_kb() if idx == len(parsed_schedule) - 1 else None
         await message.answer(schedule, reply_markup=kb)
