@@ -19,7 +19,7 @@ def validate_whatsapp_number(value):
 class Student(models.Model):
     full_name = models.CharField(
         max_length=255, verbose_name="Полное имя", null=True)
-    telegram_id = models.IntegerField(
+    telegram_id = models.BigIntegerField(
         verbose_name="Telegram ID")
     telegram_link = models.CharField(
         max_length=255, verbose_name="Ссылка на Telegram", blank=True, null=True)
